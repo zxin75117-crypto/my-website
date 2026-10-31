@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>郑新 | 个人主页</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            900: '#0c4a6e',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .dark .glass {
+            background: rgba(15, 23, 42, 0.75);
+        }
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 2px;
+            background: #e2e8f0;
+            transform: translateX(-50%);
+        }
+        .dark .timeline-line::before {
+            background: #334155;
+        }
+        @media (max-width: 768px) {
+            .timeline-line::before {
+                left: 20px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans transition-colors duration-300">
+
+    <!-- Header / Navbar -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass border-b border-slate-200/50 dark:border-slate-800/50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <a href="#" class="text-xl font-bold bg-gradient-to-r from-sky-500 to-indigo-600 bg-clip-text text-transparent">
+                郑新 Zheng Xin
+            </a>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+                <a href="#about" class="hover:text-sky-500 transition-colors">首页</a>
+                <a href="#experience" class="hover:text-sky-500 transition-colors">职业</a>
+                <a href="#gallery" class="hover:text-sky-500 transition-colors">生活</a>
+                <a href="#books" class="hover:text-sky-500 transition-colors">著作</a>
+                <a href="#aerial" class="hover:text-sky-500 transition-colors">航拍</a>
+                <a href="#contact" class="hover:text-sky-500 transition-colors">联系</a>
+            </nav>
+
+            <!-- Right Controls -->
+            <div class="flex items-center space-x-4">
+                <button id="themeToggle" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors">
+                    <i class="fa-solid fa-moon dark:hidden text-lg"></i>
+                    <i class="fa-solid fa-sun hidden dark:block text-lg"></i>
+                </button>
+                <button id="mobileMenuBtn" class="md:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden px-4 pt-2 pb-6 space-y-3 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+            <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-100 dark:hover:bg-slate-800">首页</a>
+            <a href="#experience" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-100 dark:hover:bg-slate-800">职业</a>
+            <a href="#gallery" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-100 dark:hover:bg-slate-800">生活</a>
+            <a href="#books" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-100 dark:hover:bg-slate-800">著作</a>
+            <a href="#aerial" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-100 dark:hover:bg-slate-800">航拍</a>
+            <a href="#contact" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-100 dark:hover:bg-slate-800">联系</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="about" class="min-h-screen pt-24 pb-16 flex items-center justify-center relative overflow-hidden">
+        <div class="absolute inset-0 -z-10 opacity-30 dark:opacity-20 pointer-events-none">
+            <div class="absolute top-20 left-10 w-72 h-72 bg-sky-400 rounded-full filter blur-3xl"></div>
+            <div class="absolute bottom-20 right-10 w-96 h-96 bg-indigo-500 rounded-full filter blur-3xl"></div>
+        </div>
+        
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="inline-block p-1 bg-gradient-to-tr from-sky-400 to-indigo-600 rounded-full mb-6">
+                <img src="./images/avatar.jpg" 
+                     onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300'"
+                     alt="郑新" 
+                     class="w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover border-4 border-white dark:border-slate-900 shadow-xl">
+            </div>
+            <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight mb-3">
+                你好，我是 <span class="bg-gradient-to-r from-sky-500 to-indigo-600 bg-clip-text text-transparent">郑新</span>
+            </h1>
+            <p class="text-lg sm:text-xl font-medium text-slate-700 dark:text-slate-300 mb-2">
+                阿斯利康（AstraZeneca）高级产品专员
+            </p>
+            
+            <!-- 座右铭 -->
+            <div class="inline-block px-4 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-sky-600 dark:text-sky-400 font-semibold text-sm mb-8 border border-slate-200 dark:border-slate-700">
+                “ 拥抱创新，顺势而为 ”
+            </div>
+
+            <!-- 5个导航标签 -->
+            <div class="flex flex-wrap justify-center gap-3 sm:gap-4 max-w-xl mx-auto">
+                <a href="#experience" class="px-5 py-2.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-sky-500 dark:hover:border-sky-500 hover:text-sky-500 font-medium shadow-sm hover:shadow transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-briefcase text-sky-500"></i> 职业
+                </a>
+                <a href="#gallery" class="px-5 py-2.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-indigo-500 dark:hover:border-indigo-500 hover:text-indigo-500 font-medium shadow-sm hover:shadow transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-camera text-indigo-500"></i> 生活
+                </a>
+                <a href="#books" class="px-5 py-2.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-500 dark:hover:border-emerald-500 hover:text-emerald-500 font-medium shadow-sm hover:shadow transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-book text-emerald-500"></i> 著作
+                </a>
+                <a href="#aerial" class="px-5 py-2.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-amber-500 dark:hover:border-amber-500 hover:text-amber-500 font-medium shadow-sm hover:shadow transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-plane text-amber-500"></i> 航拍
+                </a>
+                <a href="#contact" class="px-5 py-2.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-rose-500 dark:hover:border-rose-500 hover:text-rose-500 font-medium shadow-sm hover:shadow transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-paper-plane text-rose-500"></i> 联系
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Work Experience Timeline (从上到下 2017 -> 2025) -->
+    <section id="experience" class="py-20 bg-white dark:bg-slate-900/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl font-bold tracking-tight mb-4">职业经历与成长脚印</h2>
+                <p class="text-slate-600 dark:text-slate-400">立足医药信息沟通与产品学术推广，持续探索行业前沿。</p>
+            </div>
+
+            <div class="relative timeline-line max-w-4xl mx-auto">
+
+                <!-- 2017年 -->
+                <div class="mb-12 flex flex-col md:flex-row items-center">
+                    <div class="flex md:w-1/2 md:justify-end md:pr-8 mb-4 md:mb-0">
+                        <div class="bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl shadow-md border border-slate-100 dark:border-slate-700/50 w-full md:max-w-md">
+                            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">2017 年</span>
+                            <h3 class="text-xl font-bold mt-1">大学毕业</h3>
+                            <p class="text-sm text-slate-500 dark:text-slate-400 mb-2">福建医科大学</p>
+                            <p class="text-sm text-slate-600 dark:text-slate-300">顺利毕业于福建医科大学，开启医药健康领域的专业实践与学术探索。</p>
+                        </div>
+                    </div>
+                    <div class="z-10 flex items-center justify-center w-10 h-10 rounded-full bg-slate-500 text-white shadow-lg shrink-0">
+                        <i class="fa-solid fa-graduation-cap text-sm"></i>
+                    </div>
+                    <div class="md:w-1/2 md:pl-8 hidden md:block"></div>
+                </div>
+
+                <!-- 2020年 -->
+                <div class="mb-12 flex flex-col md:flex-row items-center">
+                    <div class="md:w-1/2 md:pr-8 hidden md:block"></div>
+                    <div class="z-10 flex items-center justify-center w-10 h-10 rounded-full bg-sky-500 text-white shadow-lg shrink-0">
+                        <i class="fa-solid fa-building text-sm"></i>
+                    </div>
+                    <div class="flex md:w-1/2 md:justify-start md:pl-8 mb-4 md:mb-0">
+                        <div class="bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl shadow-md border border-slate-100 dark:border-slate-700/50 w-full md:max-w-md">
+                            <span class="text-xs font-semibold uppercase tracking-wider text-sky-500">2020 年 8 月 3 日</span>
+                            <h3 class="text-xl font-bold mt-1">加入阿斯利康 (AstraZeneca)</h3>
+                            <p class="text-sm text-slate-500 dark:text-slate-400 mb-2">医学信息沟通代表</p>
+                            <p class="text-sm text-slate-600 dark:text-slate-300">开启在跨国药企的职业新旅程，致力于专业学术传递与临床价值沟通。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2022年 -->
+                <div class="mb-12 flex flex-col md:flex-row items-center">
+                    <div class="flex md:w-1/2 md:justify-end md:pr-8 mb-4 md:mb-0">
+                        <div class="bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl shadow-md border border-slate-100 dark:border-slate-700/50 w-full md:max-w-md">
+                            <span class="text-xs font-semibold uppercase tracking-wider text-amber-500">2022 年</span>
+                            <h3 class="text-xl font-bold mt-1">获得 EC 绩效卓越奖</h3>
+                            <p class="text-sm text-slate-500 dark:text-slate-400 mb-2">阿斯利康 荣誉表彰</p>
+                            <p class="text-sm text-slate-600 dark:text-slate-300">凭出色的业务指标与高质量的学术沟通服务，获得 EC 绩效卓越评定。</p>
+                        </div>
+                    </div>
+                    <div class="z-10 flex items-center justify-center w-10 h-10 rounded-full bg-amber-500 text-white shadow-lg shrink-0">
+                        <i class="fa-solid fa-trophy text-sm"></i>
+                    </div>
+                    <div class="md:w-1/2 md:pl-8 hidden md:block"></div>
+                </div>
+
+                <!-- 2023年 -->
+                <div class="mb-12 flex flex-col md:flex-row items-center">
+                    <div class="md:w-1/2 md:pr-8 hidden md:block"></div>
+                    <div class="z-10 flex items-center justify-center w-10 h-10 rounded-full bg-indigo-500 text-white shadow-lg shrink-0">
+                        <i class="fa-solid fa-arrow-up-right-dots text-sm"></i>
+                    </div>
+                    <div class="flex md:w-1/2 md:justify-start md:pl-8 mb-4 md:mb-0">
+                        <div class="bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl shadow-md border border-slate-100 dark:border-slate-700/50 w-full md:max-w-md">
+                            <span class="text-xs font-semibold uppercase tracking-wider text-indigo-500">2023 年</span>
+                            <h3 class="text-xl font-bold mt-1">晋升 高级医学代表</h3>
+                            <p class="text-sm text-slate-500 dark:text-slate-400 mb-2">职业生涯突破</p>
+                            <p class="text-sm text-slate-600 dark:text-slate-300">团队骨干担当，协助区域学术会议筹备及重点项目的推进实施。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2024年 -->
+                <div class="mb-12 flex flex-col md:flex-row items-center">
+                    <div class="flex md:w-1/2 md:justify-end md:pr-8 mb-4 md:mb-0">
+                        <div class="bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl shadow-md border border-slate-100 dark:border-slate-700/50 w-full md:max-w-md">
+                            <span class="text-xs font-semibold uppercase tracking-wider text-amber-500">2024 年</span>
+                            <h3 class="text-xl font-bold mt-1">再获 EC 绩效卓越奖</h3>
+                            <p class="text-sm text-slate-500 dark:text-slate-400 mb-2">阿斯利康 荣誉表彰</p>
+                            <p class="text-sm text-slate-600 dark:text-slate-300">持续保持高水平业绩产出与团队协作，再次斩获 EC 绩效卓越称号。</p>
+                        </div>
+                    </div>
+                    <div class="z-10 flex items-center justify-center w-10 h-10 rounded-full bg-amber-500 text-white shadow-lg shrink-0">
+                        <i class="fa-solid fa-award text-sm"></i>
+                    </div>
+                    <div class="md:w-1/2 md:pl-8 hidden md:block"></div>
+                </div>
+
+                <!-- 2025年 -->
+                <div class="flex flex-col md:flex-row items-center">
+                    <div class="md:w-1/2 md:pr-8 hidden md:block"></div>
+                    <div class="z-10 flex items-center justify-center w-10 h-10 rounded-full bg-emerald-500 text-white shadow-lg shrink-0">
+                        <i class="fa-solid fa-user-check text-sm"></i>
+                    </div>
+                    <div class="flex md:w-1/2 md:justify-start md:pl-8 mb-4 md:mb-0">
+                        <div class="bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl shadow-md border border-slate-100 dark:border-slate-700/50 w-full md:max-w-md">
+                            <span class="text-xs font-semibold uppercase tracking-wider text-emerald-500">2025 年</span>
+                            <h3 class="text-xl font-bold mt-1">晋升 高级产品专员</h3>
+                            <p class="text-sm text-slate-500 dark:text-slate-400 mb-2">通过区域春苗测试</p>
+                            <p class="text-sm text-slate-600 dark:text-slate-300">高分通过区域春苗测试考评，成功晋升为高级产品专员，开启产品战略策划与精准学术推介。</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Photo Gallery Section -->
+    <section id="gallery" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <h2 class="text-3xl font-bold tracking-tight mb-4">精彩风采与生活瞬间</h2>
+                <p class="text-slate-600 dark:text-slate-400">记录工作中的高光时刻、远方的壮阔风景，以及与家人度过的温馨岁月。</p>
+                
+                <!-- Filter Tabs -->
+                <div class="flex flex-wrap justify-center gap-3 mt-8">
+                    <button onclick="filterGallery('all')" class="gallery-tab px-5 py-2 rounded-full text-sm font-medium transition-all bg-sky-600 text-white active" data-filter="all">全部照片</button>
+                    <button onclick="filterGallery('work')" class="gallery-tab px-5 py-2 rounded-full text-sm font-medium transition-all bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300" data-filter="work">职场风采/获奖/主持</button>
+                    <button onclick="filterGallery('travel')" class="gallery-tab px-5 py-2 rounded-full text-sm font-medium transition-all bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300" data-filter="travel">旅行足迹</button>
+                    <button onclick="filterGallery('family')" class="gallery-tab px-5 py-2 rounded-full text-sm font-medium transition-all bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300" data-filter="family">家庭时光</button>
+                </div>
+            </div>
+
+            <!-- Gallery Grid -->
+            <div id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Work 1: Award Photo -->
+                <div class="gallery-item work group relative overflow-hidden rounded-2xl shadow-md cursor-pointer aspect-4/3" onclick="openLightbox('./images/award.jpg', '获得 EC 绩效卓越颁奖合影')">
+                    <img src="./images/award.jpg" onerror="this.src='https://images.unsplash.com/photo-1531545514256-b1400bc00f31?auto=format&fit=crop&q=80&w=600'" alt="个人获奖照" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                        <span class="text-xs text-amber-400 font-semibold uppercase tracking-wider">个人获奖</span>
+                        <h4 class="text-white text-lg font-bold">EC 绩效卓越颁奖时刻</h4>
+                    </div>
+                </div>
+
+                <!-- Work 2: Gala Hosting -->
+                <div class="gallery-item work group relative overflow-hidden rounded-2xl shadow-md cursor-pointer aspect-4/3" onclick="openLightbox('./images/host.jpg', '公司年终晚宴会议主持风采')">
+                    <img src="./images/host.jpg" onerror="this.src='https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&q=80&w=600'" alt="晚宴主持照" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                        <span class="text-xs text-amber-400 font-semibold uppercase tracking-wider">会议主持</span>
+                        <h4 class="text-white text-lg font-bold">晚会主持风采</h4>
+                    </div>
+                </div>
+
+                <!-- Work 3: Team Building -->
+                <div class="gallery-item work group relative overflow-hidden rounded-2xl shadow-md cursor-pointer aspect-4/3" onclick="openLightbox('./images/team.jpg', '阿斯利康团队团建与户外拓展')">
+                    <img src="./images/team.jpg" onerror="this.src='https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=600'" alt="公司团建照" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                        <span class="text-xs text-amber-400 font-semibold uppercase tracking-wider">团队合影</span>
+                        <h4 class="text-white text-lg font-bold">团队拓展与团建</h4>
+                    </div>
+                </div>
+
+                <!-- Travel 1 -->
+                <div class="gallery-item travel group relative overflow-hidden rounded-2xl shadow-md cursor-pointer aspect-4/3" onclick="openLightbox('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&q=80&w=1200', '远方旅行回忆')">
+                    <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&q=80&w=600" alt="旅行" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                        <span class="text-xs text-sky-400 font-semibold uppercase tracking-wider">旅行足迹</span>
+                        <h4 class="text-white text-lg font-bold">山川与公路旅行</h4>
+                    </div>
+                </div>
+
+                <!-- Family 1 -->
+                <div class="gallery-item family group relative overflow-hidden rounded-2xl shadow-md cursor-pointer aspect-4/3" onclick="openLightbox('https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&q=80&w=1200', '温馨家庭时光')">
+                    <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&q=80&w=600" alt="家庭" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                        <span class="text-xs text-emerald-400 font-semibold uppercase tracking-wider">家庭时光</span>
+                        <h4 class="text-white text-lg font-bold">户外野餐合影</h4>
+                    </div>
+                </div>
+
+                <!-- Travel 2 -->
+                <div class="gallery-item travel group relative overflow-hidden rounded-2xl shadow-md cursor-pointer aspect-4/3" onclick="openLightbox('https://images.unsplash.com/photo-1476514525535-ce74f45814d9?auto=format&fit=crop&q=80&w=1200', '海滨度假风光')">
+                    <img src="https://images.unsplash.com/photo-1476514525535-ce74f45814d9?auto=format&fit=crop&q=80&w=600" alt="旅行" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                        <span class="text-xs text-sky-400 font-semibold uppercase tracking-wider">旅行足迹</span>
+                        <h4 class="text-white text-lg font-bold">阿尔卑斯山脉风光</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Published Books Section -->
+    <section id="books" class="py-20 bg-slate-100 dark:bg-slate-900/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl font-bold tracking-tight mb-4">出版书籍与专业著作</h2>
+                <p class="text-slate-600 dark:text-slate-400">将行业洞察与学术思考凝结成文，记录探索路上的点滴沉淀。</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Book 1 -->
+                <div class="bg-white dark:bg-slate-800/80 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row gap-6 border border-slate-100 dark:border-slate-700/50 shadow-md">
+                    <div class="w-40 h-56 bg-slate-300 dark:bg-slate-700 rounded-lg shrink-0 overflow-hidden shadow-lg mx-auto sm:mx-0">
+                        <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=400" alt="书籍封面" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex flex-col justify-between">
+                        <div>
+                            <span class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-sky-100 text-sky-700 dark:bg-sky-900/50 dark:text-sky-300 mb-2">学术/专业专著</span>
+                            <h3 class="text-2xl font-bold mb-2">《现代医学沟通与学术推介实战》</h3>
+                            <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">医药科技出版社 | 2023出版</p>
+                            <p class="text-sm text-slate-600 dark:text-slate-300">系统梳理高价值学术信息的沟通方法论，兼具理论深度与实操指南。</p>
+                        </div>
+                        <div class="mt-6 flex gap-3">
+                            <a href="#" class="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-sm font-medium transition-colors">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Book 2 -->
+                <div class="bg-white dark:bg-slate-800/80 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row gap-6 border border-slate-100 dark:border-slate-700/50 shadow-md">
+                    <div class="w-40 h-56 bg-slate-300 dark:bg-slate-700 rounded-lg shrink-0 overflow-hidden shadow-lg mx-auto sm:mx-0">
+                        <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&q=80&w=400" alt="书籍封面" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex flex-col justify-between">
+                        <div>
+                            <span class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300 mb-2">个人随笔</span>
+                            <h3 class="text-2xl font-bold mb-2">《光影云端：航拍视觉纪实》</h3>
+                            <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">摄影艺术出版社 | 2022出版</p>
+                            <p class="text-sm text-slate-600 dark:text-slate-300">收录航拍风光照片与构图创作心得，从上帝视角记录神州大地的四时美景。</p>
+                        </div>
+                        <div class="mt-6 flex gap-3">
+                            <a href="#" class="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-sm font-medium transition-colors">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Aerial Drone Videos Section -->
+    <section id="aerial" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-amber-500 font-semibold text-sm uppercase tracking-wider">上帝视角</span>
+                <h2 class="text-3xl font-bold tracking-tight mt-1 mb-4">航拍视频作品展示</h2>
+                <p class="text-slate-600 dark:text-slate-400">使用无人机俯瞰大地，用镜头捕捉震撼的自然山川与城市轮廓。</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Video 1 -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg group border border-slate-100 dark:border-slate-700/50">
+                    <div class="relative aspect-video bg-slate-900 cursor-pointer overflow-hidden" onclick="playVideo('https://player.bilibili.com/player.html?bvid=BV1GJ411x7vh&page=1')">
+                        <img src="https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&q=80&w=800" alt="航拍封面" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/30 transition-colors">
+                            <div class="w-16 h-16 rounded-full bg-white/90 dark:bg-slate-900/90 flex items-center justify-center text-amber-500 shadow-xl group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-play text-xl ml-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="text-xl font-bold">山海连绵：航拍大地之美</h3>
+                            <span class="text-xs text-slate-500"><i class="fa-regular fa-clock mr-1"></i>03:45</span>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-300">使用大疆无人机创作，记录晨曦中浩瀚的云海与群山。</p>
+                    </div>
+                </div>
+
+                <!-- Video 2 -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg group border border-slate-100 dark:border-slate-700/50">
+                    <div class="relative aspect-video bg-slate-900 cursor-pointer overflow-hidden" onclick="playVideo('https://player.bilibili.com/player.html?bvid=BV1GJ411x7vh&page=1')">
+                        <img src="https://images.unsplash.com/photo-1477959858617-67f30ac4ce78?auto=format&fit=crop&q=80&w=800" alt="航拍封面" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/30 transition-colors">
+                            <div class="w-16 h-16 rounded-full bg-white/90 dark:bg-slate-900/90 flex items-center justify-center text-amber-500 shadow-xl group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-play text-xl ml-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="text-xl font-bold">城市天际线：夜色绚烂</h3>
+                            <span class="text-xs text-slate-500"><i class="fa-regular fa-clock mr-1"></i>02:15</span>
+                        </div>
+                        <p class="text-sm text-slate-600 dark:text-slate-300">俯瞰繁华现代都市的高楼大厦与车水马龙，光影交织。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact & Footer Section -->
+    <footer id="contact" class="bg-slate-900 text-white pt-16 pb-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4 bg-gradient-to-r from-sky-400 to-indigo-400 bg-clip-text text-transparent">郑新 Zheng Xin</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        阿斯利康 高级产品专员。保持敏锐与创新，顺应时代趋势发展。欢迎交流与指导！
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">快速导航</h4>
+                    <ul class="space-y-2 text-sm text-slate-400">
+                        <li><a href="#about" class="hover:text-white transition-colors">关于我</a></li>
+                        <li><a href="#experience" class="hover:text-white transition-colors">职业履历</a></li>
+                        <li><a href="#gallery" class="hover:text-white transition-colors">精彩瞬间</a></li>
+                        <li><a href="#books" class="hover:text-white transition-colors">出版书籍</a></li>
+                        <li><a href="#aerial" class="hover:text-white transition-colors">航拍视频</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">联系方式</h4>
+                    <ul class="space-y-3 text-sm text-slate-400">
+                        <li class="flex items-center gap-3">
+                            <i class="fa-solid fa-envelope text-sky-400"></i>
+                            <span>zhengxin@example.com</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fa-solid fa-location-dot text-sky-400"></i>
+                            <span>福建省 / 福州市</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">社交平台</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-sky-600 transition-colors">
+                            <i class="fa-brands fa-weixin"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-sky-600 transition-colors">
+                            <i class="fa-brands fa-bilibili"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-sky-600 transition-colors">
+                            <i class="fa-brands fa-weibo"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-8 border-t border-slate-800 text-center text-xs text-slate-500">
+                <p>&copy; 2026 郑新 (Zheng Xin). All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Lightbox Modal for Photos -->
+    <div id="lightbox" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
+        <button onclick="closeLightbox()" class="absolute top-6 right-6 text-white text-3xl hover:text-slate-300">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="max-w-4xl max-h-[85vh] text-center">
+            <img id="lightboxImg" src="" alt="Full view" class="max-w-full max-h-[75vh] object-contain rounded-lg mx-auto shadow-2xl">
+            <p id="lightboxCaption" class="text-white mt-4 text-lg font-medium"></p>
+        </div>
+    </div>
+
+    <!-- Video Player Modal -->
+    <div id="videoModal" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
+        <button onclick="closeVideo()" class="absolute top-6 right-6 text-white text-3xl hover:text-slate-300">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="w-full max-w-4xl aspect-video rounded-xl overflow-hidden shadow-2xl">
+            <iframe id="videoIframe" class="w-full h-full" src="" title="Video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Toggle Dark/Light Mode
+        const themeToggleBtn = document.getElementById('themeToggle');
+        themeToggleBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+        });
+
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Photo Gallery Filtering
+        function filterGallery(category) {
+            const items = document.querySelectorAll('.gallery-item');
+            const tabs = document.querySelectorAll('.gallery-tab');
+
+            // Update Tab Styling
+            tabs.forEach(tab => {
+                if (tab.getAttribute('data-filter') === category) {
+                    tab.classList.add('bg-sky-600', 'text-white');
+                    tab.classList.remove('bg-slate-200', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
+                } else {
+                    tab.classList.remove('bg-sky-600', 'text-white');
+                    tab.classList.add('bg-slate-200', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
+                }
+            });
+
+            // Filter Gallery Items
+            items.forEach(item => {
+                if (category === 'all' || item.classList.contains(category)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // Lightbox Functions
+        function openLightbox(src, caption) {
+            document.getElementById('lightboxImg').src = src;
+            document.getElementById('lightboxCaption').textContent = caption;
+            document.getElementById('lightbox').classList.remove('hidden');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.add('hidden');
+        }
+
+        // Video Modal Functions
+        function playVideo(url) {
+            document.getElementById('videoIframe').src = url;
+            document.getElementById('videoModal').classList.remove('hidden');
+        }
+
+        function closeVideo() {
+            document.getElementById('videoIframe').src = '';
+            document.getElementById('videoModal').classList.add('hidden');
+        }
+
+        // Close Modals on Escape Key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeLightbox();
+                closeVideo();
+            }
+        });
+    </script>
+</body>
+</html>
