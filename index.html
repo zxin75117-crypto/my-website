@@ -112,7 +112,7 @@
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div class="inline-block p-1 bg-gradient-to-tr from-sky-400 to-indigo-600 rounded-full mb-6">
                 <img src="./images/avatar.jpg" 
-                     onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300'"
+                     onerror="this.src='./images/avatar.jpg'"
                      alt="郑新" 
                      class="w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover border-4 border-white dark:border-slate-900 shadow-xl">
             </div>
@@ -278,17 +278,17 @@
             <!-- Gallery Grid -->
             <div id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Work 1: Award Photo -->
-                <div class="gallery-item work group relative overflow-hidden rounded-2xl shadow-md cursor-pointer aspect-4/3" onclick="openLightbox('./images/award.jpg', '获得 EC 绩效卓越颁奖合影')">
-                    <img src="./images/award.jpg" onerror="this.src='https://images.unsplash.com/photo-1531545514256-b1400bc00f31?auto=format&fit=crop&q=80&w=600'" alt="个人获奖照" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="gallery-item work group relative overflow-hidden rounded-2xl shadow-md cursor-pointer aspect-4/3" onclick="openLightbox('./images/award.jpg', '2022年团队合影')">
+                    <img src="./images/award.jpg" onerror="this.src='./images/award.jpg " alt="团队合影" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                        <span class="text-xs text-amber-400 font-semibold uppercase tracking-wider">个人获奖</span>
-                        <h4 class="text-white text-lg font-bold">EC 绩效卓越颁奖时刻</h4>
+                        <span class="text-xs text-amber-400 font-semibold uppercase tracking-wider">团队合影</span>
+                        <h4 class="text-white text-lg font-bold">EC 团队合影</h4>
                     </div>
                 </div>
 
                 <!-- Work 2: Gala Hosting -->
-                <div class="gallery-item work group relative overflow-hidden rounded-2xl shadow-md cursor-pointer aspect-4/3" onclick="openLightbox('./images/host.jpg', '公司年终晚宴会议主持风采')">
-                    <img src="./images/host.jpg" onerror="this.src='https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&q=80&w=600'" alt="晚宴主持照" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="gallery-item work group relative overflow-hidden rounded-2xl shadow-md cursor-pointer aspect-4/3" onclick="openLightbox('./images/host.jpg', '2025公司年终会主持')">
+                    <img src="./images/host.jpg" onerror="this.src='./images/host.jpg'" alt="晚宴主持照" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
                         <span class="text-xs text-amber-400 font-semibold uppercase tracking-wider">会议主持</span>
                         <h4 class="text-white text-lg font-bold">晚会主持风采</h4>
@@ -296,8 +296,8 @@
                 </div>
 
                 <!-- Work 3: Team Building -->
-                <div class="gallery-item work group relative overflow-hidden rounded-2xl shadow-md cursor-pointer aspect-4/3" onclick="openLightbox('./images/team.jpg', '阿斯利康团队团建与户外拓展')">
-                    <img src="./images/team.jpg" onerror="this.src='https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=600'" alt="公司团建照" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="gallery-item work group relative overflow-hidden rounded-2xl shadow-md cursor-pointer aspect-4/3" onclick="openLightbox('./images/team.jpg', '2026年赶海一号团建照')">
+                    <img src="./images/team.jpg" onerror="this.src='./images/team.jpg'" alt="公司团建照" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
                         <span class="text-xs text-amber-400 font-semibold uppercase tracking-wider">团队合影</span>
                         <h4 class="text-white text-lg font-bold">团队拓展与团建</h4>
@@ -305,20 +305,20 @@
                 </div>
 
                 <!-- Travel 1 -->
-                <div class="gallery-item travel group relative overflow-hidden rounded-2xl shadow-md cursor-pointer aspect-4/3" onclick="openLightbox('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&q=80&w=1200', '远方旅行回忆')">
-                    <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&q=80&w=600" alt="旅行" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="gallery-item travel group relative overflow-hidden rounded-2xl shadow-md cursor-pointer aspect-4/3" onclick="openLightbox('./images/shantou.jpg', '远方旅行回忆')">
+                    <img src="./images/shantou.jpg" alt="旅行" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
                         <span class="text-xs text-sky-400 font-semibold uppercase tracking-wider">旅行足迹</span>
-                        <h4 class="text-white text-lg font-bold">山川与公路旅行</h4>
+                        <h4 class="text-white text-lg font-bold">汕头</h4>
                     </div>
                 </div>
 
                 <!-- Family 1 -->
-                <div class="gallery-item family group relative overflow-hidden rounded-2xl shadow-md cursor-pointer aspect-4/3" onclick="openLightbox('https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&q=80&w=1200', '温馨家庭时光')">
-                    <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&q=80&w=600" alt="家庭" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <div class="gallery-item family group relative overflow-hidden rounded-2xl shadow-md cursor-pointer aspect-4/3" onclick="openLightbox('./images/nanchang.jpg', '温馨家庭时光')">
+                    <img src="./images/nanchang.jpg" alt="家庭" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
                         <span class="text-xs text-emerald-400 font-semibold uppercase tracking-wider">家庭时光</span>
-                        <h4 class="text-white text-lg font-bold">户外野餐合影</h4>
+                        <h4 class="text-white text-lg font-bold">南昌</h4>
                     </div>
                 </div>
 
