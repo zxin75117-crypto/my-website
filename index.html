@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>郑新 | 阿斯利康高级产品专员</title>
-<meta name="description" content="郑新的个人主页：工作经历、精彩时刻、电子书籍与自制音乐。">
+<meta name="description" content="郑新的个人主页：工作经历、精彩时刻、原创音乐与电子书籍。">
 <style>
 /* =====================================================================
    设计令牌：颜色由 JS 根据时间写入 --sky-* / --hill-*，主题色由 data-theme 切换
@@ -220,7 +220,8 @@ h1.name span{display:inline-block}
   -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
 .tabs button{position:relative;z-index:1;padding:8px 18px;border-radius:999px;font-weight:700;font-size:.9rem;color:var(--ink-2);transition:color .25s}
 .tabs button[aria-selected="true"]{color:var(--on-ink)}
-.tabs .pill{position:absolute;z-index:0;top:4px;bottom:4px;left:0;width:0;border-radius:999px;background:var(--ink);transition:transform .35s cubic-bezier(.3,1.2,.4,1),width .35s}
+.tabs .pill{position:absolute;z-index:0;top:4px;left:0;width:0;height:calc(100% - 8px);border-radius:999px;background:var(--ink);
+  transition:transform .35s cubic-bezier(.3,1.2,.4,1),width .35s,top .3s,height .3s}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 @media (max-width:900px){.grid3{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:560px){.grid3{grid-template-columns:1fr}}
@@ -372,13 +373,6 @@ h1.name span{display:inline-block}
   .shelf-search input{width:104px}
   .shelf-top{gap:8px}
 }
-.essay{display:block;width:100%;text-align:left;padding:22px 4px;border-top:1px solid var(--line);transition:padding .3s}
-.essay:last-child{border-bottom:1px solid var(--line)}
-.essay:hover{padding-left:16px}
-.essay .m{font-size:.85rem;color:var(--ink-2);display:flex;gap:12px}
-.essay h3{font-size:1.3rem;font-weight:800;margin:4px 0}
-.essay p{color:var(--ink-2)}
-.essays{max-width:820px}
 .hidden{display:none!important}
 .modal{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(12,2,5,.66);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
 .modal.open{display:flex}
@@ -390,7 +384,7 @@ h1.name span{display:inline-block}
 .modal .x{position:absolute;top:18px;right:18px}
 
 /* =====================================================================
-   自制音乐
+   原创音乐
    ===================================================================== */
 .player{padding:clamp(20px,3vw,32px);display:grid;grid-template-columns:minmax(0,1.3fr) minmax(320px,.9fr);
   gap:clamp(22px,3.4vw,44px);align-items:center}
@@ -515,25 +509,11 @@ h1.name span{display:inline-block}
   .mini{padding:6px}
 }
 
-/* =====================================================================
-   分身展示
-   ===================================================================== */
-.socials{display:grid;grid-template-columns:1fr 1fr;column-gap:clamp(24px,5vw,72px)}
-@media (max-width:760px){.socials{grid-template-columns:1fr}}
-.soc{display:grid;grid-template-columns:48px 1fr auto;gap:16px;align-items:center;width:100%;text-align:left;padding:22px 12px;border-top:1px solid var(--line);border-radius:6px;transition:padding .3s}
-.soc:hover{padding-left:22px}
-.soc .ic{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-size:1.4rem;background:var(--panel);border:1px solid var(--line);transition:background .3s,color .3s,transform .3s}
-.soc:hover .ic{background:var(--ink);color:var(--on-ink);transform:rotate(-6deg)}
-.soc h3{font-size:1.05rem;font-weight:800;line-height:1.3}
-.soc .h{font-family:var(--serif);font-style:italic;color:var(--ink-2)}
-.soc p{font-size:.88rem;color:var(--ink-2);margin-top:2px}
-.soc .cp{display:flex;align-items:center;gap:6px;font-size:.82rem;font-weight:700;color:var(--ink-2);opacity:0;transition:opacity .25s}
-.soc:hover .cp,.soc:focus-visible .cp{opacity:1}
-@media (hover:none){.soc .cp{opacity:1}}
-.soc.end{border-bottom:1px solid var(--line)}
-@media (min-width:761px){.soc:nth-last-child(2){border-bottom:1px solid var(--line)}}
-
 footer{padding:90px 0 110px}
+.foot-mail{display:flex;align-items:center;gap:8px;margin-top:14px;font-size:.95rem}
+.foot-mail .i{width:18px;height:18px;flex:none;color:var(--accent)}
+.foot-mail a{color:var(--ink);border-bottom:1px solid var(--line);padding-bottom:1px;transition:border-color .25s,color .25s}
+.foot-mail a:hover{color:var(--accent);border-color:var(--accent)}
 .foot-in{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:32px}
 .foot-in h3{font-size:1.6rem;font-weight:900;letter-spacing:.02em}
 .foot-in p{color:var(--ink-2);font-size:.9rem}
@@ -563,6 +543,7 @@ footer{padding:90px 0 110px}
   <symbol id="i-book" viewBox="0 0 24 24"><path d="M3 5.5C5 4 8.5 4 12 6c3.5-2 7-2 9-.5V19c-2-1.5-5.500-1.500-9 .5-3.500-2-7-2-9-.5z"/><path d="M12 6v13.500"/></symbol>
   <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V5l11-2v13"/><circle cx="6.500" cy="18" r="2.500"/><circle cx="17.500" cy="16" r="2.500"/></symbol>
   <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-8l-5 4v-4H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/><path d="M8 10h8M8 13h5"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M4.5 7.5 12 13l7.5-5.5"/></symbol>
   <symbol id="i-tv" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M8 3l4 3 4-3M10 10.500l4 2-4 2z"/></symbol>
   <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></symbol>
   <symbol id="i-broadcast" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M8 8a5.700 5.700 0 0 0 0 8M16 8a5.700 5.700 0 0 1 0 8M5 5a10 10 0 0 0 0 14M19 5a10 10 0 0 1 0 14"/></symbol>
@@ -618,9 +599,8 @@ footer{padding:90px 0 110px}
     <a href="#about">首页</a>
     <a href="#experience">工作经历</a>
     <a href="#gallery">精彩时刻</a>
+    <a href="#music">原创音乐</a>
     <a href="#books">电子书籍</a>
-    <a href="#music">自制音乐</a>
-    <a href="#digital-avatars">分身展示</a>
   </nav>
   <button class="icon-btn menu-btn" id="menuBtn" aria-label="打开菜单" aria-expanded="false"><svg class="i"><use href="#i-menu"/></svg></button>
 </header>
@@ -640,9 +620,8 @@ footer{padding:90px 0 110px}
     <div class="quick">
       <a href="#experience"><svg class="i"><use href="#i-briefcase"/></svg>工作经历</a>
       <a href="#gallery"><svg class="i"><use href="#i-camera"/></svg>精彩时刻</a>
+      <a href="#music"><svg class="i"><use href="#i-music"/></svg>原创音乐</a>
       <a href="#books"><svg class="i"><use href="#i-book"/></svg>电子书籍</a>
-      <a href="#music"><svg class="i"><use href="#i-music"/></svg>自制音乐</a>
-      <a href="#digital-avatars"><svg class="i"><use href="#i-users"/></svg>分身展示</a>
     </div>
   </div>
   <a href="#experience" class="scroll-cue" aria-label="向下滚动"><span>向下</span><svg class="i"><use href="#i-chev-d"/></svg></a>
@@ -720,49 +699,11 @@ footer{padding:90px 0 110px}
   </div>
 </section>
 
-<!-- ============ 电子书籍 ============ -->
-<section id="books">
-  <div class="wrap">
-    <div class="sec-head">
-      <h2>电子书籍</h2>
-      <p>沉淀阅读与专业思考。书柜可以左右拖动旋转，点击封面查看简介并下载。</p>
-    </div>
-    <div class="tabs" id="bTabs" role="tablist" aria-label="电子书籍分类">
-      <span class="pill"></span>
-      <button role="tab" aria-selected="true" data-t="ebooks">全套电子书</button>
-      <button role="tab" aria-selected="false" data-t="essays">读后感与文章</button>
-    </div>
-    <div class="books" id="bookGrid">
-      <div class="shelf" id="shelf">
-        <div class="shelf-top">
-          <span class="shelf-count" id="shCount">正在读取书架…</span>
-          <label class="shelf-search">
-            <svg class="i"><use href="#i-search"/></svg>
-            <input id="shSearch" type="search" placeholder="搜索书名或作者" aria-label="搜索电子书">
-          </label>
-        </div>
-        <div class="shelf-stage" id="shStage" tabindex="0" role="listbox" aria-label="3D 电子书书柜：左右拖动旋转，方向键切换">
-          <div class="ring" id="shRing"></div>
-          <div class="shelf-empty" id="shEmpty">书架还是空的，把 EPUB 放进 E-book 文件夹，刷新页面就会出现在这里。</div>
-          <div class="shelf-hint" id="shHint"><svg class="i"><use href="#i-chev-l"/></svg>拖动旋转 · 点击查看<svg class="i"><use href="#i-chev-r"/></svg></div>
-        </div>
-        <div class="shelf-ctrl">
-          <button class="icon-btn" id="shPrev" aria-label="上一本"><svg class="i"><use href="#i-chev-l"/></svg></button>
-          <button class="spin-btn" id="shSpin" aria-pressed="true"><svg class="i" id="shSpinIcon"><use href="#i-pause"/></svg><span id="shSpinText">自动旋转</span></button>
-          <button class="icon-btn" id="shNext" aria-label="下一本"><svg class="i"><use href="#i-chev-r"/></svg></button>
-        </div>
-      </div>
-      <div class="shelf-info panel" id="shInfo"></div>
-    </div>
-    <div class="essays hidden" id="essayList"></div>
-  </div>
-</section>
-
-<!-- ============ 自制音乐 ============ -->
+<!-- ============ 原创音乐 ============ -->
 <section id="music">
   <div class="wrap">
     <div class="sec-head">
-      <h2>自制音乐</h2>
+      <h2>原创音乐</h2>
       <p>工作之余的原创创作。曲目会自动同步，右侧列表可以搜索；右下角的小播放器会一直跟着你。</p>
     </div>
     <div class="panel player" id="player">
@@ -805,14 +746,35 @@ footer{padding:90px 0 110px}
   </div>
 </section>
 
-<!-- ============ 分身展示 ============ -->
-<section id="digital-avatars">
+<!-- ============ 电子书籍（放最后） ============ -->
+<section id="books">
   <div class="wrap">
     <div class="sec-head">
-      <h2>分身展示</h2>
-      <p>欢迎在各大社交平台关注我。点击任意一行，可以复制账号。</p>
+      <h2>电子书籍</h2>
+      <p>沉淀阅读与专业思考。书柜可以左右拖动旋转，点击封面查看简介并下载。</p>
     </div>
-    <div class="socials" id="socials"></div>
+    <div class="books" id="bookGrid">
+      <div class="shelf" id="shelf">
+        <div class="shelf-top">
+          <span class="shelf-count" id="shCount">正在读取书架…</span>
+          <label class="shelf-search">
+            <svg class="i"><use href="#i-search"/></svg>
+            <input id="shSearch" type="search" placeholder="搜索书名或作者" aria-label="搜索电子书">
+          </label>
+        </div>
+        <div class="shelf-stage" id="shStage" tabindex="0" role="listbox" aria-label="3D 电子书书柜：左右拖动旋转，方向键切换">
+          <div class="ring" id="shRing"></div>
+          <div class="shelf-empty" id="shEmpty">书架还是空的，把 EPUB 放进 E-book 文件夹，刷新页面就会出现在这里。</div>
+          <div class="shelf-hint" id="shHint"><svg class="i"><use href="#i-chev-l"/></svg>拖动旋转 · 点击查看<svg class="i"><use href="#i-chev-r"/></svg></div>
+        </div>
+        <div class="shelf-ctrl">
+          <button class="icon-btn" id="shPrev" aria-label="上一本"><svg class="i"><use href="#i-chev-l"/></svg></button>
+          <button class="spin-btn" id="shSpin" aria-pressed="true"><svg class="i" id="shSpinIcon"><use href="#i-pause"/></svg><span id="shSpinText">自动旋转</span></button>
+          <button class="icon-btn" id="shNext" aria-label="下一本"><svg class="i"><use href="#i-chev-r"/></svg></button>
+        </div>
+      </div>
+      <div class="shelf-info panel" id="shInfo"></div>
+    </div>
   </div>
 </section>
 </main>
@@ -823,6 +785,7 @@ footer{padding:90px 0 110px}
       <div>
         <h3>郑新 · Zheng Xin</h3>
         <p>阿斯利康 高级产品专员 · 拥抱创新，顺势而为</p>
+        <p class="foot-mail"><svg class="i"><use href="#i-mail"/></svg><a href="mailto:zxin75117@gmail.com">zxin75117@gmail.com</a></p>
         <small>&copy; 2026 郑新 (Zheng Xin). All rights reserved.</small>
       </div>
       <a class="btn ghost" href="#about"><svg class="i"><use href="#i-up"/></svg>回到顶部</a>
@@ -850,7 +813,7 @@ footer{padding:90px 0 110px}
 <!-- 悬浮迷你播放器 -->
 <div class="panel mini" id="mini">
   <div class="disc"><svg class="i"><use href="#i-music"/></svg></div>
-  <a class="txt" href="#music"><b id="miniTitle">自制音乐</b><span id="miniState">点击播放</span></a>
+  <a class="txt" href="#music"><b id="miniTitle">原创音乐</b><span id="miniState">点击播放</span></a>
   <button class="go" id="miniPlay" aria-label="播放"><svg class="i solid" id="miniIcon"><use href="#i-play"/></svg></button>
 </div>
 
@@ -917,13 +880,6 @@ const BOOK_INFO = [
   { file:'以日为鉴 衰退时代生存指南 (分析师Boden) .epub', title:'以日为鉴', author:'分析师Boden', kind:'经济',
     desc:'复盘日本泡沫破裂后的社会与经济，讨论衰退时代普通人的选择。' },
 ];
-const ESSAYS = [
-  { kind:'读后感', date:'2025-10-12', title:'读《穷查理宝典》：关于医学沟通的多元思维模型', brief:'如何运用复利效应与逆向思维，提升产品学术推广过程中的沟通深度与临床信任感？',
-    body:'在医药产品学术推介中，单一专业维度往往无法解决复杂的临床沟通问题。查理·芒格提倡的‘多元思维模型’为我们提供了新的解题思路：结合临床医学、行为心理学与经济学考量，能让学术信息的传递更加精准且有温度。' },
-  { kind:'深度研读', date:'2025-08-20', title:'精读《置身事内》：中国整体发展与医药健康产业思考', brief:'结合国内医药市场宏观政策变化，谈谈医疗产品专员如何做到顺势而为。',
-    body:'通过阅读兰小欢教授的《置身事内》，深刻理解了地方政府与经济发展之间的互动逻辑，也让我更加明确了医药创新在保障国民健康与推动产业升级中的核心战略价值。' },
-];
-
 // ---- 背景照片（可选）：想用自己的航拍照片当背景，把路径填进来；留空则使用自动生成的天空 ----
 // 例：{ dawn:'images/bg/dawn.jpg', day:'images/bg/day.jpg', dusk:'images/bg/dusk.jpg', night:'images/bg/night.jpg' }
 const BG_IMAGES = { dawn:'', day:'', dusk:'', night:'' };
@@ -952,16 +908,6 @@ const PHOTOS = [
   { cat:'旅行', srcs:['./photos/旅行/full/2025年汕头旅社合影.jpg'],   title:'2025年汕头旅社合影' },
   { cat:'旅行', srcs:['./photos/旅行/full/2026年南昌美术馆合影.jpg'], title:'2026年南昌美术馆合影' },
   { cat:'风景', srcs:['./photos/风景/full/鼓山观景台.jpg'],           title:'鼓山观景台' },
-];
-
-/* ---- 社交账号 ---- */
-const SOCIALS = [
-  { icon:'chat',      name:'微信工作号',     handle:'@ZhengXin_Med',  desc:'学术交流、医药产品探讨与业务合作联系通道。' },
-  { icon:'tv',        name:'哔哩哔哩',       handle:'@郑新-航拍视界', desc:'发布高画质无人机航拍视频与音乐视频作品。' },
-  { icon:'bookmark',  name:'小红书',         handle:'@郑新_LifeLog',  desc:'分享职场装备、阅读书单、旅行攻略与生活Vlog。' },
-  { icon:'broadcast', name:'新浪微博',       handle:'@郑新ZhengXin',  desc:'记录日常感悟、行业即时动态与实时生活随笔。' },
-  { icon:'video',     name:'抖音',           handle:'@树荫沾水',     desc:'日常分享。' },
-  { icon:'bulb',      name:'知乎',           handle:'@郑新-医药洞察', desc:'撰写医药科普回答、读书笔记与职业成长长文。' },
 ];
 
 /* =====================================================================
@@ -1327,7 +1273,13 @@ function tilt(el, max=6){
 /* 滑动指示条的分段选项卡 */
 function tabs(box, onSelect){
   const pill = $('.pill', box), btns = $$('button', box);
-  const move = b => { pill.style.width = b.offsetWidth+'px'; pill.style.transform = `translateX(${b.offsetLeft}px)`; };
+  const move = b => {
+    if (!b) return;
+    pill.style.width  = b.offsetWidth + 'px';
+    pill.style.height = b.offsetHeight + 'px';
+    pill.style.top    = b.offsetTop + 'px';                 // 手机上标签会换行，跟着高度走才不会盖住两行
+    pill.style.transform = `translateX(${b.offsetLeft}px)`;
+  };
   btns.forEach(b => b.addEventListener('click', () => {
     btns.forEach(x => x.setAttribute('aria-selected', x===b)); move(b); onSelect(b);
   }));
@@ -1861,22 +1813,6 @@ function tabs(box, onSelect){
   const reflow = () => { measure(); paint(); };
   addEventListener('resize', () => { clearTimeout(reflow.t); reflow.t = setTimeout(reflow, 120); });
 
-  /* ---- 读后感 ---- */
-  $('#essayList').innerHTML = ESSAYS.map((e,i) => `
-    <button class="essay" data-e="${i}"><div class="m"><b>${esc(e.kind)}</b><span class="serif">${esc(e.date)}</span></div><h3>${esc(e.title)}</h3><p>${esc(e.brief)}</p></button>`).join('');
-  $$('#essayList .essay').forEach(el => el.addEventListener('click', () => {
-    const e = ESSAYS[+el.dataset.e];
-    $('#mTitle').textContent = e.title; $('#mBody').textContent = e.body; $('#mFoot').innerHTML = '';
-    modal.classList.add('open'); document.body.style.overflow = 'hidden';
-  }));
-
-  tabs($('#bTabs'), b => {
-    const eb = b.dataset.t === 'ebooks';
-    $('#bookGrid').classList.toggle('hidden', !eb);
-    $('#essayList').classList.toggle('hidden', eb);
-    if (eb) reflow();
-  });
-
   /* ---- 数据更新：来自自动扫描 ---- */
   document.addEventListener('library:books', e => {
     const list = e.detail || [];
@@ -1901,7 +1837,7 @@ function tabs(box, onSelect){
 })();
 
 /* =====================================================================
-   六、自制音乐（真实播放）
+   六、原创音乐（真实播放）
    ===================================================================== */
 (function music(){
   const audio = new Audio(); audio.preload = 'auto';
@@ -2032,7 +1968,7 @@ function tabs(box, onSelect){
     });
     scrollToCurrent();
     $('#tDur').textContent = fmt(audio.duration || t.dur);
-    if ('mediaSession' in navigator) navigator.mediaSession.metadata = new MediaMetadata({ title:t.title, artist:'郑新', album:'自制音乐' });
+    if ('mediaSession' in navigator) navigator.mediaSession.metadata = new MediaMetadata({ title:t.title, artist:'郑新', album:'原创音乐' });
   }
 
   async function load(i){
@@ -2563,23 +2499,6 @@ function tabs(box, onSelect){
   setTimeout(sync, 80);
 })();
 
-/* =====================================================================
-   八、分身展示：点击复制
-   ===================================================================== */
-(function socials(){
-  $('#socials').innerHTML = SOCIALS.map((s,i) => `
-    <button class="soc" data-spot data-i="${i}">
-      <span class="ic">${ic(s.icon)}</span>
-      <span><h3>${esc(s.name)}</h3><span class="h">${esc(s.handle)}</span><p>${esc(s.desc)}</p></span>
-      <span class="cp">${ic('copy')}复制账号</span>
-    </button>`).join('');
-  $$('#socials .soc').forEach(el => el.addEventListener('click', async () => {
-    const s = SOCIALS[+el.dataset.i];
-    try { await navigator.clipboard.writeText(s.handle); }
-    catch(e){ const t=document.createElement('textarea'); t.value=s.handle; document.body.appendChild(t); t.select(); try{document.execCommand('copy')}catch(_){} t.remove(); }
-    toast(`已复制 ${s.handle}`);
-  }));
-})();
 </script>
 </body>
 </html>
