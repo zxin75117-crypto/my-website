@@ -121,13 +121,12 @@ input[type=range]::-moz-range-thumb{width:12px;height:12px;border-radius:50%;bac
 .hero{min-height:100svh;padding:0;display:flex;align-items:center;position:relative;overflow:hidden;isolation:isolate}
 .hero .wrap{padding:120px 0 18vh;position:relative;z-index:2}
 
-/* 首屏背景视频：电脑端循环播放，手机/省流量/减少动态效果时只显示海报首帧 */
-.hero-video{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;object-position:50% 42%;
-  pointer-events:none;opacity:.92;
-  -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 54%,rgba(0,0,0,.5) 80%,transparent 100%);
-  mask-image:linear-gradient(180deg,#000 0%,#000 54%,rgba(0,0,0,.5) 80%,transparent 100%)}
+/* 首屏线条动画：螺旋 DNA，14 秒循环一次「拧紧 → 断裂 → 接上」 */
+.hero-lines{position:absolute;inset:0;z-index:0;width:100%;height:100%;display:block;pointer-events:none;
+  -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 72%,rgba(0,0,0,.5) 90%,transparent 100%);
+  mask-image:linear-gradient(180deg,#000 0%,#000 72%,rgba(0,0,0,.5) 90%,transparent 100%)}
 .hero::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:linear-gradient(180deg,rgba(20,4,8,.76) 0%,rgba(22,5,10,.38) 26%,rgba(22,5,10,.12) 50%,rgba(24,5,10,.46) 100%)}
+  background:linear-gradient(180deg,rgba(20,4,8,.62) 0%,rgba(22,5,10,.26) 24%,rgba(22,5,10,.06) 52%,rgba(24,5,10,.34) 100%)}
 .scroll-cue{z-index:2}
 .hello{display:flex;align-items:center;gap:14px;flex-wrap:wrap;color:var(--ink-2);font-weight:600;margin-bottom:20px}
 .hello .clock{font-family:var(--serif);font-style:italic;font-size:1.25rem;color:var(--ink);font-variant-numeric:tabular-nums}
@@ -629,7 +628,7 @@ footer{padding:90px 0 110px}
 <main>
 <!-- ============ Hero ============ -->
 <section id="about" class="hero">
-  <video class="hero-video" id="heroVideo" poster="./video/hero-poster.jpg" muted loop playsinline disablepictureinpicture aria-hidden="true" tabindex="-1"></video>
+  <canvas class="hero-lines" id="heroLines" aria-hidden="true"></canvas>
   <div class="wrap">
     <p class="hello"><span id="greet">你好</span><span class="sep"></span><span class="clock" id="clock">--:--</span><span class="preview-tag" id="previewTag" hidden>时间预览</span></p>
     <div class="name-row">
@@ -1099,38 +1098,162 @@ addEventListener('resize', () => renderSky(curMin));
 })();
 
 /* =====================================================================
-   二、首屏背景视频
-   —— 电脑端循环播放；手机、省流量、系统「减少动态效果」都只留海报首帧
+   二、首屏线条动画：螺旋 DNA
+   —— 两条骨架 + 碱基对横档，14 秒一个循环：拧紧 → 断成 7 段飘散 → 重新接上
+   —— 纯 canvas 绘制，没有视频文件；离开首屏或切后台就停下，减少动态效果只画静帧
    ===================================================================== */
-(function heroVideo(){
-  const v = $('#heroVideo');
-  if (!v) return;
-  const wide = matchMedia('(min-width: 861px)');
+(function heroLines(){
+  const cv = document.getElementById('heroLines');
+  if (!cv) return;
+  const ctx = cv.getContext('2d');
   const calm = matchMedia('(prefers-reduced-motion: reduce)');
-  const conn = navigator.connection || {};
-  const stingy = () => !!(conn.saveData || /2g/.test(conn.effectiveType || ''));
-  const allowed = () => wide.matches && !calm.matches && !stingy();
-  let attached = false, armed = false;
+  const TAU = Math.PI * 2, T = 14000, K = 7, PERSP = .66;
+  let TURNS = 4;
+  const S1 = [255,178,92], S2 = [255,106,122], PALE = [255,226,196];
+  const BUCKETS = 8;
 
+  let W = 0, H = 0, M = 34, N = K * M + 1, R0 = 110, gain = 1;
+  let raf = 0, t0 = 0, lastP = 0, inView = true;
+  let ax = 0, ay = 0, ex = 0, ey = 0, ux = 1, uy = 0;      // 轴线起点/终点/方向
+  let P1X, P1Y, P2X, P2Y, D1;                              // 每帧的骨架点
+  let fade = null;
+
+  function size(){
+    const r = cv.getBoundingClientRect();
+    W = Math.max(1, Math.round(r.width));
+    H = Math.max(1, Math.round(r.height));
+    const dpr = Math.min(1.6, window.devicePixelRatio || 1);
+    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    M = Math.max(16, Math.min(42, Math.round(W / 28)));
+    N = K * M + 1;
+    const wide = W >= 720;
+    if (wide){ ax = -.04 * W; ay = .70 * H; ex = 1.04 * W; ey = .34 * H; TURNS = 4; }
+    else     { ax =  .02 * W; ay = .78 * H; ex = 1.02 * W; ey = .16 * H; TURNS = 2.2; }
+    const len = Math.hypot(ex - ax, ey - ay) || 1;
+    ux = (ex - ax) / len; uy = (ey - ay) / len;
+    R0 = Math.max(34, Math.min(175, len / TURNS * .33));      // 半径跟着螺距走，窄屏才不会挤成乱麻
+    gain = wide ? 1 : .72;                                    // 手机屏幕小，再压暗一点
+
+    P1X = new Float32Array(N); P1Y = new Float32Array(N);
+    P2X = new Float32Array(N); P2Y = new Float32Array(N);
+    D1  = new Float32Array(N);
+
+    fade = ctx.createLinearGradient(0, 0, W, 0);            // 两端淡出
+    fade.addColorStop(0, 'rgba(0,0,0,1)');
+    fade.addColorStop(.10, 'rgba(0,0,0,0)');
+    fade.addColorStop(.90, 'rgba(0,0,0,0)');
+    fade.addColorStop(1, 'rgba(0,0,0,1)');
+  }
+
+  const mix = (a, b, t) => 'rgb(' + Math.round(a[0] + (b[0] - a[0]) * t) + ','
+                                 + Math.round(a[1] + (b[1] - a[1]) * t) + ','
+                                 + Math.round(a[2] + (b[2] - a[2]) * t) + ')';
+
+  function draw(p){
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+    ctx.clearRect(0, 0, W, H);
+    if (!N) return;
+
+    const nx = -uy, ny = ux;                                 // 轴线法向
+    const amt = .5 - .5 * Math.cos(TAU * p);                 // 0 = 完整，1 = 散开
+    for (let i = 0; i < N; i++){
+      const u = i / (N - 1);
+      const env = Math.pow(Math.sin(Math.PI * u), .42);      // 两端收细
+      const th = TAU * (TURNS * u + p);
+      const c = Math.cos(th) * R0 * env, s = Math.sin(th) * R0 * env * PERSP;
+      const cx = ax + (ex - ax) * u, cy = ay + (ey - ay) * u;
+      P1X[i] = cx + c * nx + s * ux; P1Y[i] = cy + c * ny + s * uy;
+      P2X[i] = cx - c * nx - s * ux; P2Y[i] = cy - c * ny - s * uy;
+      D1[i]  = Math.sin(th);
+    }
+
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    /* 按深度分桶，一桶一笔：整屏只用 24 次 stroke，手机上也不掉帧 */
+    const pa = [], pb = [], pr = [];
+    for (let q = 0; q < BUCKETS; q++){ pa.push(new Path2D()); pb.push(new Path2D()); pr.push(new Path2D()); }
+    const q0 = [0, 0], q1 = [0, 0], q2 = [0, 0], q3 = [0, 0];
+
+    for (let k = 0; k < K; k++){
+      const ph = (k * .618) % 1;
+      const ox = amt * .035 * W * Math.cos(TAU * (p + ph));
+      const oy = amt * .055 * H * Math.sin(TAU * (2 * p + ph * 1.3));
+      const ang = amt * .38 * Math.sin(TAU * (p + ph * .7));
+      const ca = Math.cos(ang), sa = Math.sin(ang);
+      const kx = ax + (ex - ax) * ((k + .5) / K);
+      const ky = ay + (ey - ay) * ((k + .5) / K);
+      const tf = (x, y, out) => {
+        const dx = x - kx, dy = y - ky;
+        out[0] = kx + dx * ca - dy * sa + ox;
+        out[1] = ky + dx * sa + dy * ca + oy;
+      };
+      const i0 = k * M, i1 = (k + 1) * M;
+      for (let i = i0; i < i1; i++){
+        const d01 = (D1[i] + 1) / 2, qa = Math.min(BUCKETS - 1, d01 * BUCKETS | 0);
+        tf(P1X[i], P1Y[i], q0); tf(P1X[i + 1], P1Y[i + 1], q1);
+        pa[qa].moveTo(q0[0], q0[1]); pa[qa].lineTo(q1[0], q1[1]);
+        const qb = Math.min(BUCKETS - 1, (1 - d01) * BUCKETS | 0);
+        tf(P2X[i], P2Y[i], q2); tf(P2X[i + 1], P2Y[i + 1], q3);
+        pb[qb].moveTo(q2[0], q2[1]); pb[qb].lineTo(q3[0], q3[1]);
+        if (i % 4 === 0){                                    // 碱基对横档，取靠前那一端
+          const qr = Math.min(BUCKETS - 1, Math.max(d01, 1 - d01) * BUCKETS | 0);
+          pr[qr].moveTo(q0[0], q0[1]); pr[qr].lineTo(q2[0], q2[1]);
+        }
+      }
+    }
+
+    for (let q = 0; q < BUCKETS; q++){
+      const d01 = (q + .5) / BUCKETS;
+      const lw = .8 + 1.5 * d01, al = (.14 + .74 * d01) * gain;
+      strokePath(pa[q], mix(S1, PALE, .12 * d01), lw, al);
+      strokePath(pb[q], mix(S2, PALE, .12 * d01), lw, al);
+      strokePath(pr[q], 'rgb(255,214,170)', .5 + .5 * d01, (.035 + .13 * d01) * gain, true);
+    }
+
+    ctx.globalAlpha = 1;
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.fillStyle = fade; ctx.fillRect(0, 0, W, H);
+    ctx.globalCompositeOperation = 'source-over';
+  }
+
+  function strokePath(path, color, lw, alpha, thin){
+    ctx.strokeStyle = color;
+    ctx.globalAlpha = alpha * .10; ctx.lineWidth = lw * (thin ? 2 : 4.5);
+    ctx.stroke(path);                                        // 一层淡辉光
+    ctx.globalAlpha = alpha; ctx.lineWidth = lw;
+    ctx.stroke(path);
+  }
+
+  function tick(ts){
+    if (!t0) t0 = ts - lastP * T;                            // 从上次停下的地方接着走
+    const p = (((ts - t0) / T) % 1 + 1) % 1;
+    lastP = p;
+    draw(p);
+    raf = requestAnimationFrame(tick);
+  }
   function play(){
-    if (!allowed()){ if (!v.paused) v.pause(); return; }
-    if (!armed) return;                          // 等页面空闲了再开始下载，别跟首屏内容抢带宽
-    if (!attached){ attached = true; v.src = './video/hero.mp4'; v.load(); }
-    const p = v.play();
-    if (p && p.then) p.catch(() => {});          // 自动播放被拦就静静保留海报
+    if (raf || calm.matches || !inView) return;
+    t0 = 0; raf = requestAnimationFrame(tick);
   }
-  const pause = () => { if (!v.paused) v.pause(); };
-  const arm = () => { armed = true; play(); };
+  function stop(){ if (raf) cancelAnimationFrame(raf); raf = 0; }
 
-  if ('requestIdleCallback' in window) requestIdleCallback(arm, { timeout: 2500 });
-  else setTimeout(arm, 700);
-  wide.addEventListener('change', play);
-  calm.addEventListener('change', play);
-  document.addEventListener('visibilitychange', () => document.hidden ? pause() : play());
-  if ('IntersectionObserver' in window){
-    new IntersectionObserver(list => list.forEach(e => e.isIntersecting ? play() : pause()), { threshold: 0.08 })
-      .observe($('#about'));
+  size();
+  draw(0);
+  if (!calm.matches){
+    if ('IntersectionObserver' in window){
+      new IntersectionObserver(list => list.forEach(e => {
+        inView = e.isIntersecting;
+        inView ? play() : stop();
+      }), { threshold: .05 }).observe(document.getElementById('about'));
+    } else play();
   }
+
+  document.addEventListener('visibilitychange', () => document.hidden ? stop() : (inView && play()));
+  calm.addEventListener('change', () => { if (calm.matches){ stop(); draw(0); } else play(); });
+  let rz = 0;
+  addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => { size(); if (!raf) draw(lastP); }, 160); });
 })();
 
 /* ---- 飘浮的火星微粒 ---- */
