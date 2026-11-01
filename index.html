@@ -1258,11 +1258,14 @@ function tabs(box, onSelect){
   let shots = [];
   let currentFilter = 'all';
 
-  /* 缩略图 / 大图目录：photo/thumbs/x.jpg、photo/full/x.jpg，没有就回退原图 */
+  /* 缩略图 / 大图目录：优先 <分类>/thumbs/、<分类>/full/，没有就回退原图 */
   const variant = (src, kind) => {
     if (/^[a-z]+:\/\//i.test(src || '')) return src;
-    const i = (src || '').lastIndexOf('/');
-    return i < 0 ? src : `${src.slice(0, i)}/${kind}/${src.slice(i + 1)}`;
+    const i = src.lastIndexOf('/');
+    if (i < 0) return src;
+    const dir = src.slice(0, i), file = src.slice(i + 1);
+    const m = dir.match(/^(.*)\/(full|thumbs)$/i);
+    return m ? `${m[1]}/${kind}/${file}` : `${dir}/${kind}/${file}`;
   };
 
   function applyFilter(f){
@@ -2052,14 +2055,25 @@ function tabs(box, onSelect){
     if (photoName){
       try {
         const pd = await listDir(repo, photoName);
-        const subs = pd.filter(d => d.dir && !/^(thumbs|full|\.)/i.test(d.name)).sort(byName);
+        const CAT_ORDER = ['职场','旅行','家庭'];
+        const subs = pd.filter(d => d.dir && !/^(thumbs|full|\.)/i.test(d.name))
+          .sort((a, b) => {
+            const ia = CAT_ORDER.indexOf(a.name), ib = CAT_ORDER.indexOf(b.name);
+            return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib) || byName(a, b);
+          });
         for (const s of subs){
-          const files = await listDir(repo, photoName + '/' + s.name).catch(() => []);
-          files.filter(f => !f.dir && !SKIP.test(f.name) && IMG_RE.test(f.name)).sort(byName).forEach(f =>
-            photos.push({
-              title: prettyPhoto(f.name), cat: s.name,
-              src: photoName + '/' + encodeURIComponent(s.name) + '/' + encodeURIComponent(f.name),
-            }));
+          const kids = await listDir(repo, photoName + '/' + s.name).catch(() => []);
+          // 两种放法都支持：图片直接放在分类目录里，或放在 full/、thumbs/ 子目录里
+          const subDirs = kids.filter(k => k.dir && /^(full|thumbs)$/i.test(k.name))
+            .sort((a, b) => (a.name.toLowerCase() === 'full' ? -1 : 1));
+          for (const src of subDirs.concat([null])) {
+            const files = src ? await listDir(repo, photoName + '/' + s.name + '/' + src.name).catch(() => []) : kids;
+            const imgs = files.filter(f => !f.dir && !SKIP.test(f.name) && IMG_RE.test(f.name)).sort(byName);
+            if (!imgs.length) continue;
+            const base = [photoName, s.name].concat(src ? [src.name] : []).map(encodeURIComponent).join('/');
+            imgs.forEach(f => photos.push({ title: prettyPhoto(f.name), cat: s.name, src: base + '/' + encodeURIComponent(f.name) }));
+            break;
+          }
         }
         pd.filter(f => !f.dir && !SKIP.test(f.name) && IMG_RE.test(f.name)).sort(byName).forEach(f =>
           photos.push({ title: prettyPhoto(f.name), cat: '', src: photoName + '/' + encodeURIComponent(f.name) }));
