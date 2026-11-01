@@ -216,7 +216,7 @@ h1.name span{display:inline-block}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 @media (max-width:900px){.grid3{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:560px){.grid3{grid-template-columns:1fr}}
-.shot{position:relative;aspect-ratio:4/3;border-radius:22px;overflow:hidden;cursor:zoom-in;background:var(--panel);border:1px solid var(--line);
+.shot{position:relative;aspect-ratio:4/3;border-radius:22px;overflow:hidden;cursor:pointer;background:var(--panel);border:1px solid var(--line);
   transition:opacity .3s,transform .3s;transform-style:preserve-3d;will-change:transform}
 .shot.hide{opacity:0;transform:scale(.94)}
 .shot img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
@@ -225,13 +225,37 @@ h1.name span{display:inline-block}
   background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 25%,transparent),color-mix(in srgb,var(--sky-top) 25%,transparent))}
 .shot .ph .i{font-size:2rem}
 .shot.failed .ph{display:flex}
-.shot .cap{position:absolute;inset:auto 0 0 0;padding:44px 18px 16px;color:#fff;background:linear-gradient(to top,rgba(12,2,5,.82),transparent);
-  transform:translateY(30%);opacity:0;transition:transform .4s,opacity .4s}
-.shot:hover .cap,.shot:focus-visible .cap{transform:none;opacity:1}
-.shot .cap span{display:flex;align-items:center;gap:6px;font-size:.8rem;font-weight:700;opacity:.85}
-.shot .cap b{display:block;font-size:1.05rem;margin-top:2px}
-.shot.failed .cap{display:none}
-@media (hover:none){.shot .cap{transform:none;opacity:1}}
+.shot .cap{position:absolute;inset:auto 0 0 0;padding:38px 18px 15px;color:#fff;
+  background:linear-gradient(to top,rgba(12,2,5,.82),rgba(12,2,5,.32) 58%,transparent)}
+.shot .cap b{display:block;font-size:.98rem;font-weight:700;letter-spacing:.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* 查看大图按钮 */
+.shot .zoom{position:absolute;top:12px;left:12px;z-index:4;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
+  color:#fff;background:rgba(12,2,5,.45);border:1px solid rgba(255,255,255,.16);cursor:zoom-in;
+  opacity:0;transform:translateY(-4px);transition:opacity .25s,transform .25s,background .2s;
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.shot:hover .zoom,.shot:focus-within .zoom{opacity:1;transform:none}
+.shot .zoom:hover{background:rgba(12,2,5,.72)}
+@media (hover:none){.shot .zoom{opacity:.9;transform:none}}
+
+/* 点赞后右上角的小心形 */
+.like-badge{position:absolute;top:12px;right:12px;z-index:4;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;
+  font-size:.95rem;line-height:1;color:#ff9db2;background:rgba(12,2,5,.45);border:1px solid rgba(255,120,150,.35);pointer-events:none;
+  opacity:0;transform:scale(.5);transition:opacity .35s,transform .35s cubic-bezier(.3,1.6,.5,1);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.shot.liked .like-badge{opacity:1;transform:none}
+
+/* 点赞时飞出的爱心 */
+.heart-fly{position:absolute;left:50%;top:50%;z-index:6;pointer-events:none;line-height:1;
+  color:rgba(255,214,224,.8);filter:blur(1px);
+  text-shadow:0 0 26px rgba(255,90,130,.75),0 0 70px rgba(255,50,100,.42);
+  animation:heartFly .95s cubic-bezier(.22,.8,.3,1) forwards;will-change:transform,opacity}
+@keyframes heartFly{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.25) rotate(-10deg)}
+  20%{opacity:.9;transform:translate(-50%,-50%) scale(1.14) rotate(-2deg)}
+  42%{opacity:.85;transform:translate(-50%,-50%) scale(.96) rotate(0)}
+  100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(.13)}
+}
 
 .lightbox{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(12,2,5,.9);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
 .lightbox.open{display:flex}
@@ -246,25 +270,100 @@ h1.name span{display:inline-block}
 /* =====================================================================
    电子书籍
    ===================================================================== */
-.books{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(24px,4vw,56px)}
-@media (max-width:860px){.books{grid-template-columns:1fr 1fr}}
-@media (max-width:560px){.books{grid-template-columns:1fr}}
-.book{display:flex;flex-direction:column}
-.cover-stage{perspective:900px;padding:8px 0 22px}
-.cover{position:relative;aspect-ratio:3/4;width:min(240px,100%);border-radius:4px 12px 12px 4px;padding:22px 20px 20px 30px;color:#fff;display:flex;flex-direction:column;justify-content:space-between;
-  background:linear-gradient(150deg,hsl(var(--h) 62% 46%),hsl(calc(var(--h) + 40) 58% 30%));
-  box-shadow:-6px 10px 0 -2px rgba(0,0,0,.12),0 26px 40px -14px rgba(0,0,0,.45);transform:rotateY(-14deg);transform-origin:left center;transition:transform .5s cubic-bezier(.2,.8,.2,1);overflow:hidden}
-.cover::before{content:"";position:absolute;left:0;top:0;bottom:0;width:14px;background:linear-gradient(to right,rgba(0,0,0,.28),rgba(255,255,255,.12) 60%,transparent)}
-.cover::after{content:"";position:absolute;right:-30%;top:-18%;width:80%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.22),transparent 65%)}
-.cover:hover{transform:rotateY(-2deg) translateY(-6px)}
-.cover .c-t{font-size:1.28rem;font-weight:800;line-height:1.3;position:relative;z-index:1}
-.cover .c-a{font-family:var(--serif);font-style:italic;position:relative;z-index:1;opacity:.9}
-.cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2}
-.book .kind{font-size:.82rem;font-weight:700;color:var(--ink-2)}
-.book h3{font-size:1.2rem;line-height:1.4;font-weight:800;margin:4px 0 4px}
-.book .meta{font-size:.85rem;color:var(--ink-2);margin-bottom:8px}
-.book p{color:var(--ink-2);font-size:.95rem;flex:1}
-.book .btn{margin-top:16px;align-self:flex-start}
+.books{display:block}
+.shelf{position:relative;padding:16px clamp(12px,2.6vw,24px) 10px;border-radius:30px;overflow:hidden;
+  background:radial-gradient(120% 90% at 50% -12%,color-mix(in srgb,var(--accent) 14%,transparent),transparent 62%),var(--panel);
+  border:1px solid var(--line);box-shadow:var(--shadow);
+  -webkit-backdrop-filter:blur(20px) saturate(1.4);backdrop-filter:blur(20px) saturate(1.4)}
+.shelf::after{content:"";position:absolute;left:50%;top:56%;width:min(820px,96%);height:min(340px,64%);transform:translateX(-50%);
+  background:radial-gradient(ellipse at 50% 58%,color-mix(in srgb,var(--accent) 15%,transparent),transparent 66%);
+  pointer-events:none;filter:blur(12px)}
+.shelf-top{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:0 4px 2px}
+.shelf-count{font-size:.85rem;color:var(--ink-2);font-weight:600}
+.shelf-count b{color:var(--ink);font-family:var(--serif);font-style:italic;font-size:1.05rem;font-variant-numeric:tabular-nums}
+.shelf-search{display:flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;border:1px solid var(--line);
+  background:color-mix(in srgb,var(--panel-solid) 45%,transparent);transition:border-color .25s,background .25s}
+.shelf-search:focus-within{border-color:var(--ink-2);background:var(--panel-hi)}
+.shelf-search .i{font-size:.95rem;color:var(--ink-2)}
+.shelf-search input{width:158px;background:none;border:0;color:var(--ink);font:inherit;font-size:.85rem;outline:none}
+.shelf-search input::placeholder{color:var(--ink-2);opacity:.75}
+
+.shelf-stage{position:relative;z-index:2;height:clamp(330px,42vw,450px);perspective:1600px;perspective-origin:50% 46%;
+  touch-action:pan-y;cursor:grab;outline:none;-webkit-user-select:none;user-select:none}
+.shelf-stage:active{cursor:grabbing}
+.shelf-stage:focus-visible{outline:2px solid var(--ink);outline-offset:6px;border-radius:24px}
+.shelf-hint{position:absolute;left:50%;bottom:2px;transform:translateX(-50%);display:flex;align-items:center;gap:6px;
+  font-size:.78rem;color:var(--ink-2);opacity:.8;transition:opacity .5s;pointer-events:none;z-index:3}
+.shelf.hinted .shelf-hint{opacity:0}
+.shelf-empty{position:absolute;inset:0;display:none;place-items:center;text-align:center;color:var(--ink-2);font-size:.95rem;padding:24px}
+.shelf.is-empty .shelf-empty{display:grid}
+.shelf.is-empty .ring{display:none}
+
+.ring{--bw:168px;--depth:13px;--r:290px;position:absolute;left:50%;top:50%;width:0;height:0;
+  transform-style:preserve-3d;transform:rotateX(-5deg) rotateY(var(--ry,0deg));will-change:transform}
+.bk{position:absolute;left:0;top:0;width:var(--bw);aspect-ratio:2/3;border:0;padding:0;background:none;
+  transform:translate(-50%,-50%) rotateY(var(--a,0deg)) translateZ(var(--r));
+  transform-style:preserve-3d;cursor:pointer;outline:none}
+.bk-face{position:absolute;inset:0;border-radius:3px 8px 8px 3px;overflow:hidden;backface-visibility:hidden;
+  background:linear-gradient(150deg,#3a1a22,#150609);
+  box-shadow:0 22px 38px -18px rgba(0,0,0,.8),inset 0 0 0 1px rgba(255,255,255,.09)}
+.bk-back{position:absolute;inset:0;border-radius:3px 8px 8px 3px;backface-visibility:hidden;visibility:hidden;
+  transform:translateZ(calc(var(--depth) * -1)) rotateY(180deg);
+  background:linear-gradient(160deg,#2b1017,#120408);box-shadow:inset 0 0 0 1px rgba(255,255,255,.06)}
+.bk.flipped .bk-back{visibility:visible}
+.bk.flipped .bk-face{visibility:hidden}
+.bk-side{position:absolute;top:0;height:100%;width:var(--depth);pointer-events:none}
+.bk-spine{left:0;transform-origin:left center;transform:rotateY(90deg);
+  background:linear-gradient(90deg,rgba(0,0,0,.62),rgba(255,255,255,.08) 55%,rgba(0,0,0,.45))}
+.bk-pages{left:100%;transform-origin:left center;transform:rotateY(90deg);
+  background:repeating-linear-gradient(90deg,#efe4d5 0 1px,#c2ae98 1px 2px)}
+.bk-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .55s ease}
+.bk-img.in{opacity:1}
+.bk-shade{position:absolute;inset:0;background:#0b0206;opacity:var(--sh,0);pointer-events:none}
+.bk-gloss{position:absolute;inset:0;opacity:0;transition:opacity .45s;pointer-events:none;
+  background:linear-gradient(112deg,transparent 36%,rgba(255,255,255,.17) 47%,transparent 60%)}
+.bk:hover .bk-gloss{opacity:1}
+.bk.front .bk-gloss{opacity:.55}
+.bk.front .bk-face{box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 55%,transparent),0 30px 54px -20px rgba(0,0,0,.85),inset 0 0 0 1px rgba(255,255,255,.14)}
+.bk:focus-visible .bk-face{box-shadow:0 0 0 2px var(--ink),0 22px 38px -18px rgba(0,0,0,.8)}
+
+.bk-art{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;padding:13px 11px;color:#fff;overflow:hidden;
+  background:linear-gradient(158deg,var(--c1,#5c2028),var(--c2,#23090d) 72%)}
+.bk-art::before{content:"";position:absolute;inset:7px;border:1px solid rgba(255,255,255,.22);border-radius:2px}
+.bk-art::after{content:"";position:absolute;right:-32%;top:-18%;width:88%;aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.2),transparent 64%)}
+.bk-t{position:relative;z-index:1;font-weight:800;font-size:clamp(.82rem,1.35vw,1.02rem);line-height:1.3;letter-spacing:.02em;
+  display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.bk-art.v .bk-t{writing-mode:vertical-rl;text-orientation:upright;align-self:flex-end;max-height:80%;display:block;overflow:hidden}
+.bk-a{position:relative;z-index:1;font-family:var(--serif);font-style:italic;font-size:.7rem;opacity:.82;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;align-self:flex-start;max-width:100%}
+
+.shelf-ctrl{position:relative;z-index:3;display:flex;align-items:center;justify-content:center;gap:10px;padding:4px 0 8px}
+.shelf-ctrl .icon-btn{background:var(--panel);border:1px solid var(--line)}
+.spin-btn{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:999px;font-size:.85rem;font-weight:700;
+  border:1px solid var(--line);color:var(--ink-2);transition:color .25s,border-color .25s,background .25s}
+.spin-btn[aria-pressed="true"]{color:var(--on-ink);background:var(--ink);border-color:var(--ink)}
+
+.shelf-info{display:grid;grid-template-columns:1fr auto;gap:clamp(16px,3vw,40px);align-items:center;margin-top:18px;
+  padding:24px clamp(18px,3vw,30px);border-radius:26px}
+.si-head{display:flex;align-items:center;gap:12px}
+.si-kind{display:inline-flex;align-items:center;gap:7px;font-size:.76rem;font-weight:800;letter-spacing:.08em;color:var(--accent)}
+.si-kind::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 10px currentColor}
+.si-index{margin-left:auto;font-family:var(--serif);font-style:italic;font-size:.88rem;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.si-title{font-size:clamp(1.35rem,2.6vw,1.9rem);font-weight:800;line-height:1.25;margin-top:8px;letter-spacing:-.01em}
+.si-sub{color:var(--ink-2);font-size:.9rem;margin-top:5px}
+.si-desc{margin-top:10px;color:var(--ink-2);font-size:.94rem;max-width:36em}
+.si-act{display:flex;flex-direction:column;gap:10px;align-items:flex-end;text-align:right}
+.si-size{font-family:var(--serif);font-style:italic;color:var(--ink-2);font-size:.85rem}
+.si-act .btn{white-space:nowrap}
+@media (max-width:760px){
+  .shelf-stage{height:clamp(300px,68vw,380px)}
+  .ring{--bw:118px;--depth:9px}
+  .shelf-info{grid-template-columns:1fr;align-items:flex-start;gap:16px}
+  .si-act{align-items:flex-start;text-align:left}
+  .shelf-search input{width:104px}
+  .shelf-top{gap:8px}
+}
 .essay{display:block;width:100%;text-align:left;padding:22px 4px;border-top:1px solid var(--line);transition:padding .3s}
 .essay:last-child{border-bottom:1px solid var(--line)}
 .essay:hover{padding-left:16px}
@@ -430,6 +529,7 @@ footer{padding:90px 0 110px}
   <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2.500"/><path d="M16 8V6.500A2.500 2.500 0 0 0 13.500 4h-7A2.500 2.500 0 0 0 4 6.500v7A2.500 2.500 0 0 0 6.500 16H8"/></symbol>
   <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
   <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.2-4.2"/></symbol>
   <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></symbol>
   <symbol id="i-file" viewBox="0 0 24 24"><path d="M6 3h8l5 5v12a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5M8.500 13h7M8.500 17h5"/></symbol>
   <symbol id="i-plane" viewBox="0 0 24 24"><path d="M21 3L3 10.500l7 2.500 2.500 7z"/><path d="M10 13l11-10"/></symbol>
@@ -530,7 +630,7 @@ footer{padding:90px 0 110px}
 
       <div class="j-ctrl">
         <div class="ladder" id="ladder" aria-label="职级阶梯">
-          <div class="step"><small>2020</small>医学信息沟通代表</div>
+          <div class="step"><small>2018</small>医学信息沟通代表</div>
           <div class="step"><small>2023</small>高级医学代表</div>
           <div class="step"><small>2025</small>高级产品专员</div>
         </div>
@@ -567,14 +667,35 @@ footer{padding:90px 0 110px}
   <div class="wrap">
     <div class="sec-head">
       <h2>电子书籍</h2>
-      <p>沉淀阅读与专业思考，分享电子书、读书笔记与读后感。</p>
+      <p>沉淀阅读与专业思考。书柜可以左右拖动旋转，点击封面查看简介并下载。</p>
     </div>
     <div class="tabs" id="bTabs" role="tablist" aria-label="电子书籍分类">
       <span class="pill"></span>
       <button role="tab" aria-selected="true" data-t="ebooks">全套电子书</button>
       <button role="tab" aria-selected="false" data-t="essays">读后感与文章</button>
     </div>
-    <div class="books" id="bookGrid"></div>
+    <div class="books" id="bookGrid">
+      <div class="shelf" id="shelf">
+        <div class="shelf-top">
+          <span class="shelf-count" id="shCount">正在读取书架…</span>
+          <label class="shelf-search">
+            <svg class="i"><use href="#i-search"/></svg>
+            <input id="shSearch" type="search" placeholder="搜索书名或作者" aria-label="搜索电子书">
+          </label>
+        </div>
+        <div class="shelf-stage" id="shStage" tabindex="0" role="listbox" aria-label="3D 电子书书柜：左右拖动旋转，方向键切换">
+          <div class="ring" id="shRing"></div>
+          <div class="shelf-empty" id="shEmpty">书架还是空的，把 EPUB 放进 E-book 文件夹，刷新页面就会出现在这里。</div>
+          <div class="shelf-hint" id="shHint"><svg class="i"><use href="#i-chev-l"/></svg>拖动旋转 · 点击查看<svg class="i"><use href="#i-chev-r"/></svg></div>
+        </div>
+        <div class="shelf-ctrl">
+          <button class="icon-btn" id="shPrev" aria-label="上一本"><svg class="i"><use href="#i-chev-l"/></svg></button>
+          <button class="spin-btn" id="shSpin" aria-pressed="true"><svg class="i" id="shSpinIcon"><use href="#i-pause"/></svg><span id="shSpinText">自动旋转</span></button>
+          <button class="icon-btn" id="shNext" aria-label="下一本"><svg class="i"><use href="#i-chev-r"/></svg></button>
+        </div>
+      </div>
+      <div class="shelf-info panel" id="shInfo"></div>
+    </div>
     <div class="essays hidden" id="essayList"></div>
   </div>
 </section>
@@ -682,30 +803,46 @@ footer{padding:90px 0 110px}
    ★ 你最常改的配置都在这里 ★
    ===================================================================== */
 
-// ---- 音乐：把 mp3 等文件放进 music 文件夹（与 index.html 同级）----
-// file 不带扩展名时，会自动依次尝试 mp3 / m4a / wav / flac / ogg / aac。
-// 如果实际文件名不一样，改 file 即可（也可以写成 '大战在即.mp3'）。alts 是备用文件名。
+// ---- 仓库位置：默认自动从网址识别 ----
+// 部署在 https://用户名.github.io/仓库名/ 时不用改；绑定自定义域名时，把 owner / repo 填上。
+const REPO = { provider:'auto', owner:'', repo:'', branch:'' };
+
+// ---- 音乐：把 mp3 等文件放进 music 文件夹，网页打开时会自动扫描，不用改下面的代码 ----
+// 下面这份列表只是「读不到仓库时」的兜底，正常情况下会被真实文件夹内容替换。
 const MUSIC_DIR = 'music/';
-const AUDIO_EXTS = ['mp3','m4a','wav','flac','ogg','aac'];
+const AUDIO_EXTS = ['mp3','m4a','wav','flac','ogg','aac','opus'];
 const TRACKS = [
-  { title:'大战在即', file:'大战在即' },
-  { title:'宿命之轮', file:'宿命之轮' },
-  { title:'So What',  file:'So What', alts:['so what','So_What','so_what','SoWhat','sowhat'] },
+  { title:'大战在即', file:'大战在即.mp3' },
+  { title:'宿命之轮', file:'宿命之轮.mp3' },
+  { title:'So What',  file:'so what.mp3' },
 ];
 
-// ---- 电子书：把文件放进 E-book 文件夹后，把 file 填成文件名（如 'xxx.pdf'）即可出现下载按钮 ----
-// cover 可选：封面图片（如 'E-book/cover1.jpg'），留空则使用自动生成的封面。
+// ---- 电子书：把 EPUB / PDF 放进 E-book 文件夹即可，3D 书柜会自动更新 ----
+// 下面的 BOOK_INFO 只是给这几本书写好的简介；以后新增的书会自动从书名解析，
+// 想给它写简介，就在下面照格式加一条（file 随便写，程序按「去掉空格和扩展名」匹配）。
 const EBOOK_DIR = 'E-book/';
-const EBOOKS = [
-  { title:'《现代医学沟通与学术推介实战》', kind:'医药专业', meta:'著者：郑新 | PDF格式 (12.5MB)', hue:210, file:'', cover:'',
-    desc:'聚焦跨国药企学术交流、临床研究证据传达与KOL沟通技巧的实操总结指南。',
-    detail:'本书总结了近5年来在阿斯利康等跨国药企一线学术交流中的百余个实战案例，涵盖临床文献研读方法、科室会学术讲座呈现逻辑以及高价值医学信息的准确传达方法。' },
-  { title:'《光影云端：航拍视觉纪实》', kind:'摄影人文', meta:'著者：郑新 | EPUB格式 (45MB)', hue:170, file:'', cover:'',
-    desc:'收集全国各地的航拍风光摄影作品，附带大疆无人机参数设置与构图创作心得。',
-    detail:'收录了从福建海岸线到江西山川的数十幅高清晰度无人机航拍大片，同时包含无人机航线规划、光影捕捉及后期的全流程干货教案。' },
-  { title:'《顺势而为：职场敏捷成长笔记》', kind:'个人成长', meta:'著者：郑新 | PDF格式 (8.2MB)', hue:28, file:'', cover:'',
-    desc:'从大学毕业到通过春苗测试晋升高级专员的心路历程与高效时间管理框架。',
-    detail:'分享个人在职场生涯中的认知升级过程，包括如何应对行业环境变化、如何在繁忙事务中保持对新事物的敏锐度，以及如何持续拥抱创新。' },
+const BOOK_EXT = ['epub','pdf','mobi','azw3','txt'];
+const BOOK_INFO = [
+  { file:'三体(刘慈欣).epub', title:'三体', author:'刘慈欣', kind:'科幻',
+    desc:'刘慈欣的长篇科幻：一次秘密实验，把地球文明推进了宇宙尺度的生死博弈。' },
+  { file:'白夜行 (东野圭吾).epub', title:'白夜行', author:'东野圭吾', kind:'推理',
+    desc:'一桩旧案牵出两个人长达十九年的黑夜，东野圭吾最具代表性的长篇之一。' },
+  { file:'明朝那些事儿 (当年明月) .epub', title:'明朝那些事儿', author:'当年明月', kind:'历史',
+    desc:'用通俗笔法讲透明朝三百年，从开国到覆亡，把正史读成故事。' },
+  { file:'你当像鸟飞往你的山 (Tara Westover) .epub', title:'你当像鸟飞往你的山', author:'Tara Westover', kind:'回忆录',
+    desc:'一个从大山里走出来的女孩的自述：教育如何把一个人从原生家庭中带出来。' },
+  { file:'贫穷的本质：我们为什么摆脱不了贫穷 (( 印度) 班纳吉  （法）迪弗洛) .epub', title:'贫穷的本质', author:'阿比吉特·班纳吉 / 埃斯特·迪弗洛', kind:'经济学',
+    desc:'两位诺奖经济学家用田野实验追问：穷人为什么难以摆脱贫穷，以及什么样的干预真正有效。' },
+  { file:'追风筝的人 (胡赛尼 [胡赛尼]) .epub', title:'追风筝的人', author:'卡勒德·胡赛尼', kind:'小说',
+    desc:'关于喀布尔、背叛与救赎的故事，也是一个人重新面对自己过去的旅程。' },
+  { file:'Influence The Psychology of Persuasion ([美] Robert B. Cialdini  闾佳 译) .epub', title:'Influence', short:'Influence', author:'Robert B. Cialdini', kind:'心理学',
+    desc:'西奥迪尼的经典社会心理学著作，拆解说服与顺从背后的六大原则。' },
+  { file:'The 7 Habits of Highly Effective People  [美] 史蒂芬 · 柯维 .epub', title:'The 7 Habits of Highly Effective People', short:'The 7 Habits', author:'史蒂芬·柯维', kind:'自我管理',
+    desc:'柯维的自我管理经典：从依赖到独立，再从独立走向互赖。' },
+  { file:'The Triple Focus A New Approach to Education ([美] Daniel Goleman etc.) .epub', title:'The Triple Focus', short:'The Triple Focus', author:'Daniel Goleman / Peter Senge', kind:'教育',
+    desc:'戈尔曼与圣吉谈三种关键能力：专注自己、共情他人、看见系统。' },
+  { file:'以日为鉴 衰退时代生存指南 (分析师Boden) .epub', title:'以日为鉴', author:'分析师Boden', kind:'经济',
+    desc:'复盘日本泡沫破裂后的社会与经济，讨论衰退时代普通人的选择。' },
 ];
 const ESSAYS = [
   { kind:'读后感', date:'2025-10-12', title:'读《穷查理宝典》：关于医学沟通的多元思维模型', brief:'如何运用复利效应与逆向思维，提升产品学术推广过程中的沟通深度与临床信任感？',
@@ -724,23 +861,24 @@ const AUTO_PLAY_ON_FIRST_CLICK = false;
 /* ---- 职业经历 ---- */
 const CAREER = [
   { year:'2017', when:'2017 年', tag:'毕业', icon:'cap', title:'福建医科大学 毕业', sub:'医学本科专业', desc:'顺利完成医科学业，奠定扎实的临床医学基础与严谨的科学思维体系。' },
+  { year:'2018', when:'2018 年', tag:'入行', icon:'briefcase', title:'加入赛诺菲 (Sanofi)', sub:'医学信息沟通代表', desc:'在赛诺菲担任医学信息沟通代表，负责区域医院的学术信息传递与临床沟通，打下跨国药企一线推广的基本功。' },
   { year:'2020', when:'2020 年 8 月 3 日', tag:'入职', icon:'briefcase', title:'加入阿斯利康 (AstraZeneca)', sub:'医学信息沟通代表', desc:'正式开启全球顶尖跨国药企的工作经历，投身核心治疗领域的学术推广与临床价值传递。' },
   { year:'2022', when:'2022 年', tag:'荣誉', icon:'trophy', title:'荣获 EC 绩效卓越奖', sub:'AstraZeneca 核心荣誉', desc:'凭借突出的学术沟通质量与高效的项目执行力，斩获区域 EC 绩效卓越最高评定。' },
   { year:'2023', when:'2023 年', tag:'晋升', icon:'trend', title:'晋升 高级医学代表', sub:'职级晋升', desc:'承担更大业务辖区与团队帮带职责，牵头组织多场区域性学术研讨会议。' },
   { year:'2024', when:'2024 年', tag:'荣誉', icon:'award', title:'连任 获得 EC 绩效卓越奖', sub:'阿斯利康 年度表彰', desc:'业务能力持续精进，再次在公司年度考评中获得 EC 绩效卓越认可。' },
   { year:'2025', when:'2025 年', tag:'晋升', icon:'star', title:'晋升 高级产品专员', sub:'通过区域春苗测试', desc:'通关公司区域春苗专项测试，全面负责产品市场策略落地与精准学术赋能。' },
 ];
-const ROLE_AT = [-1, 0, 0, 1, 1, 2];           // 每个节点对应的职级阶梯位置
+const ROLE_AT = [-1, 0, 0, 0, 1, 1, 2];        // 每个节点对应的职级阶梯位置
 const JOIN_DATE = new Date('2020-08-03');
 
 /* ---- 相册 ---- */
 const PHOTOS = [
-  { cat:'work',   srcs:['./images/award.jpg'],    tag:'团队合影', icon:'award', title:'2022 EC 绩效卓越颁奖合影', long:'2022年 EC 团队合影与获奖评定' },
-  { cat:'work',   srcs:['./images/host.jpg'],     tag:'晚会主持', icon:'mic',   title:'公司年终晚宴舞台主持',   long:'2025公司年终会大型盛典主持' },
-  { cat:'work',   srcs:['./images/team.jpg'],     tag:'团建拓展', icon:'users', title:'赶海一号户外团建留影',   long:'2026年 赶海一号团队团建拓展' },
-  { cat:'travel', srcs:['./images/shantou.jpg'],  tag:'广东汕头', icon:'plane', title:'南澳岛与海滨风光',       long:'汕头海滨与美食探寻之旅' },
-  { cat:'family', srcs:['./images/nanchang.jpg'], tag:'江西南昌', icon:'heart', title:'滕王阁前与家人的时光',   long:'南昌与家人相聚之旅' },
-  { cat:'travel', srcs:['https://images.unsplash.com/photo-1476514525535-ce74f45814d9?auto=format&fit=crop&q=80&w=1200'], tag:'航拍探索', icon:'camera', title:'上帝视角下的湖光山色', long:'航拍视角下的壮丽风光' },
+  { cat:'work',   srcs:['./images/award.jpg'],    title:'2022年团队合影照片' },
+  { cat:'work',   srcs:['./images/host.jpg'],     title:'2025年新年晚宴主持' },
+  { cat:'work',   srcs:['./images/team.jpg'],     title:'2026年“赶海一号”团建' },
+  { cat:'travel', srcs:['./images/shantou.jpg'],  title:'2025年汕头旅社合影' },
+  { cat:'family', srcs:['./images/nanchang.jpg'], title:'2026年南昌美术馆合影' },
+  { cat:'travel', srcs:['./images/maotains.jpg'], title:'鼓山观景台' },
 ];
 
 /* ---- 社交账号 ---- */
@@ -971,7 +1109,12 @@ function tabs(box, onSelect){
    ===================================================================== */
 (function career(){
   const box = $('#journey'), N = CAREER.length;
-  const pts = CAREER.map((_,i) => ({ x: 80 + i*168, y: [262,226,194,156,122,72][i] }));
+  const YS = [262, 228, 196, 162, 130, 101, 72];   // 节点高度，多出来的节点按线性补
+  const stepX = Math.min(168, 870 / Math.max(1, N - 1));
+  const pts = CAREER.map((_, i) => ({
+    x: 80 + i * stepX,
+    y: YS[i] !== undefined ? YS[i] : Math.round(262 - 190 * (i / Math.max(1, N - 1)))
+  }));
   const seg = (i) => {
     const p0 = pts[i-1]||pts[i], p1 = pts[i], p2 = pts[i+1], p3 = pts[i+2]||pts[i+1];
     return `M${p1.x} ${p1.y}C${p1.x+(p2.x-p0.x)/6} ${p1.y+(p2.y-p0.y)/6} ${p2.x-(p3.x-p1.x)/6} ${p2.y-(p3.y-p1.y)/6} ${p2.x} ${p2.y}`;
@@ -1042,18 +1185,51 @@ function tabs(box, onSelect){
    ===================================================================== */
 (function gallery(){
   const grid = $('#gGrid');
+  let store = [];
+  try { store = JSON.parse(localStorage.getItem('zx-photo-likes') || '[]'); } catch(_){}
+  const liked = new Set(Array.isArray(store) ? store : []);
+  const saveLikes = () => { try { localStorage.setItem('zx-photo-likes', JSON.stringify([...liked])); } catch(_){} };
+
   grid.innerHTML = PHOTOS.map((p,i) => `
-    <div class="shot" data-cat="${p.cat}" data-i="${i}" tabindex="0" role="button" aria-label="${esc(p.title)}">
+    <div class="shot${liked.has(p.title) ? ' liked' : ''}" data-cat="${p.cat}" data-i="${i}" tabindex="0" role="button"
+         aria-pressed="${liked.has(p.title)}" aria-label="${esc(p.title)}，点击点赞">
       <img alt="${esc(p.title)}" loading="lazy" decoding="async">
       <div class="ph">${ic('image')}<span>照片待添加</span></div>
-      <div class="cap"><span>${ic(p.icon)}${esc(p.tag)}</span><b>${esc(p.title)}</b></div>
+      <div class="cap"><b>${esc(p.title)}</b></div>
+      <span class="like-badge" aria-hidden="true">♥</span>
+      <button class="zoom" type="button" aria-label="查看大图">${ic('search')}</button>
     </div>`).join('');
   const shots = $$('.shot', grid);
+
+  /* 点击照片：一颗虚化的大爱心，缩小飞向右上角，完成点赞 */
+  function like(el, i){
+    const title = PHOTOS[i].title;
+    if (!liked.has(title)){ liked.add(title); saveLikes(); }
+    el.classList.add('liked');
+    el.setAttribute('aria-pressed', 'true');
+    if (reduced) return;
+    const r = el.getBoundingClientRect();
+    const heart = document.createElement('span');
+    heart.className = 'heart-fly';
+    heart.textContent = '♥';
+    heart.setAttribute('aria-hidden', 'true');
+    heart.style.setProperty('--dx', Math.round(r.width / 2 - 26) + 'px');
+    heart.style.setProperty('--dy', Math.round(26 - r.height / 2) + 'px');
+    heart.style.fontSize = Math.round(Math.max(90, Math.min(r.width, r.height) * 0.92)) + 'px';
+    el.appendChild(heart);
+    heart.addEventListener('animationend', () => heart.remove(), { once:true });
+  }
+
   shots.forEach((el,i) => {
     const img = $('img', el), list = PHOTOS[i].srcs.slice();
     const next = () => { const s = list.shift(); if (s) img.src = s; else { el.classList.add('failed'); img.remove(); PHOTOS[i].failed = true; } };
     img.addEventListener('error', next); next();
-    el.addEventListener('click', () => open(i)); el.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' ') { e.preventDefault(); open(i); } });
+    el.addEventListener('click', () => like(el, i));
+    el.addEventListener('keydown', e => {
+      if (e.target !== el) return;
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); like(el, i); }
+    });
+    $('.zoom', el).addEventListener('click', e => { e.stopPropagation(); open(i); });
     tilt(el, 5);
   });
   tabs($('#gTabs'), b => {
@@ -1070,7 +1246,7 @@ function tabs(box, onSelect){
     const i = order[pos], p = PHOTOS[i], img = $('#lbImg');
     img.style.animation = 'none'; void img.offsetWidth; img.style.animation = '';
     img.src = $('img', shots[i]).currentSrc || p.srcs[0]; img.alt = p.title;
-    $('#lbCap').textContent = p.long; $('#lbCount').textContent = `${pos+1} / ${order.length}`;
+    $('#lbCap').textContent = p.title; $('#lbCount').textContent = `${pos+1} / ${order.length}`;
   }
   function open(i){
     order = shots.map((el,k)=>k).filter(k => shots[k].style.display!=='none' && !PHOTOS[k].failed);
@@ -1090,40 +1266,345 @@ function tabs(box, onSelect){
    ===================================================================== */
 (function books(){
   const modal = $('#modal');
-  function openModal(title, body, file){
-    $('#mTitle').textContent = title; $('#mBody').textContent = body;
-    $('#mFoot').innerHTML = file
-      ? `<a class="btn" href="${EBOOK_DIR + encodeURI(file)}" target="_blank" rel="noopener" download>${ic('download')}下载 / 阅读</a>`
-      : `<span class="note">电子书文件正在整理中，上线后这里会出现下载按钮。</span>`;
-    modal.classList.add('open'); document.body.style.overflow='hidden'; $('#mClose').focus();
+  const $shelf = $('#shelf'), $ring = $('#shRing'), $stage = $('#shStage'),
+        $info = $('#shInfo'), $count = $('#shCount'), $search = $('#shSearch'),
+        $hint = $('#shHint');
+  const normKey = s => String(s).replace(/\.[^.]+$/,'').replace(/\s+/g,'').toLowerCase();
+  const fmtSize = n => !n ? '' : (n >= 1048576 ? (n/1048576).toFixed(1)+' MB' : Math.max(1, Math.round(n/1024))+' KB');
+  const PALETTE = [
+    ['#6d2a34','#2a0c12'], ['#28605c','#0e2a28'], ['#363f6b','#151830'],
+    ['#6d4726','#2a180c'], ['#355468','#111f29'], ['#5a3353','#200f1e'],
+    ['#2f5039','#102016'], ['#6b352b','#27130e'], ['#3d4d6d','#161e2c'],
+    ['#594627','#251c0b'],
+  ];
+  const paletteOf = s => { let h = 3; for (let i = 0; i < s.length; i++) h = (h * 17 + s.charCodeAt(i)) % 997; return PALETTE[h % PALETTE.length]; };
+  const isCJK = s => /[㐀-鿿]/.test(s);
+
+  let all = [], items = [], cards = [];
+  let rot = 0, step = 36, stepRad = Math.PI/5, radius = 300, cardW = 168;
+  let front = -1, dragging = false, dragX = 0, dragY = 0, dragMoved = 0, dragMoveY = 0, vel = 0;
+  let hovering = false, spinning = !reduced, animating = false, anim = 0, hintDone = false, spinPause = 0;
+  let coverStarted = false;
+  const covers = new Map(), pending = new Set();
+
+  /* ---- 书名 / 作者解析（新书没有写简介时用） ---- */
+  function parseName(file){
+    let base = file.replace(/\.[^.]+$/,'').replace(/\s+/g,' ').trim();
+    base = base.replace(/^《([\s\S]*)》$/, '$1');
+    let title = base, author = '';
+    let m = base.match(/^(.*?)\s*[\(（\[【]([^\(\)（）\[\]【】]*)[\)）\]】]\s*$/);
+    if (m && m[1].trim()) { title = m[1].trim(); author = m[2].trim(); }
+    if (!author) { m = base.match(/^(.*?)\s+[-–—]\s+(.+)$/); if (m) { title = m[1].trim(); author = m[2].trim(); } }
+    author = author.replace(/^\[[^\]]*\]\s*/, '').replace(/^[（(][^）)]*[）)]\s*/, '').replace(/\s*etc\.?$/i,'').trim();
+    return { title: title.replace(/^《|》$/g,'').trim(), author };
   }
-  const close = () => { modal.classList.remove('open'); document.body.style.overflow=''; };
-  $('#mClose').onclick = close; modal.addEventListener('click', e => { if (e.target===modal) close(); });
-  addEventListener('keydown', e => { if (e.key==='Escape' && modal.classList.contains('open')) close(); });
+  function metaFor(file){
+    const k = normKey(file);
+    return BOOK_INFO.find(b => normKey(b.file) === k);
+  }
+  function normalize(file, size, dir){
+    const m = metaFor(file) || parseName(file);
+    const folder = (dir || EBOOK_DIR).replace(/\/?$/, '/');
+    return {
+      file,
+      title: m.title || file.replace(/\.[^.]+$/,''),
+      short: m.short || '',
+      author: m.author || '',
+      kind: m.kind || '电子书',
+      desc: m.desc || '',
+      size: size || 0,
+      url: encodeURI(folder + file),
+    };
+  }
 
-  $('#bookGrid').innerHTML = EBOOKS.map((b,i) => `
-    <article class="book">
-      <div class="cover-stage"><div class="cover" style="--h:${b.hue}">
-        <span class="c-t">${esc(b.title.replace(/[《》]/g,''))}</span><span class="c-a">郑新</span>
-        ${b.cover ? `<img src="${esc(b.cover)}" alt="${esc(b.title)} 封面" onerror="this.remove()">` : ''}
-      </div></div>
-      <span class="kind">${esc(b.kind)}</span>
-      <h3>${esc(b.title)}</h3>
-      <p class="meta">${esc(b.meta)}</p>
-      <p>${esc(b.desc)}</p>
-      <button class="btn" data-b="${i}">${ic(b.file ? 'download' : 'file')}在线试读 / 下载</button>
-    </article>`).join('');
-  $$('#bookGrid .btn').forEach(btn => btn.addEventListener('click', () => { const b = EBOOKS[+btn.dataset.b]; openModal(b.title, b.detail, b.file); }));
-  $$('#bookGrid .cover').forEach(c => tilt(c, 0));
+  /* ---- 渲染 ---- */
+  function cardHTML(b, i){
+    const label = b.short || b.title;
+    const vertical = isCJK(label) && !/^[A-Za-z]/.test(label);
+    const src = covers.get(b.file);
+    const pal = paletteOf(label);
+    return `<button class="bk" data-i="${i}" data-file="${esc(b.file)}" role="option"
+        aria-label="${esc(b.title + (b.author ? ' · ' + b.author : ''))}"
+        style="--a:${(i*step).toFixed(3)}deg;--c1:${pal[0]};--c2:${pal[1]}">
+      <span class="bk-face">
+        <span class="bk-art${vertical ? ' v' : ''}">
+          <span class="bk-t">${esc(label)}</span>
+          <span class="bk-a">${esc(b.author || '')}</span>
+        </span>
+        ${src ? `<img class="bk-img in" src="${src}" alt="">` : ''}
+        <span class="bk-gloss"></span>
+        <span class="bk-shade"></span>
+      </span>
+      <span class="bk-back"></span>
+      <span class="bk-side bk-spine"></span>
+      <span class="bk-side bk-pages"></span>
+    </button>`;
+  }
 
+  function measure(){
+    const w = $stage.clientWidth || 900;
+    cardW = Math.round(clamp(w * 0.2, 104, 190));
+    const n = Math.max(1, items.length);
+    step = 360 / n; stepRad = Math.PI * 2 / n;
+    const chord = (cardW * 1.26) / (2 * Math.sin(Math.PI / n));
+    radius = n < 3 ? Math.max(cardW * 0.85, 60) : Math.max(cardW * 0.9, chord);
+    $ring.style.setProperty('--bw', cardW + 'px');
+    $ring.style.setProperty('--depth', Math.round(cardW * 0.075) + 'px');
+    $ring.style.setProperty('--r', radius.toFixed(1) + 'px');
+  }
+
+  function render(){
+    measure();
+    $ring.innerHTML = items.map(cardHTML).join('');
+    cards = $$('.bk', $ring);
+    $shelf.classList.toggle('is-empty', !items.length);
+    $count.innerHTML = items.length ? `书架上共 <b>${items.length}</b> 本` : '书架暂时是空的';
+    front = -1;
+    bindCards();
+    paint();
+    if (items.length) { front = frontIndex(); renderInfo(); }
+    else $info.innerHTML = '';
+  }
+
+  function activate(el){
+    const i = +el.dataset.i;
+    if (i === frontIndex()) openBook(i); else focusIndex(i);
+  }
+  function bindCards(){
+    // 鼠标/触摸由 pointerup 统一判定（指针捕获会让 click 落在舞台而不是卡片上）；
+    // 这里只保留键盘 Enter / 空格触发的 click。
+    cards.forEach(el => el.addEventListener('click', e => { if (e.detail === 0) activate(el); }));
+  }
+
+  /* ---- 旋转 ---- */
+  function frontIndex(){
+    const n = items.length; if (!n) return -1;
+    return ((-Math.round(rot / step)) % n + n) % n;
+  }
+  function targetFor(i){
+    const base = -i * step;
+    return base + Math.round((rot - base) / 360) * 360;
+  }
+  function animateTo(to, dur){
+    const from = rot, t0 = performance.now(), k = to - from;
+    animating = true;
+    cancelAnimationFrame(anim);
+    const tick = now => {
+      const p = Math.min(1, (now - t0) / dur);
+      rot = from + k * (1 - Math.pow(1 - p, 3));
+      if (p < 1) anim = requestAnimationFrame(tick);
+      else animating = false;
+    };
+    anim = requestAnimationFrame(tick);
+  }
+  function focusIndex(i, smooth = true){
+    const n = items.length; if (!n) return;
+    i = ((i % n) + n) % n;
+    vel = 0;
+    spinPause = performance.now() + 6000;
+    const to = targetFor(i);
+    if (smooth && !reduced) animateTo(to, 620); else { rot = to; animating = false; }
+    front = i; renderInfo();
+  }
+
+  function paint(){
+    if (!items.length) return;
+    $ring.style.setProperty('--ry', rot.toFixed(2) + 'deg');
+    const rr = rot * Math.PI / 180;
+    for (let i = 0; i < cards.length; i++){
+      const c = Math.cos(i * stepRad + rr);
+      const sh = c < 0 ? Math.min(.72, -c * .72) : 0;
+      cards[i].style.setProperty('--sh', sh.toFixed(3));
+      cards[i].style.opacity = (0.4 + 0.6 * Math.max(0, c)).toFixed(3);
+      cards[i].classList.toggle('front', c > 0.985);
+      cards[i].classList.toggle('flipped', c < 0.02);
+    }
+    const idx = frontIndex();
+    if (idx !== front){ front = idx; renderInfo(); }
+  }
+
+  let lastT = 0;
+  function loop(now){
+    if (!visible){ lastT = now; requestAnimationFrame(loop); return; }
+    if (!lastT) lastT = now;
+    const dt = Math.min(64, now - lastT); lastT = now;
+    if (!animating && !dragging){
+      if (Math.abs(vel) > 0.02){ rot += vel * (dt / 16); vel *= Math.pow(0.94, dt / 16); }
+      else {
+        vel = 0;
+        if (spinning && !hovering && performance.now() > spinPause) rot += dt * 0.0032;
+      }
+    }
+    paint();
+    requestAnimationFrame(loop);
+  }
+
+  /* ---- 详情面板 ---- */
+  function renderInfo(){
+    const b = items[front];
+    if (!b){ $info.innerHTML = ''; return; }
+    const ext = (b.file.split('.').pop() || '').toUpperCase();
+    const size = fmtSize(b.size);
+    $info.innerHTML = `
+      <div class="si-main">
+        <div class="si-head"><span class="si-kind">${esc(b.kind)}</span><span class="si-index">${String(front + 1).padStart(2,'0')} / ${String(items.length).padStart(2,'0')}</span></div>
+        <h3 class="si-title">${esc(b.title)}</h3>
+        ${b.author ? `<p class="si-sub">${esc(b.author)}</p>` : ''}
+        ${b.desc ? `<p class="si-desc">${esc(b.desc)}</p>` : ''}
+      </div>
+      <div class="si-act">
+        <span class="si-size">${ext}${size ? ' · ' + size : ''}</span>
+        <a class="btn" href="${b.url}" download>${ic('download')}下载 / 阅读</a>
+      </div>`;
+  }
+
+  function openBook(i){
+    const b = items[i]; if (!b) return;
+    $('#mTitle').textContent = b.title;
+    $('#mBody').textContent = b.desc || '这本书还没有写简介。可以在 index.html 的 BOOK_INFO 里补一条介绍。';
+    $('#mFoot').innerHTML = `<a class="btn" href="${b.url}" download>${ic('download')}下载 / 阅读</a>
+      <span class="note">${(b.file.split('.').pop() || '').toUpperCase()}${b.size ? ' · ' + fmtSize(b.size) : ''}</span>`;
+    modal.classList.add('open'); document.body.style.overflow = 'hidden'; $('#mClose').focus();
+  }
+  const close = () => { modal.classList.remove('open'); document.body.style.overflow = ''; };
+  $('#mClose').onclick = close; modal.addEventListener('click', e => { if (e.target === modal) close(); });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('open')) close(); });
+
+  /* ---- 封面 ---- */
+  function applyCover(file, url){
+    const probe = new Image();
+    probe.onload = () => {
+      covers.set(file, url);
+      const el = cards.find(c => c.dataset.file === file);
+      if (!el) return;
+      const face = el.querySelector('.bk-face');
+      if (!face || face.querySelector('.bk-img')) return;
+      probe.className = 'bk-img';
+      probe.alt = '';
+      face.insertBefore(probe, face.querySelector('.bk-gloss'));
+      requestAnimationFrame(() => probe.classList.add('in'));
+    };
+    probe.onerror = () => {};   // 没有封面就保留设计款封面
+    probe.src = url;
+  }
+  function requestCovers(){
+    if (!window.BookCovers) return;
+    items.forEach(b => {
+      if (covers.has(b.file) || pending.has(b.file)) return;
+      pending.add(b.file);
+      window.BookCovers.get(b).then(url => {
+        pending.delete(b.file);
+        if (url) applyCover(b.file, url);
+      }).catch(() => pending.delete(b.file));
+    });
+  }
+  let visible = false;
+  const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => {
+    visible = es.some(e => e.isIntersecting);
+    if (visible && items.length) requestCovers();
+  }, { rootMargin: '240px' }) : null;
+  if (io) io.observe($stage); else visible = true;
+
+  /* ---- 交互 ---- */
+  $stage.addEventListener('pointerdown', e => {
+    if (e.button !== undefined && e.button !== 0) return;
+    dragging = true; dragMoved = 0; dragMoveY = 0; dragX = e.clientX; dragY = e.clientY; vel = 0;
+    animating = false; cancelAnimationFrame(anim);
+    try { $stage.setPointerCapture(e.pointerId); } catch(_){}
+    if (!hintDone){ hintDone = true; $shelf.classList.add('hinted'); }
+  });
+  $stage.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    const dx = e.clientX - dragX, dy = e.clientY - dragY;
+    dragX = e.clientX; dragY = e.clientY;
+    dragMoved += Math.abs(dx); dragMoveY += Math.abs(dy);
+    if (Math.abs(dy) > Math.abs(dx) * 1.5) return;   // 纵向滑动交给页面滚动
+    rot += dx * 0.32;
+    vel = dx * 0.32;
+  });
+  const endDrag = e => {
+    if (!dragging) return;
+    dragging = false;
+    try { $stage.releasePointerCapture(e.pointerId); } catch(_){}
+    if (dragMoved <= 8 && dragMoveY <= 12 && e.type === 'pointerup'){
+      const hit = document.elementFromPoint(e.clientX, e.clientY);
+      const card = hit && hit.closest ? hit.closest('.bk') : null;
+      if (card && $ring.contains(card)) activate(card);
+    }
+  };
+  $stage.addEventListener('pointerup', endDrag);
+  $stage.addEventListener('pointercancel', endDrag);
+  $stage.addEventListener('pointerenter', e => { if (e.pointerType !== 'touch') hovering = true; });
+  $stage.addEventListener('pointerleave', e => { if (e.pointerType !== 'touch') hovering = false; });
+  $info.addEventListener('pointerenter', () => { hovering = true; });
+  $info.addEventListener('pointerleave', () => { hovering = false; });
+  $stage.addEventListener('wheel', e => {
+    if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+    e.preventDefault(); rot += e.deltaX * 0.3; vel = 0;
+  }, { passive:false });
+  $stage.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft'){ e.preventDefault(); focusIndex(frontIndex() - 1); }
+    else if (e.key === 'ArrowRight'){ e.preventDefault(); focusIndex(frontIndex() + 1); }
+    else if (e.key === 'Enter'){ e.preventDefault(); openBook(frontIndex()); }
+  });
+  $('#shPrev').onclick = () => focusIndex(frontIndex() - 1);
+  $('#shNext').onclick = () => focusIndex(frontIndex() + 1);
+  $('#shSpin').onclick = () => {
+    spinning = !spinning;
+    $('#shSpin').setAttribute('aria-pressed', String(spinning));
+    $('#shSpinIcon').firstElementChild.setAttribute('href', spinning ? '#i-pause' : '#i-play');
+    $('#shSpinText').textContent = spinning ? '自动旋转' : '已暂停';
+  };
+  if (reduced){ $('#shSpin').setAttribute('aria-pressed', 'false'); $('#shSpinText').textContent = '已暂停'; }
+
+  $search.addEventListener('input', () => {
+    const q = $search.value.trim().toLowerCase();
+    items = !q ? all.slice() : all.filter(b => (b.title + ' ' + b.author + ' ' + b.kind).toLowerCase().includes(q));
+    rot = 0; front = -1;
+    render(); focusIndex(0, false);
+    if (items.length) requestCovers();
+  });
+
+  const reflow = () => { measure(); paint(); };
+  addEventListener('resize', () => { clearTimeout(reflow.t); reflow.t = setTimeout(reflow, 120); });
+
+  /* ---- 读后感 ---- */
   $('#essayList').innerHTML = ESSAYS.map((e,i) => `
     <button class="essay" data-e="${i}"><div class="m"><b>${esc(e.kind)}</b><span class="serif">${esc(e.date)}</span></div><h3>${esc(e.title)}</h3><p>${esc(e.brief)}</p></button>`).join('');
-  $$('#essayList .essay').forEach(el => el.addEventListener('click', () => { const e = ESSAYS[+el.dataset.e]; openModal(e.title, e.body, null); $('#mFoot').innerHTML=''; }));
+  $$('#essayList .essay').forEach(el => el.addEventListener('click', () => {
+    const e = ESSAYS[+el.dataset.e];
+    $('#mTitle').textContent = e.title; $('#mBody').textContent = e.body; $('#mFoot').innerHTML = '';
+    modal.classList.add('open'); document.body.style.overflow = 'hidden';
+  }));
 
   tabs($('#bTabs'), b => {
     const eb = b.dataset.t === 'ebooks';
-    $('#bookGrid').classList.toggle('hidden', !eb); $('#essayList').classList.toggle('hidden', eb);
+    $('#bookGrid').classList.toggle('hidden', !eb);
+    $('#essayList').classList.toggle('hidden', eb);
+    if (eb) reflow();
   });
+
+  /* ---- 数据更新：来自自动扫描 ---- */
+  document.addEventListener('library:books', e => {
+    const list = e.detail || [];
+    if (!list.length) return;
+    all = list.map(x => normalize(x.file, x.size, x.dir));
+    items = all.slice();
+    if ($search.value.trim()){
+      const q = $search.value.trim().toLowerCase();
+      items = all.filter(b => (b.title + ' ' + b.author + ' ' + b.kind).toLowerCase().includes(q));
+    }
+    rot = 0; front = -1;
+    render(); focusIndex(0, false);
+    if (visible) requestCovers();
+  });
+
+  /* ---- 首屏：先用内置书单铺满，扫描结果到达后覆盖 ---- */
+  all = BOOK_INFO.map(b => normalize(b.file, 0, EBOOK_DIR));
+  items = all.slice();
+  render(); focusIndex(0, false);
+  if (!io) requestCovers();
+  requestAnimationFrame(loop);
 })();
 
 /* =====================================================================
@@ -1136,10 +1617,11 @@ function tabs(box, onSelect){
 
   // 候选文件列表
   function candidates(t){
+    const dir = t.dir || MUSIC_DIR;
     const names = [t.file, ...(t.alts||[])], out = [];
     for (const n of names) {
-      if (/\.[A-Za-z0-9]{2,5}$/.test(n)) out.push(MUSIC_DIR + n.split('/').map(encodeURIComponent).join('/'));
-      else for (const e of AUDIO_EXTS) out.push(MUSIC_DIR + encodeURIComponent(n) + '.' + e);
+      if (/\.[A-Za-z0-9]{2,5}$/.test(n)) out.push(dir + n.split('/').map(encodeURIComponent).join('/'));
+      else for (const e of AUDIO_EXTS) out.push(dir + encodeURIComponent(n) + '.' + e);
     }
     return out;
   }
@@ -1235,15 +1717,441 @@ function tabs(box, onSelect){
   }
   addEventListener('keydown', e => { if (e.code==='Space' && e.target===document.body && !$('#lightbox').classList.contains('open') && !$('#modal').classList.contains('open')) { /* 空格不抢占页面滚动 */ } });
 
+  // 扫描到 music/ 的真实文件后，整体替换歌单（保留正在播放的那首歌）
+  document.addEventListener('library:tracks', e => {
+    const list = e.detail || [];
+    if (!list.length) return;
+    const playing = !audio.paused && !audio.ended;
+    const curFile = TRACKS[cur] && TRACKS[cur].file;
+    TRACKS.length = 0;
+    list.forEach(t => TRACKS.push(t));
+    const keep = curFile ? TRACKS.findIndex(t => t.file === curFile) : -1;
+    if (keep >= 0) cur = keep;
+    else {
+      cur = 0;
+      if (playing){ audio.pause(); audio.removeAttribute('src'); audio.load(); }
+    }
+    renderList(); ui();
+    TRACKS.slice(0, 40).forEach((_, i) => resolve(i).then(() => { if (i === cur) ui(); }));
+  });
+
   // 初始化：随机选一首作为当前曲目（不自动播放），并预读时长
   cur = Math.floor(Math.random()*TRACKS.length);
   renderList(); ui();
-  TRACKS.forEach((_,i) => resolve(i).then(() => { if (i===cur) ui(); }));
+  TRACKS.slice(0, 40).forEach((_,i) => resolve(i).then(() => { if (i===cur) ui(); }));
   if (AUTO_PLAY_ON_FIRST_CLICK) addEventListener('pointerdown', () => play(), {once:true});
 })();
 
 /* =====================================================================
-   七、分身展示：点击复制
+   七、自动同步：扫描仓库里的 music/ 与 E-book/，并从 EPUB 里取封面
+   —— 往文件夹里丢新文件，刷新网页就会自动出现，不用改任何代码
+   ===================================================================== */
+(function library(){
+  const AUDIO_RE = /\.(mp3|m4a|wav|flac|ogg|aac|opus)$/i;
+  const BOOK_RE  = new RegExp('\\.(' + BOOK_EXT.join('|') + ')$', 'i');
+  const SKIP     = /(^\.|^~\$|thumbs\.db$|desktop\.ini$)/i;
+  const CACHE_KEY = 'zx-library-v1';
+  const CACHE_TTL = 60 * 1000 * 10;
+
+  /* ---- 1. 识别仓库：GitHub Pages / Gitee Pages 都能用 ---- */
+  function detectRepo(){
+    if (REPO.owner && REPO.repo){
+      return { provider: REPO.provider === 'auto' ? 'github' : REPO.provider, owner: REPO.owner, repo: REPO.repo, branch: REPO.branch || '' };
+    }
+    const host = location.hostname;
+    const segs = location.pathname.split('/').filter(Boolean).map(s => { try { return decodeURIComponent(s); } catch(_) { return s; } });
+    let m = host.match(/^([^.]+)\.github\.io$/i);
+    if (m){
+      const owner = m[1], first = segs[0] || '';
+      const isProject = !!first && !/\.[a-z0-9]+$/i.test(first) && first.toLowerCase() !== owner.toLowerCase();
+      return { provider:'github', owner, repo: isProject ? first : host, branch: REPO.branch || '' };
+    }
+    m = host.match(/^([^.]+)\.gitee\.io$/i);
+    if (m){
+      const owner = m[1], first = segs[0] || '';
+      const isProject = !!first && !/\.[a-z0-9]+$/i.test(first);
+      return { provider:'gitee', owner, repo: isProject ? first : owner, branch: REPO.branch || '' };
+    }
+    m = host.match(/^(?:www\.)?github\.com$/i);
+    if (m && segs.length >= 2) return { provider:'github', owner:segs[0], repo:segs[1], branch: REPO.branch || '' };
+    m = host.match(/^(?:www\.)?gitee\.com$/i);
+    if (m && segs.length >= 2) return { provider:'gitee', owner:segs[0], repo:segs[1], branch: REPO.branch || '' };
+    return null;
+  }
+
+  async function listDir(repo, path){
+    const p = path.split('/').filter(Boolean).map(encodeURIComponent).join('/');
+    const q = repo.branch ? '?ref=' + encodeURIComponent(repo.branch) : '';
+    const url = repo.provider === 'gitee'
+      ? `https://gitee.com/api/v5/repos/${repo.owner}/${repo.repo}/contents/${p}${q}`
+      : `https://api.github.com/repos/${repo.owner}/${repo.repo}/contents/${p}${q}`;
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (!Array.isArray(data)) throw new Error('not a folder');
+    return data.map(d => ({
+      name: d.name, path: d.path, dir: d.type === 'dir', size: d.size || 0, url: d.download_url || ''
+    }));
+  }
+
+  const readCache = () => { try { const raw = localStorage.getItem(CACHE_KEY); return raw ? JSON.parse(raw) : null; } catch(_) { return null; } };
+  const writeCache = o => { try { localStorage.setItem(CACHE_KEY, JSON.stringify(Object.assign({}, o, { t: Date.now() }))); } catch(_) {} };
+  const emit = (name, list) => document.dispatchEvent(new CustomEvent(name, { detail: list }));
+  const prettyTrack = name => {
+    let s = name.replace(/\.[^.]+$/, '').replace(/_+/g, ' ').trim();
+    s = s.replace(/^\d{1,3}[\s.\-、]*/, '').trim();
+    if (/^[a-z0-9\s'’&\-]+$/.test(s)) s = s.replace(/(^|\s)([a-z])/g, (m, a, b) => a + b.toUpperCase());
+    return s || name;
+  };
+  const byName = (a, b) => a.name.localeCompare(b.name, 'zh-Hans-CN');
+
+  let running = false;
+  async function sync(){
+    if (running) return;
+    running = true;
+    const repo = detectRepo();
+    if (!repo){ running = false; return; }
+    let root;
+    try { root = await listDir(repo, ''); }
+    catch(_){
+      const cached = readCache();
+      if (cached && cached.tracks && Date.now() - cached.t < CACHE_TTL * 6){
+        emit('library:tracks', cached.tracks);
+        emit('library:books', cached.books || []);
+      }
+      running = false;
+      return;
+    }
+    const dirs = root.filter(d => d.dir);
+    const pick = want => {
+      const low = want.toLowerCase();
+      const exact = dirs.find(d => d.name === want);
+      if (exact) return exact.name;
+      const ci = dirs.find(d => d.name.toLowerCase() === low);
+      if (ci) return ci.name;
+      const loose = dirs.find(d => d.name.toLowerCase().replace(/[^a-z]/g, '') === low.replace(/[^a-z]/g, ''));
+      return loose ? loose.name : null;
+    };
+    const musicName = pick('music') || 'music';
+    const bookName = pick('E-book') || pick('EBOOK') || 'E-book';
+
+    const [music, books] = await Promise.all([
+      listDir(repo, musicName).catch(() => []),
+      listDir(repo, bookName).catch(() => []),
+    ]);
+
+    const tracks = music
+      .filter(f => !f.dir && !SKIP.test(f.name) && AUDIO_RE.test(f.name)).sort(byName)
+      .map(f => ({ title: prettyTrack(f.name), file: f.name, dir: musicName + '/', size: f.size }));
+
+    const bookList = books
+      .filter(f => !f.dir && !SKIP.test(f.name) && BOOK_RE.test(f.name)).sort(byName)
+      .map(f => ({ file: f.name, size: f.size, dir: bookName + '/' }));
+
+    if (tracks.length) emit('library:tracks', tracks);
+    if (bookList.length) emit('library:books', bookList);
+    if (tracks.length || bookList.length) writeCache({ tracks, books: bookList });
+    running = false;
+  }
+
+  /* ---- 2. EPUB 封面：在浏览器里直接解包，零依赖 ---- */
+  function findEOCD(u8, dv){
+    const min = Math.max(0, u8.length - 66000);
+    for (let i = u8.length - 22; i >= min; i--) if (dv.getUint32(i, true) === 0x06054b50) return i;
+    return -1;
+  }
+  function zipIndex(buf){
+    const u8 = new Uint8Array(buf), dv = new DataView(buf);
+    const eocd = findEOCD(u8, dv);
+    if (eocd < 0) throw new Error('not a zip');
+    const count = dv.getUint16(eocd + 10, true);
+    let off = dv.getUint32(eocd + 16, true);
+    const entries = new Map();
+    for (let i = 0; i < count; i++){
+      if (off + 46 > u8.length || dv.getUint32(off, true) !== 0x02014b50) break;
+      const method = dv.getUint16(off + 10, true);
+      const csize = dv.getUint32(off + 20, true);
+      const nameLen = dv.getUint16(off + 28, true);
+      const extraLen = dv.getUint16(off + 30, true);
+      const cmtLen = dv.getUint16(off + 32, true);
+      const lho = dv.getUint32(off + 42, true);
+      let name = '';
+      try { name = new TextDecoder('utf-8').decode(u8.subarray(off + 46, off + 46 + nameLen)); } catch(_){}
+      if (name) entries.set(name, { method, csize, lho });
+      off += 46 + nameLen + extraLen + cmtLen;
+    }
+    return { u8, dv, entries };
+  }
+  async function inflateEntry(raw, method){
+    if (method === 0) return raw.slice();
+    if (method !== 8) return null;
+    if (typeof DecompressionStream === 'undefined') return null;
+    const stream = new Blob([raw]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+    return new Uint8Array(await new Response(stream).arrayBuffer());
+  }
+
+  /* 只按需读取 ZIP 的一小段：40MB 的 EPUB 也只下载几十 KB */
+  class RemoteZip {
+    constructor(url, size){ this.url = url; this.size = size || 0; this.full = null; this.entries = new Map(); }
+    async slice(start, len){
+      if (this.full) return this.full.subarray(start, Math.min(this.full.length, start + len));
+      if (!this.size) throw new Error('no size');
+      const end = Math.min(this.size - 1, start + Math.max(0, len) - 1);
+      const res = await fetch(this.url, { headers: { Range: 'bytes=' + start + '-' + end }, cache: 'force-cache' });
+      if (res.status === 200){
+        this.full = new Uint8Array(await res.arrayBuffer());
+        this.size = this.full.length;
+        return this.full.subarray(start, start + len);
+      }
+      if (res.status !== 206) throw new Error('range ' + res.status);
+      return new Uint8Array(await res.arrayBuffer());
+    }
+    static async open(url, size){
+      const z = new RemoteZip(url, size);
+      await z.init();
+      return z;
+    }
+    async init(){
+      const tailLen = Math.min(this.size || 0, 65536);
+      if (!tailLen) throw new Error('no size');
+      const start = this.size - tailLen;
+      const tail = await this.slice(start, tailLen);
+      const dv = new DataView(tail.buffer, tail.byteOffset, tail.byteLength);
+      let e = -1;
+      for (let i = tail.length - 22; i >= 0; i--) if (dv.getUint32(i, true) === 0x06054b50){ e = i; break; }
+      if (e < 0) throw new Error('no eocd');
+      const count = dv.getUint16(e + 10, true);
+      const cdSize = dv.getUint32(e + 12, true);
+      const cdOff = dv.getUint32(e + 16, true);
+      let cd;
+      if (cdOff >= start && cdOff + cdSize <= start + tail.length){
+        cd = tail.subarray(cdOff - start, cdOff - start + cdSize);
+      } else {
+        cd = await this.slice(cdOff, cdSize);
+      }
+      const cdv = new DataView(cd.buffer, cd.byteOffset, cd.byteLength);
+      let p = 0;
+      for (let i = 0; i < count; i++){
+        if (p + 46 > cd.length || cdv.getUint32(p, true) !== 0x02014b50) break;
+        const method = cdv.getUint16(p + 10, true);
+        const csize = cdv.getUint32(p + 20, true);
+        const nl = cdv.getUint16(p + 28, true);
+        const el = cdv.getUint16(p + 30, true);
+        const cl = cdv.getUint16(p + 32, true);
+        const lho = cdv.getUint32(p + 42, true);
+        let name = '';
+        try { name = new TextDecoder('utf-8').decode(cd.subarray(p + 46, p + 46 + nl)); } catch(_){}
+        if (name) this.entries.set(name, { method, csize, lho });
+        p += 46 + nl + el + cl;
+      }
+    }
+    async read(name){
+      const ent = this.entries.get(name);
+      if (!ent) return null;
+      let head = await this.slice(ent.lho, 30 + 2048 + ent.csize);
+      if (head.length < 30) return null;
+      const dv = new DataView(head.buffer, head.byteOffset, head.byteLength);
+      const nl = dv.getUint16(26, true), el = dv.getUint16(28, true);
+      const start = 30 + nl + el;
+      if (start + ent.csize > head.length) head = await this.slice(ent.lho, start + ent.csize + 16);
+      const raw = head.subarray(start, start + ent.csize);
+      return inflateEntry(raw, ent.method);
+    }
+  }
+
+  async function readEntry(zip, name){
+    if (zip.read) return zip.read(name);
+    const ent = zip.entries.get(name);
+    if (!ent) return null;
+    const { u8, dv } = zip;
+    if (ent.lho + 30 > u8.length) return null;
+    const nl = dv.getUint16(ent.lho + 26, true);
+    const el = dv.getUint16(ent.lho + 28, true);
+    const start = ent.lho + 30 + nl + el;
+    if (start > u8.length) return null;
+    const raw = u8.subarray(start, Math.min(u8.length, start + ent.csize));
+    return inflateEntry(raw, ent.method);
+  }
+  const textOf = bytes => new TextDecoder('utf-8').decode(bytes);
+  const attrOf = (tag, name) => {
+    const m = tag.match(new RegExp(name + '\\s*=\\s*("([^"]*)"|\'([^\']*)\')', 'i'));
+    return m ? (m[2] !== undefined ? m[2] : m[3]) : '';
+  };
+  const unescape = s => s.replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+  function resolvePath(base, href){
+    href = unescape(href.split('#')[0]);
+    try { href = decodeURIComponent(href); } catch(_){}
+    if (/^https?:/i.test(href)) return href;
+    const parts = href.startsWith('/') ? [] : (base ? base.split('/') : []);
+    href.replace(/\\/g, '/').split('/').forEach(p => {
+      if (p === '..') parts.pop();
+      else if (p && p !== '.') parts.push(p);
+    });
+    return parts.join('/');
+  }
+  const guessMime = p => /\.png$/i.test(p) ? 'image/png' : /\.gif$/i.test(p) ? 'image/gif' : /\.webp$/i.test(p) ? 'image/webp' : 'image/jpeg';
+
+  async function epubCover(zip){
+    const names = [...zip.entries.keys()];
+    let opfPath = null;
+    const container = await readEntry(zip, 'META-INF/container.xml');
+    if (container){
+      const xml = textOf(container);
+      const m = xml.match(/<rootfile[^>]*full-path\s*=\s*["']([^"']+)["']/i);
+      if (m) opfPath = unescape(m[1]);
+    }
+    if (!opfPath) opfPath = names.find(n => /\.opf$/i.test(n)) || null;
+    if (!opfPath) return null;
+    const opfBytes = await readEntry(zip, opfPath);
+    if (!opfBytes) return null;
+    const opf = textOf(opfBytes);
+    const baseDir = opfPath.includes('/') ? opfPath.slice(0, opfPath.lastIndexOf('/')) : '';
+
+    const items = [];
+    const re = /<item\b[^>]*>/gi;
+    let m;
+    while ((m = re.exec(opf))){
+      const tag = m[0], href = attrOf(tag, 'href');
+      if (href) items.push({ id: attrOf(tag, 'id'), href, mt: attrOf(tag, 'media-type'), props: attrOf(tag, 'properties') });
+    }
+
+    let cover = items.find(it => /cover-image/i.test(it.props))
+      || (() => {
+        const meta = opf.match(/<meta\b[^>]*name\s*=\s*["']cover["'][^>]*>/i);
+        if (!meta) return null;
+        const cid = attrOf(meta[0], 'content');
+        return items.find(it => it.id === cid) || null;
+      })()
+      || items.find(it => /image\//i.test(it.mt) && /cover/i.test(it.href))
+      || items.find(it => /image\//i.test(it.mt) && /\.(jpe?g|png|gif|webp)$/i.test(it.href));
+
+    let coverPath = cover ? resolvePath(baseDir, cover.href) : null;
+    let mime = cover && cover.mt ? cover.mt : '';
+
+    if (!coverPath){
+      const ref = opf.match(/<reference\b[^>]*type\s*=\s*["']cover["'][^>]*>/i);
+      if (ref){ const h = attrOf(ref[0], 'href'); if (h) coverPath = resolvePath(baseDir, h); }
+    }
+    if (!coverPath){
+      const cand = names.find(n => /(^|\/)cover[^\/]*\.(jpe?g|png|gif|webp)$/i.test(n));
+      if (cand) coverPath = cand;
+    }
+    if (!coverPath) return null;
+
+    if (/\.(x?html?|xml)$/i.test(coverPath)){
+      const page = await readEntry(zip, coverPath);
+      if (!page) return null;
+      const html = textOf(page);
+      const img = html.match(/<(?:img|image)[^>]+(?:src|href)\s*=\s*["']([^"']+)["']/i);
+      if (!img) return null;
+      coverPath = resolvePath(coverPath.includes('/') ? coverPath.slice(0, coverPath.lastIndexOf('/')) : '', img[1]);
+      mime = '';
+    }
+
+    let bytes = await readEntry(zip, coverPath);
+    if (!bytes){
+      const cand = names.find(n => /(^|\/)cover[^\/]*\.(jpe?g|png|gif|webp)$/i.test(n));
+      if (cand && cand !== coverPath){ coverPath = cand; bytes = await readEntry(zip, cand); mime = ''; }
+    }
+    if (!bytes || bytes.length < 500) return null;
+    if (!mime || !/^image\//i.test(mime)) mime = guessMime(coverPath);
+    return new Blob([bytes], { type: mime });
+  }
+
+  /* ---- 3. 封面缓存（只解包一次） ---- */
+  const DB_NAME = 'zx-covers', STORE = 'covers';
+  let dbp = null;
+  function openDB(){
+    if (!('indexedDB' in window)) return Promise.resolve(null);
+    if (dbp) return dbp;
+    dbp = new Promise(res => {
+      let req;
+      try { req = indexedDB.open(DB_NAME, 1); } catch(_) { return res(null); }
+      req.onupgradeneeded = () => { try { req.result.createObjectStore(STORE); } catch(_){} };
+      req.onsuccess = () => res(req.result);
+      req.onerror = () => res(null);
+    });
+    return dbp;
+  }
+  async function cacheGet(key){
+    const db = await openDB(); if (!db) return null;
+    return new Promise(res => {
+      try {
+        const r = db.transaction(STORE, 'readonly').objectStore(STORE).get(key);
+        r.onsuccess = () => res(r.result || null);
+        r.onerror = () => res(null);
+      } catch(_){ res(null); }
+    });
+  }
+  async function cachePut(key, blob){
+    const db = await openDB(); if (!db) return;
+    try { db.transaction(STORE, 'readwrite').objectStore(STORE).put(blob, key); } catch(_){}
+  }
+
+  async function bookCover(book){
+    const base = (book.dir || EBOOK_DIR).replace(/\/?$/, '/');
+    // 可选：把同名封面图放到 E-book/covers/书名.jpg，会自动优先使用（读取失败时才用）
+    const manual = encodeURI(base + 'covers/' + book.file.replace(/\.[^.]+$/, '').trim() + '.jpg');
+    if (!/\.epub$/i.test(book.file)) return manual;
+    let size = book.size || 0;
+    if (!size){
+      try {
+        const head = await fetch(book.url, { method: 'HEAD' });
+        const len = head.headers.get('content-length');
+        if (len) size = +len;
+      } catch(_){}
+    }
+    const key = (book.dir || EBOOK_DIR) + book.file + '|' + size;
+    const hit = await cacheGet(key);
+    if (hit) return URL.createObjectURL(hit);
+    try {
+      let zip = null;
+      if (size > 262144){
+        try { zip = await RemoteZip.open(book.url, size); } catch(_){ zip = null; }
+      }
+      if (!zip){
+        const res = await fetch(book.url);
+        if (!res.ok) return '';
+        zip = zipIndex(await res.arrayBuffer());
+      }
+      const blob = await epubCover(zip);
+      if (!blob) return manual;
+      cachePut(key, blob);
+      return URL.createObjectURL(blob);
+    } catch(err){
+      if (window.console && console.warn) console.warn('[封面] 读取失败：' + book.file, err);
+      return manual;
+    }
+  }
+
+  const coverQueue = [];
+  let activeJobs = 0;
+  function pump(){
+    while (activeJobs < 2 && coverQueue.length){
+      const job = coverQueue.shift();
+      activeJobs++;
+      bookCover(job.book)
+        .then(url => job.resolve(url), () => job.resolve(''))
+        .then(() => { activeJobs--; pump(); });
+    }
+  }
+  window.BookCovers = {
+    get(book){
+      if (!window.__coverJobs) window.__coverJobs = new Map();
+      const id = book.file;
+      if (!window.__coverJobs.has(id)){
+        window.__coverJobs.set(id, new Promise(resolve => { coverQueue.push({ book, resolve }); pump(); }));
+      }
+      return window.__coverJobs.get(id);
+    }
+  };
+
+  // 首屏渲染完再扫描，避免拖慢第一帧
+  setTimeout(sync, 80);
+})();
+
+/* =====================================================================
+   八、分身展示：点击复制
    ===================================================================== */
 (function socials(){
   $('#socials').innerHTML = SOCIALS.map((s,i) => `
