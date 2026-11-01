@@ -118,8 +118,17 @@ input[type=range]::-moz-range-thumb{width:12px;height:12px;border-radius:50%;bac
 /* =====================================================================
    Hero
    ===================================================================== */
-.hero{min-height:100svh;padding:0;display:flex;align-items:center}
-.hero .wrap{padding:120px 0 18vh}
+.hero{min-height:100svh;padding:0;display:flex;align-items:center;position:relative;overflow:hidden;isolation:isolate}
+.hero .wrap{padding:120px 0 18vh;position:relative;z-index:2}
+
+/* 首屏背景视频：电脑端循环播放，手机/省流量/减少动态效果时只显示海报首帧 */
+.hero-video{position:absolute;inset:0;z-index:0;width:100%;height:100%;object-fit:cover;object-position:50% 42%;
+  pointer-events:none;opacity:.92;
+  -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 54%,rgba(0,0,0,.5) 80%,transparent 100%);
+  mask-image:linear-gradient(180deg,#000 0%,#000 54%,rgba(0,0,0,.5) 80%,transparent 100%)}
+.hero::after{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(20,4,8,.76) 0%,rgba(22,5,10,.38) 26%,rgba(22,5,10,.12) 50%,rgba(24,5,10,.46) 100%)}
+.scroll-cue{z-index:2}
 .hello{display:flex;align-items:center;gap:14px;flex-wrap:wrap;color:var(--ink-2);font-weight:600;margin-bottom:20px}
 .hello .clock{font-family:var(--serif);font-style:italic;font-size:1.25rem;color:var(--ink);font-variant-numeric:tabular-nums}
 .hello .sep{width:34px;height:1px;background:var(--ink-2);opacity:.6}
@@ -620,6 +629,7 @@ footer{padding:90px 0 110px}
 <main>
 <!-- ============ Hero ============ -->
 <section id="about" class="hero">
+  <video class="hero-video" id="heroVideo" poster="./video/hero-poster.jpg" muted loop playsinline disablepictureinpicture aria-hidden="true" tabindex="-1"></video>
   <div class="wrap">
     <p class="hello"><span id="greet">你好</span><span class="sep"></span><span class="clock" id="clock">--:--</span><span class="preview-tag" id="previewTag" hidden>时间预览</span></p>
     <div class="name-row">
@@ -937,12 +947,12 @@ const JOIN_DATE = new Date('2020-08-03');
 
 /* ---- 相册 ---- */
 const PHOTOS = [
-  { cat:'职场', srcs:['./images/award.jpg'],    title:'2022年团队合影照片' },
-  { cat:'职场', srcs:['./images/host.jpg'],     title:'2025年新年晚宴主持' },
-  { cat:'职场', srcs:['./images/team.jpg'],     title:'2026年“赶海一号”团建' },
-  { cat:'旅行', srcs:['./images/shantou.jpg'],  title:'2025年汕头旅社合影' },
-  { cat:'家庭', srcs:['./images/nanchang.jpg'], title:'2026年南昌美术馆合影' },
-  { cat:'旅行', srcs:['./images/maotains.jpg'], title:'鼓山观景台' },
+  { cat:'职场', srcs:['./photos/职场/full/2022年团队合影照片.jpg'],   title:'2022年团队合影照片' },
+  { cat:'职场', srcs:['./photos/职场/full/2025年新年晚宴主持.jpg'],   title:'2025年新年晚宴主持' },
+  { cat:'职场', srcs:['./photos/职场/full/2026年“赶海一号”团建.jpg'], title:'2026年“赶海一号”团建' },
+  { cat:'旅行', srcs:['./photos/旅行/full/2025年汕头旅社合影.jpg'],   title:'2025年汕头旅社合影' },
+  { cat:'旅行', srcs:['./photos/旅行/full/2026年南昌美术馆合影.jpg'], title:'2026年南昌美术馆合影' },
+  { cat:'风景', srcs:['./photos/风景/full/鼓山观景台.jpg'],           title:'鼓山观景台' },
 ];
 
 /* ---- 社交账号 ---- */
@@ -1086,6 +1096,41 @@ addEventListener('resize', () => renderSky(curMin));
   const q = new URLSearchParams(location.search).get('t');
   if (q && /^\d{1,2}:\d{2}$/.test(q)) { const [a,b]=q.split(':').map(Number); setMode('manual'); renderSky(a*60+b); }
   else { setMode('live'); renderSky(nowMin()); }
+})();
+
+/* =====================================================================
+   二、首屏背景视频
+   —— 电脑端循环播放；手机、省流量、系统「减少动态效果」都只留海报首帧
+   ===================================================================== */
+(function heroVideo(){
+  const v = $('#heroVideo');
+  if (!v) return;
+  const wide = matchMedia('(min-width: 861px)');
+  const calm = matchMedia('(prefers-reduced-motion: reduce)');
+  const conn = navigator.connection || {};
+  const stingy = () => !!(conn.saveData || /2g/.test(conn.effectiveType || ''));
+  const allowed = () => wide.matches && !calm.matches && !stingy();
+  let attached = false, armed = false;
+
+  function play(){
+    if (!allowed()){ if (!v.paused) v.pause(); return; }
+    if (!armed) return;                          // 等页面空闲了再开始下载，别跟首屏内容抢带宽
+    if (!attached){ attached = true; v.src = './video/hero.mp4'; v.load(); }
+    const p = v.play();
+    if (p && p.then) p.catch(() => {});          // 自动播放被拦就静静保留海报
+  }
+  const pause = () => { if (!v.paused) v.pause(); };
+  const arm = () => { armed = true; play(); };
+
+  if ('requestIdleCallback' in window) requestIdleCallback(arm, { timeout: 2500 });
+  else setTimeout(arm, 700);
+  wide.addEventListener('change', play);
+  calm.addEventListener('change', play);
+  document.addEventListener('visibilitychange', () => document.hidden ? pause() : play());
+  if ('IntersectionObserver' in window){
+    new IntersectionObserver(list => list.forEach(e => e.isIntersecting ? play() : pause()), { threshold: 0.08 })
+      .observe($('#about'));
+  }
 })();
 
 /* ---- 飘浮的火星微粒 ---- */
@@ -1330,7 +1375,7 @@ function tabs(box, onSelect){
   }
 
   /* 分类标签随 photos/ 里的子文件夹自动生成 */
-  const LABEL = { '职场':'职场风采', '旅行':'旅行足迹', '家庭':'家庭时光' };
+  const LABEL = { '职场':'职场风采', '旅行':'旅行足迹', '家庭':'家庭时光', '风景':'风景掠影' };
   function buildTabs(){
     const cats = [...new Set(items.map(p => p.cat).filter(Boolean))];
     tabBox.innerHTML = `<span class="pill"></span><button role="tab" aria-selected="true" data-f="all">全部照片</button>` +
@@ -1339,15 +1384,13 @@ function tabs(box, onSelect){
   }
 
   render();
-  tabs(tabBox, b => applyFilter(b.dataset.f));
+  buildTabs();   // 标签按当前照片的分类生成，photos/ 里加了新分类也会自动出现
 
   document.addEventListener('library:photos', e => {
     const list = e.detail || [];
     if (!list.length) return;
-    const scanned = list.map(x => ({ cat: x.cat || '', title: x.title, srcs: [x.src] }));
-    const seen = new Set(scanned.map(p => p.title));
-    const legacy = items.filter(p => !seen.has(p.title));   // 老的几张留在 images/ 里，不用搬
-    items = legacy.concat(scanned);
+    // 扫描成功就以 photos/ 里的为准，避免旧条目残留成打不开的空壳
+    items = list.map(x => ({ cat: x.cat || '', title: x.title, srcs: [x.src] }));
     currentFilter = 'all';
     buildTabs();
     render();
@@ -1978,19 +2021,38 @@ function tabs(box, onSelect){
     return null;
   }
 
-  async function listDir(repo, path){
-    const p = path.split('/').filter(Boolean).map(encodeURIComponent).join('/');
-    const q = repo.branch ? '?ref=' + encodeURIComponent(repo.branch) : '';
-    const url = repo.provider === 'gitee'
-      ? `https://gitee.com/api/v5/repos/${repo.owner}/${repo.repo}/contents/${p}${q}`
-      : `https://api.github.com/repos/${repo.owner}/${repo.repo}/contents/${p}${q}`;
-    const res = await fetch(url, { cache: 'no-store' });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    if (!Array.isArray(data)) throw new Error('not a folder');
-    return data.map(d => ({
-      name: d.name, path: d.path, dir: d.type === 'dir', size: d.size || 0, url: d.download_url || ''
-    }));
+  /* 一次请求拿到整个仓库的文件树（比逐个目录请求省很多配额，避免 GitHub 限流）
+     三个来源依次尝试：GitHub/Gitee 官方接口 → jsDelivr 镜像 → 本地缓存 */
+  const timedFetch = (url, ms) => {
+    try { return fetch(url, { cache: 'no-store', signal: AbortSignal.timeout(ms) }); }
+    catch(_) { return fetch(url, { cache: 'no-store' }); }
+  };
+  async function fetchTree(repo){
+    const branches = repo.branch ? [repo.branch] : ['main', 'master'];
+    const jobs = [];
+    for (const b of branches) jobs.push(async () => {
+      const url = repo.provider === 'gitee'
+        ? `https://gitee.com/api/v5/repos/${repo.owner}/${repo.repo}/git/trees/${encodeURIComponent(b)}?recursive=1`
+        : `https://api.github.com/repos/${repo.owner}/${repo.repo}/git/trees/${encodeURIComponent(b)}?recursive=1`;
+      const res = await timedFetch(url, 7000);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      if (!Array.isArray(data.tree)) throw new Error('no tree');
+      return data.tree.filter(t => t.type === 'blob').map(t => ({ path: t.path, size: t.size || 0 }));
+    });
+    if (repo.provider !== 'gitee') for (const b of branches) jobs.push(async () => {
+      const res = await timedFetch(`https://data.jsdelivr.com/v1/packages/gh/${repo.owner}/${repo.repo}@${encodeURIComponent(b)}?structure=flat`, 7000);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      if (!Array.isArray(data.files)) throw new Error('no files');
+      return data.files.map(f => ({ path: String(f.name || '').replace(/^\//, ''), size: f.size || 0 })).filter(f => f.path);
+    });
+    let lastErr = null;
+    for (const job of jobs){
+      try { const list = await job(); if (list.length) return list; }
+      catch(e){ lastErr = e; }
+    }
+    throw lastErr || new Error('tree');
   }
 
   const readCache = () => { try { const raw = localStorage.getItem(CACHE_KEY); return raw ? JSON.parse(raw) : null; } catch(_) { return null; } };
@@ -2003,7 +2065,6 @@ function tabs(box, onSelect){
     return s || name;
   };
   const prettyPhoto = name => name.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ').replace(/\s+/g, ' ').trim();
-  const byName = (a, b) => a.name.localeCompare(b.name, 'zh-Hans-CN');
 
   let running = false;
   async function sync(){
@@ -2011,9 +2072,10 @@ function tabs(box, onSelect){
     running = true;
     const repo = detectRepo();
     if (!repo){ running = false; return; }
-    let root;
-    try { root = await listDir(repo, ''); }
-    catch(_){
+    let files;
+    try { files = await fetchTree(repo); }
+    catch(err){
+      console.warn('[zx] 自动同步失败，先用手写清单/缓存显示：', err && err.message);
       const cached = readCache();
       if (cached && Date.now() - cached.t < CACHE_TTL * 6){
         if (cached.tracks && cached.tracks.length) emit('library:tracks', cached.tracks);
@@ -2023,62 +2085,57 @@ function tabs(box, onSelect){
       running = false;
       return;
     }
-    const dirs = root.filter(d => d.dir);
-    const pick = want => {
-      const low = want.toLowerCase();
-      const exact = dirs.find(d => d.name === want);
-      if (exact) return exact.name;
-      const ci = dirs.find(d => d.name.toLowerCase() === low);
-      if (ci) return ci.name;
-      const loose = dirs.find(d => d.name.toLowerCase().replace(/[^a-z]/g, '') === low.replace(/[^a-z]/g, ''));
-      return loose ? loose.name : null;
-    };
-    const musicName = pick('music') || 'music';
-    const bookName = pick('E-book') || pick('EBOOK') || 'E-book';
+    const tops = new Map();
+    files.forEach(f => {
+      const seg = f.path.split('/');
+      if (seg.length > 1) tops.set(seg[0].toLowerCase(), seg[0]);
+    });
+    const topOf = want => tops.get(want.toLowerCase()) || want;
+    const under = name => files.filter(f => f.path.startsWith(name + '/'));
+    const musicName = topOf('music');
+    const bookName = tops.get('e-book') || topOf('E-book');
+    const photoName = topOf('photos');
 
-    const [music, books] = await Promise.all([
-      listDir(repo, musicName).catch(() => []),
-      listDir(repo, bookName).catch(() => []),
-    ]);
+    const tracks = under(musicName)
+      .filter(f => f.path.split('/').length === 2 && AUDIO_RE.test(f.path) && !SKIP.test(f.path.split('/').pop()))
+      .sort((a, b) => a.path.localeCompare(b.path, 'zh-Hans-CN'))
+      .map(f => {
+        const file = f.path.split('/').pop();
+        return { title: prettyTrack(file), file, dir: musicName + '/', size: f.size };
+      });
 
-    const tracks = music
-      .filter(f => !f.dir && !SKIP.test(f.name) && AUDIO_RE.test(f.name)).sort(byName)
-      .map(f => ({ title: prettyTrack(f.name), file: f.name, dir: musicName + '/', size: f.size }));
+    const bookList = under(bookName)
+      .filter(f => f.path.split('/').length === 2 && BOOK_RE.test(f.path) && !SKIP.test(f.path.split('/').pop()))
+      .sort((a, b) => a.path.localeCompare(b.path, 'zh-Hans-CN'))
+      .map(f => ({ file: f.path.split('/').pop(), size: f.size, dir: bookName + '/' }));
 
-    const bookList = books
-      .filter(f => !f.dir && !SKIP.test(f.name) && BOOK_RE.test(f.name)).sort(byName)
-      .map(f => ({ file: f.name, size: f.size, dir: bookName + '/' }));
-
-    // 照片：photos/ 里的图片；子文件夹名就是分类，文件名就是显示的文字
-    let photos = [];
-    const photoName = pick('photos');
-    if (photoName){
-      try {
-        const pd = await listDir(repo, photoName);
-        const CAT_ORDER = ['职场','旅行','家庭'];
-        const subs = pd.filter(d => d.dir && !/^(thumbs|full|\.)/i.test(d.name))
-          .sort((a, b) => {
-            const ia = CAT_ORDER.indexOf(a.name), ib = CAT_ORDER.indexOf(b.name);
-            return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib) || byName(a, b);
-          });
-        for (const s of subs){
-          const kids = await listDir(repo, photoName + '/' + s.name).catch(() => []);
-          // 两种放法都支持：图片直接放在分类目录里，或放在 full/、thumbs/ 子目录里
-          const subDirs = kids.filter(k => k.dir && /^(full|thumbs)$/i.test(k.name))
-            .sort((a, b) => (a.name.toLowerCase() === 'full' ? -1 : 1));
-          for (const src of subDirs.concat([null])) {
-            const files = src ? await listDir(repo, photoName + '/' + s.name + '/' + src.name).catch(() => []) : kids;
-            const imgs = files.filter(f => !f.dir && !SKIP.test(f.name) && IMG_RE.test(f.name)).sort(byName);
-            if (!imgs.length) continue;
-            const base = [photoName, s.name].concat(src ? [src.name] : []).map(encodeURIComponent).join('/');
-            imgs.forEach(f => photos.push({ title: prettyPhoto(f.name), cat: s.name, src: base + '/' + encodeURIComponent(f.name) }));
-            break;
-          }
-        }
-        pd.filter(f => !f.dir && !SKIP.test(f.name) && IMG_RE.test(f.name)).sort(byName).forEach(f =>
-          photos.push({ title: prettyPhoto(f.name), cat: '', src: photoName + '/' + encodeURIComponent(f.name) }));
-      } catch(_){}
-    }
+    // 照片：photos/ 下的图片；子文件夹名就是分类，文件名就是显示的文字
+    const CAT_ORDER = ['职场','旅行','家庭'];
+    const photoMap = new Map();
+    under(photoName).filter(f => IMG_RE.test(f.path) && !SKIP.test(f.path.split('/').pop())).forEach(f => {
+      const parts = f.path.slice(photoName.length + 1).split('/');
+      if (parts.length > 3) return;
+      const name = parts[parts.length - 1];
+      let cat = '', dir = '';
+      if (parts.length === 2) cat = parts[0];
+      else if (parts.length === 3){
+        if (!/^(full|thumbs)$/i.test(parts[1])) return;
+        cat = parts[0]; dir = parts[1].toLowerCase();
+      }
+      if (/^(full|thumbs)$/i.test(cat)) return;
+      const key = cat + '/' + name;
+      const rank = dir === 'full' ? 3 : dir === '' ? 2 : 1;   // full > 直接放 > thumbs
+      const cur = photoMap.get(key);
+      if (!cur || rank > cur.rank) photoMap.set(key, { cat, name, path: f.path, rank });
+    });
+    const photos = [...photoMap.values()]
+      .sort((a, b) => {
+        const ia = CAT_ORDER.indexOf(a.cat), ib = CAT_ORDER.indexOf(b.cat);
+        return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib)
+          || a.cat.localeCompare(b.cat, 'zh-Hans-CN')
+          || a.name.localeCompare(b.name, 'zh-Hans-CN');
+      })
+      .map(p => ({ title: prettyPhoto(p.name), cat: p.cat, src: p.path.split('/').map(encodeURIComponent).join('/') }));
 
     if (tracks.length) emit('library:tracks', tracks);
     if (bookList.length) emit('library:books', bookList);

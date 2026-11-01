@@ -1,0 +1,5 @@
+.DS_Store
+
+# 原始录屏（251MB，超过 GitHub 单个文件 100MB 上限，不能入库）
+# 网站用的是压缩后的 video/hero.mp4，原片可以另存到别处
+ScreenRecording.mov
