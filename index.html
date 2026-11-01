@@ -1,587 +1,1264 @@
 <!DOCTYPE html>
-<html lang="zh-CN" class="scroll-smooth">
+<html lang="zh-CN" data-theme="night">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>郑新 | 个人主页</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#f0f7ff',
-                            100: '#e0effe',
-                            500: '#0284c7',
-                            600: '#0369a1',
-                            900: '#0c4a6e',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        .glass {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-        .dark .glass {
-            background: rgba(15, 23, 42, 0.75);
-        }
-        .timeline-line::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 50%;
-            width: 2px;
-            background: #e2e8f0;
-            transform: translateX(-50%);
-        }
-        .dark .timeline-line::before {
-            background: #334155;
-        }
-        @media (max-width: 768px) {
-            .timeline-line::before {
-                left: 20px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>郑新 | 阿斯利康高级产品专员</title>
+<meta name="description" content="郑新的个人主页：工作经历、精彩时刻、电子书籍与自制音乐。">
+<style>
+/* =====================================================================
+   设计令牌：颜色由 JS 根据时间写入 --sky-* / --hill-*，主题色由 data-theme 切换
+   ===================================================================== */
+:root{
+  --sky-top:#240509; --sky-mid:#9c1429; --sky-bot:#c23a46;
+  --sun-glow:rgba(255,120,100,.45); --sun-glow2:rgba(255,120,100,.16);
+  --accent:#ffb35c;
+
+  --ink:#fff4f2; --ink-2:#f0cfcc; --on-ink:#2a0509;
+  --panel:rgba(28,6,12,.52); --panel-solid:#2a0a12; --panel-hi:rgba(70,16,28,.82);
+  --line:rgba(255,225,220,.16);
+  --shadow:0 20px 56px -22px rgba(0,0,0,.65);
+
+  --sans:"PingFang SC","Hiragino Sans GB","Microsoft YaHei UI","Microsoft YaHei","Noto Sans SC","Source Han Sans SC",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  --wrap:1120px;
+}
+.hero .wrap{text-shadow:0 1px 16px rgba(20,0,6,.55)}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:84px;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--sans);font-size:16px;line-height:1.7;color:var(--ink);
+  background:var(--sky-mid);min-height:100vh;overflow-x:hidden;
+  transition:color .6s ease;
+}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+img{display:block;max-width:100%}
+ul{list-style:none}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:6px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.i{width:1.1em;height:1.1em;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.i.solid{fill:currentColor;stroke:none}
+.serif{font-family:var(--serif);font-style:italic}
+
+/* =====================================================================
+   背景场景：天空 / 太阳 / 月亮 / 星空 / 云 / 远山
+   ===================================================================== */
+.scene{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;--mx:0;--my:0}
+.scene .sky{position:absolute;inset:0;background:linear-gradient(165deg,var(--sky-top) 0%,var(--sky-mid) 50%,var(--sky-bot) 100%)}
+.scene .bgimg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity .8s}
+.scene canvas{position:absolute;inset:0;width:100%;height:100%}
+.orb{position:absolute;left:0;top:0;border-radius:50%;will-change:transform;display:none;mix-blend-mode:screen}
+.sun{width:820px;height:820px;background:radial-gradient(circle,var(--sun-glow) 0%,var(--sun-glow2) 36%,transparent 68%)}
+.moon{width:640px;height:640px;background:radial-gradient(circle,rgba(210,50,80,.30) 0%,rgba(130,12,44,.13) 40%,transparent 68%)}
+.sheen{position:absolute;inset:-10%;background:linear-gradient(115deg,transparent 28%,rgba(255,110,100,.09) 47%,transparent 64%);transform:translate3d(calc(var(--mx)*-34px),calc(var(--my)*-12px),0)}
+.grain{position:absolute;inset:0;opacity:.09;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.vignette{position:absolute;inset:0;background:radial-gradient(125% 95% at 50% 38%,transparent 42%,rgba(0,0,0,.6) 100%)}
+
+/* =====================================================================
+   通用组件
+   ===================================================================== */
+.wrap{width:min(var(--wrap),100% - 40px);margin-inline:auto}
+section{position:relative;padding:112px 0 40px}
+.sec-head{max-width:640px;margin-bottom:44px}
+.sec-head h2{font-size:clamp(2rem,4.4vw,3.3rem);line-height:1.12;font-weight:800;letter-spacing:-.02em}
+.sec-head p{margin-top:14px;color:var(--ink-2);max-width:34em}
+.panel{
+  background:var(--panel);border:1px solid var(--line);border-radius:28px;box-shadow:var(--shadow);
+  -webkit-backdrop-filter:blur(20px) saturate(1.5);backdrop-filter:blur(20px) saturate(1.5);
+  transition:background .6s,border-color .6s;
+}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:999px;
+  background:var(--ink);color:var(--on-ink);font-weight:700;font-size:.92rem;transition:transform .2s,opacity .2s}
+.btn:hover{transform:translateY(-2px)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.ghost:hover{background:var(--panel)}
+.icon-btn{width:44px;height:44px;border-radius:50%;display:inline-grid;place-items:center;font-size:1.15rem;transition:background .2s,transform .2s}
+.icon-btn:hover{background:var(--panel-hi);transform:scale(1.06)}
+
+/* 聚光灯：鼠标经过时跟随光斑 */
+[data-spot]{position:relative;overflow:hidden}
+[data-spot]::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .3s;
+  background:radial-gradient(260px circle at var(--sx,50%) var(--sy,50%),var(--spot,rgba(255,150,140,.16)),transparent 70%)}
+[data-spot]:hover::before{opacity:1}
+[data-spot]{--spot:rgba(255,150,140,.16)}
+
+/* range 滑块 */
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:22px;background:transparent;cursor:pointer;--p:0%;--fill:var(--ink)}
+input[type=range]::-webkit-slider-runnable-track{height:5px;border-radius:5px;background:linear-gradient(to right,var(--fill) var(--p),var(--line) var(--p))}
+input[type=range]::-moz-range-track{height:5px;border-radius:5px;background:var(--line)}
+input[type=range]::-moz-range-progress{height:5px;border-radius:5px;background:var(--fill)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--ink);margin-top:-5.5px;border:2px solid var(--panel-solid);box-shadow:0 1px 6px rgba(0,0,0,.3)}
+input[type=range]::-moz-range-thumb{width:12px;height:12px;border-radius:50%;background:var(--ink);border:2px solid var(--panel-solid)}
+
+/* =====================================================================
+   顶部导航 + 滚动进度
+   ===================================================================== */
+.progress{position:fixed;left:0;top:0;height:3px;width:100%;z-index:60;transform-origin:left;transform:scaleX(0);background:var(--accent)}
+.nav{position:fixed;top:14px;left:50%;transform:translateX(-50%);width:min(var(--wrap),100% - 24px);z-index:50;
+  display:flex;align-items:center;justify-content:space-between;padding:8px 10px 8px 20px;border-radius:999px;
+  background:transparent;border:1px solid transparent;transition:background .4s,border-color .4s,box-shadow .4s}
+.nav.stuck{background:var(--panel);border-color:var(--line);box-shadow:var(--shadow);-webkit-backdrop-filter:blur(18px) saturate(1.5);backdrop-filter:blur(18px) saturate(1.5)}
+.brand{font-weight:900;font-size:1.15rem;letter-spacing:.04em;display:flex;align-items:center;gap:10px}
+.brand i{width:12px;height:12px;border-radius:50%;background:var(--accent);box-shadow:0 0 14px var(--accent)}
+.links{display:flex;gap:2px;position:relative}
+.links a{padding:8px 14px;border-radius:999px;font-size:.9rem;font-weight:600;color:var(--ink-2);transition:color .2s,background .2s}
+.links a:hover{color:var(--ink)}
+.links a.on{color:var(--ink);background:var(--panel-hi)}
+.menu-btn{display:none}
+@media (max-width:860px){
+  .links{position:absolute;top:calc(100% + 8px);left:0;right:0;flex-direction:column;padding:10px;border-radius:24px;background:var(--panel-hi);border:1px solid var(--line);box-shadow:var(--shadow);
+    -webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);display:none}
+  .links.open{display:flex}
+  .links a{padding:12px 16px}
+  .menu-btn{display:inline-grid}
+}
+
+/* =====================================================================
+   Hero
+   ===================================================================== */
+.hero{min-height:100svh;padding:0;display:flex;align-items:center}
+.hero .wrap{padding:120px 0 18vh}
+.hello{display:flex;align-items:center;gap:14px;flex-wrap:wrap;color:var(--ink-2);font-weight:600;margin-bottom:20px}
+.hello .clock{font-family:var(--serif);font-style:italic;font-size:1.25rem;color:var(--ink);font-variant-numeric:tabular-nums}
+.hello .sep{width:34px;height:1px;background:var(--ink-2);opacity:.6}
+.preview-tag{font-size:.78rem;padding:2px 10px;border-radius:999px;border:1px solid var(--line);background:var(--panel)}
+.name-row{display:flex;align-items:flex-end;gap:clamp(18px,3vw,40px);flex-wrap:wrap}
+.avatar{position:relative;width:clamp(96px,13vw,148px);aspect-ratio:1;border-radius:50%;flex:none;margin-bottom:clamp(8px,1.6vw,22px);
+  background:var(--ink);color:var(--on-ink);display:grid;place-items:center;font-size:clamp(2.4rem,5vw,3.8rem);font-weight:900;
+  box-shadow:0 0 0 5px var(--panel-hi),0 0 0 6px var(--line),var(--shadow)}
+.avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%}
+h1.name{font-size:clamp(5.2rem,17vw,13.5rem);line-height:.92;font-weight:900;letter-spacing:-.05em;display:flex}
+h1.name span{display:inline-block}
+.role{margin-top:30px;font-size:clamp(1.2rem,2.4vw,1.7rem);font-weight:700;line-height:1.4}
+.role small{display:block;font-size:.9rem;font-weight:600;color:var(--ink-2);margin-bottom:2px;letter-spacing:.02em}
+.motto{margin-top:18px;font-family:var(--serif);font-style:italic;font-size:clamp(1.05rem,2vw,1.35rem);color:var(--ink-2)}
+.quick{margin-top:34px;display:flex;flex-wrap:wrap;gap:10px}
+.quick a{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;font-weight:600;font-size:.92rem;
+  background:var(--panel);border:1px solid var(--line);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);transition:transform .25s,background .25s}
+.quick a:hover{transform:translateY(-3px);background:var(--panel-hi)}
+.scroll-cue{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;font-size:.8rem;color:var(--ink-2)}
+.scroll-cue .i{animation:bob 1.8s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(6px)}}
+
+@media (prefers-reduced-motion:no-preference){
+  .name span{opacity:0;transform:translateY(40%);animation:rise .9s cubic-bezier(.2,.8,.2,1) forwards}
+  .name span:nth-child(1){animation-delay:.1s}.name span:nth-child(2){animation-delay:.22s}
+  .avatar,.hello,.role,.motto,.quick{opacity:0;animation:fade .9s ease forwards}
+  .avatar{animation-delay:.05s}.hello{animation-delay:.0s}.role{animation-delay:.45s}.motto{animation-delay:.6s}.quick{animation-delay:.75s}
+}
+@keyframes rise{to{opacity:1;transform:none}}
+@keyframes fade{to{opacity:1}}
+
+/* =====================================================================
+   工作经历
+   ===================================================================== */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:28px}
+.stat{padding:6px 20px 6px 0}
+.stat + .stat{padding-left:24px;border-left:1px solid var(--line)}
+.stat b{font-family:var(--serif);font-style:italic;font-weight:400;font-size:clamp(2.6rem,5.4vw,4.2rem);line-height:1;display:inline-block;font-variant-numeric:tabular-nums}
+.stat em{font-style:normal;font-weight:700;margin-left:4px}
+.stat span{display:block;margin-top:6px;font-size:.9rem;color:var(--ink-2)}
+@media (max-width:760px){
+  .stats{grid-template-columns:1fr 1fr;row-gap:22px}
+  .stat:nth-child(3){padding-left:0;border-left:0}
+}
+.journey-panel{padding:30px 30px 34px}
+.journey-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.journey-bar h3{font-size:1.05rem;font-weight:700}
+.journey-bar .hint{color:var(--ink-2);font-size:.85rem}
+.journey-scroll{overflow-x:auto;margin:0 -10px;padding:0 10px;scrollbar-width:none}
+.journey-scroll::-webkit-scrollbar{display:none}
+.journey{position:relative;min-width:780px;aspect-ratio:1000/340}
+.journey svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.journey .track{fill:none;stroke:var(--line);stroke-width:3;stroke-dasharray:2 9;stroke-linecap:round}
+.journey .seg{fill:none;stroke:var(--accent);stroke-width:4;stroke-linecap:round;transition:stroke-dashoffset .7s cubic-bezier(.4,0,.2,1)}
+.journey .area{fill:url(#areaGrad)}
+.node{position:absolute;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;display:grid;place-items:center;
+  background:var(--panel-solid);border:2px solid var(--line);color:var(--ink-2);font-size:1.1rem;transition:transform .35s cubic-bezier(.3,1.5,.5,1),background .3s,color .3s,border-color .3s}
+.node:hover{transform:scale(1.12)}
+.node.past{background:var(--ink);color:var(--on-ink);border-color:var(--ink)}
+.node.sel{transform:scale(1.28);background:var(--accent);border-color:var(--panel-solid);color:#2a1a00;box-shadow:0 0 0 7px color-mix(in srgb,var(--accent) 28%,transparent)}
+.node .yr{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);font-family:var(--serif);font-style:italic;font-size:1.02rem;color:var(--ink-2);white-space:nowrap;transition:color .3s}
+.node.sel .yr,.node.past .yr{color:var(--ink)}
+.node.sel .yr{font-weight:700}
+.detail{display:grid;grid-template-columns:minmax(150px,230px) 1fr;gap:clamp(20px,4vw,56px);align-items:center;margin-top:26px;padding-top:28px;border-top:1px solid var(--line)}
+.detail .big{font-family:var(--serif);font-style:italic;font-size:clamp(4rem,9vw,7rem);line-height:.9;letter-spacing:-.03em}
+.detail .tag{display:inline-block;margin-top:12px;padding:3px 12px;border-radius:999px;background:var(--ink);color:var(--on-ink);font-size:.8rem;font-weight:700}
+.detail h4{font-size:clamp(1.4rem,2.6vw,2rem);line-height:1.25;font-weight:800;letter-spacing:-.01em}
+.detail .sub{margin-top:4px;font-weight:700;color:var(--ink-2)}
+.detail p.d{margin-top:12px;max-width:36em;color:var(--ink-2)}
+.detail .when{font-size:.88rem;color:var(--ink-2);margin-top:6px}
+.detail.swap > *{animation:swapIn .5s cubic-bezier(.2,.8,.2,1) both}
+.detail.swap > *:nth-child(2){animation-delay:.06s}
+@keyframes swapIn{from{opacity:0;transform:translateY(14px)}}
+.j-ctrl{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:24px}
+.j-ctrl .btns{display:flex;gap:8px}
+.ladder{display:flex;align-items:flex-end;gap:8px;flex:1;min-width:260px;max-width:520px}
+.step{flex:1;border-radius:14px 14px 4px 4px;padding:10px 12px;border:1px solid var(--line);background:transparent;color:var(--ink-2);transition:background .4s,color .4s,border-color .4s;font-size:.82rem;line-height:1.35;font-weight:600}
+.step:nth-child(1){min-height:54px}.step:nth-child(2){min-height:74px}.step:nth-child(3){min-height:94px}
+.step small{display:block;font-family:var(--serif);font-style:italic;font-weight:400;font-size:.85rem;opacity:.8}
+.step.on{background:var(--accent);border-color:var(--accent);color:#2a1a00}
+@media (max-width:760px){
+  .detail{grid-template-columns:1fr;gap:12px}
+  .journey-panel{padding:22px 18px 26px}
+}
+
+/* =====================================================================
+   精彩时刻
+   ===================================================================== */
+.tabs{position:relative;display:inline-flex;padding:4px;border-radius:999px;background:var(--panel);border:1px solid var(--line);margin-bottom:28px;flex-wrap:wrap;
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.tabs button{position:relative;z-index:1;padding:8px 18px;border-radius:999px;font-weight:700;font-size:.9rem;color:var(--ink-2);transition:color .25s}
+.tabs button[aria-selected="true"]{color:var(--on-ink)}
+.tabs .pill{position:absolute;z-index:0;top:4px;bottom:4px;left:0;width:0;border-radius:999px;background:var(--ink);transition:transform .35s cubic-bezier(.3,1.2,.4,1),width .35s}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media (max-width:900px){.grid3{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.grid3{grid-template-columns:1fr}}
+.shot{position:relative;aspect-ratio:4/3;border-radius:22px;overflow:hidden;cursor:zoom-in;background:var(--panel);border:1px solid var(--line);
+  transition:opacity .3s,transform .3s;transform-style:preserve-3d;will-change:transform}
+.shot.hide{opacity:0;transform:scale(.94)}
+.shot img{width:100%;height:100%;object-fit:cover;transition:transform .8s cubic-bezier(.2,.8,.2,1)}
+.shot:hover img{transform:scale(1.08)}
+.shot .ph{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--ink-2);font-size:.9rem;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 25%,transparent),color-mix(in srgb,var(--sky-top) 25%,transparent))}
+.shot .ph .i{font-size:2rem}
+.shot.failed .ph{display:flex}
+.shot .cap{position:absolute;inset:auto 0 0 0;padding:44px 18px 16px;color:#fff;background:linear-gradient(to top,rgba(12,2,5,.82),transparent);
+  transform:translateY(30%);opacity:0;transition:transform .4s,opacity .4s}
+.shot:hover .cap,.shot:focus-visible .cap{transform:none;opacity:1}
+.shot .cap span{display:flex;align-items:center;gap:6px;font-size:.8rem;font-weight:700;opacity:.85}
+.shot .cap b{display:block;font-size:1.05rem;margin-top:2px}
+.shot.failed .cap{display:none}
+@media (hover:none){.shot .cap{transform:none;opacity:1}}
+
+.lightbox{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(12,2,5,.9);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.lightbox.open{display:flex}
+.lightbox figure{max-width:min(1100px,100%);text-align:center;color:#fff}
+.lightbox img{max-height:76vh;max-width:100%;border-radius:18px;margin:0 auto;box-shadow:0 30px 80px rgba(0,0,0,.5);animation:swapIn .4s both}
+.lightbox figcaption{margin-top:16px;font-weight:700}
+.lightbox .count{font-family:var(--serif);font-style:italic;opacity:.7;font-weight:400;margin-left:10px}
+.lb-btn{position:absolute;color:#fff;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-size:1.4rem;background:rgba(255,255,255,.1);transition:background .2s}
+.lb-btn:hover{background:rgba(255,255,255,.22)}
+.lb-close{top:20px;right:20px}.lb-prev{left:20px;top:50%;margin-top:-26px}.lb-next{right:20px;top:50%;margin-top:-26px}
+
+/* =====================================================================
+   电子书籍
+   ===================================================================== */
+.books{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(24px,4vw,56px)}
+@media (max-width:860px){.books{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.books{grid-template-columns:1fr}}
+.book{display:flex;flex-direction:column}
+.cover-stage{perspective:900px;padding:8px 0 22px}
+.cover{position:relative;aspect-ratio:3/4;width:min(240px,100%);border-radius:4px 12px 12px 4px;padding:22px 20px 20px 30px;color:#fff;display:flex;flex-direction:column;justify-content:space-between;
+  background:linear-gradient(150deg,hsl(var(--h) 62% 46%),hsl(calc(var(--h) + 40) 58% 30%));
+  box-shadow:-6px 10px 0 -2px rgba(0,0,0,.12),0 26px 40px -14px rgba(0,0,0,.45);transform:rotateY(-14deg);transform-origin:left center;transition:transform .5s cubic-bezier(.2,.8,.2,1);overflow:hidden}
+.cover::before{content:"";position:absolute;left:0;top:0;bottom:0;width:14px;background:linear-gradient(to right,rgba(0,0,0,.28),rgba(255,255,255,.12) 60%,transparent)}
+.cover::after{content:"";position:absolute;right:-30%;top:-18%;width:80%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.22),transparent 65%)}
+.cover:hover{transform:rotateY(-2deg) translateY(-6px)}
+.cover .c-t{font-size:1.28rem;font-weight:800;line-height:1.3;position:relative;z-index:1}
+.cover .c-a{font-family:var(--serif);font-style:italic;position:relative;z-index:1;opacity:.9}
+.cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2}
+.book .kind{font-size:.82rem;font-weight:700;color:var(--ink-2)}
+.book h3{font-size:1.2rem;line-height:1.4;font-weight:800;margin:4px 0 4px}
+.book .meta{font-size:.85rem;color:var(--ink-2);margin-bottom:8px}
+.book p{color:var(--ink-2);font-size:.95rem;flex:1}
+.book .btn{margin-top:16px;align-self:flex-start}
+.essay{display:block;width:100%;text-align:left;padding:22px 4px;border-top:1px solid var(--line);transition:padding .3s}
+.essay:last-child{border-bottom:1px solid var(--line)}
+.essay:hover{padding-left:16px}
+.essay .m{font-size:.85rem;color:var(--ink-2);display:flex;gap:12px}
+.essay h3{font-size:1.3rem;font-weight:800;margin:4px 0}
+.essay p{color:var(--ink-2)}
+.essays{max-width:820px}
+.hidden{display:none!important}
+.modal{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(12,2,5,.66);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.modal.open{display:flex}
+.modal .box{position:relative;width:min(640px,100%);padding:34px;max-height:88vh;overflow:auto;background:var(--panel-solid);animation:swapIn .35s both}
+.modal h3{font-size:1.5rem;line-height:1.3;font-weight:800;padding-right:44px}
+.modal .body{margin-top:14px;color:var(--ink-2)}
+.modal .foot{margin-top:24px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.modal .note{font-size:.88rem;color:var(--ink-2)}
+.modal .x{position:absolute;top:18px;right:18px}
+
+/* =====================================================================
+   自制音乐
+   ===================================================================== */
+.player{padding:clamp(22px,4vw,40px)}
+.p-main{display:grid;grid-template-columns:minmax(200px,280px) 1fr;gap:clamp(24px,5vw,60px);align-items:center}
+@media (max-width:760px){.p-main{grid-template-columns:1fr;justify-items:center;text-align:center}}
+.vinyl-wrap{position:relative;width:min(280px,72vw);aspect-ratio:1}
+.vinyl{position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(circle,transparent 0 31%,rgba(255,255,255,.07) 31.5% 32%,transparent 32.5% 40%,rgba(255,255,255,.06) 40.5% 41%,transparent 41.5% 52%,rgba(255,255,255,.06) 52.5% 53%,transparent 53.5% 64%,rgba(255,255,255,.05) 64.5% 65%,transparent 66%),
+  conic-gradient(from 20deg,#101828,#252f45,#101828 25%,#222b40 50%,#101828 75%,#252f45,#101828);
+  box-shadow:0 24px 50px -18px rgba(0,0,0,.6);animation:spin 7s linear infinite;animation-play-state:paused}
+.vinyl::after{content:"";position:absolute;inset:36%;border-radius:50%;background:radial-gradient(circle at 50% 50%,#0d2340 0 9%,transparent 10%),linear-gradient(135deg,var(--accent),#e8664b)}
+.playing .vinyl{animation-play-state:running}
+@keyframes spin{to{transform:rotate(360deg)}}
+.arm{position:absolute;right:-6%;top:-4%;width:46%;height:6px;border-radius:6px;background:linear-gradient(to right,#b8c2d6,#e6ecf7);transform-origin:92% 50%;transform:rotate(-24deg);transition:transform .8s cubic-bezier(.4,0,.2,1);box-shadow:0 4px 10px rgba(0,0,0,.3)}
+.arm::before{content:"";position:absolute;right:-8px;top:-9px;width:24px;height:24px;border-radius:50%;background:#d7deec;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.arm::after{content:"";position:absolute;left:-10px;top:-4px;width:20px;height:13px;border-radius:3px;background:#2a3550}
+.playing .arm{transform:rotate(-4deg)}
+.now .lab{font-size:.88rem;color:var(--ink-2);font-weight:600}
+.now h3{font-size:clamp(1.9rem,4.4vw,3rem);font-weight:900;line-height:1.15;letter-spacing:-.02em;margin:4px 0 2px}
+.now .by{color:var(--ink-2)}
+.seek{margin-top:22px}
+.times{display:flex;justify-content:space-between;font-family:var(--serif);font-style:italic;font-size:.9rem;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.ctrls{display:flex;align-items:center;gap:6px;margin-top:10px;flex-wrap:wrap;justify-content:inherit}
+.play-btn{width:64px;height:64px;border-radius:50%;background:var(--ink);color:var(--on-ink);display:grid;place-items:center;font-size:1.5rem;box-shadow:var(--shadow);transition:transform .2s}
+.play-btn:hover{transform:scale(1.07)}
+.vol{display:flex;align-items:center;gap:6px;margin-left:auto;width:150px;color:var(--ink-2)}
+@media (max-width:760px){.vol{margin:6px auto 0}}
+.mode{display:inline-flex;align-items:center;gap:8px;padding:0 14px;width:auto;border-radius:999px;font-size:.85rem;font-weight:700;border:1px solid var(--line)}
+.list{margin-top:30px;border-top:1px solid var(--line)}
+.row{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:12px;width:100%;text-align:left;padding:14px 10px;border-bottom:1px solid var(--line);border-radius:12px;transition:background .25s}
+.row:hover{background:var(--panel)}
+.row .n{font-family:var(--serif);font-style:italic;color:var(--ink-2)}
+.row .t{font-weight:700}
+.row .e{font-size:.82rem;color:#c0392b;display:none}
+.row.missing .e{display:block}
+.row .d{font-family:var(--serif);font-style:italic;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.row.cur .t{color:var(--ink)}
+.row.cur{background:var(--panel-hi)}
+.eq{display:none;align-items:flex-end;gap:2px;height:16px}
+.row.cur .eq{display:inline-flex}
+.row.cur .n{display:none}
+.eq i{width:3px;background:var(--accent);border-radius:2px;height:30%;animation:eq 1s ease-in-out infinite;animation-play-state:paused}
+.playing .row.cur .eq i{animation-play-state:running}
+.eq i:nth-child(2){animation-delay:-.4s}.eq i:nth-child(3){animation-delay:-.75s}
+@keyframes eq{50%{height:100%}}
+
+.mini{position:fixed;right:16px;bottom:16px;z-index:55;display:flex;align-items:center;gap:10px;padding:8px 8px 8px 8px;border-radius:999px;max-width:min(320px,calc(100vw - 32px))}
+.mini .disc{width:40px;height:40px;border-radius:50%;flex:none;display:grid;place-items:center;color:#2a1a00;background:conic-gradient(var(--accent),#e8664b,var(--accent));animation:spin 6s linear infinite;animation-play-state:paused}
+.playing .mini .disc{animation-play-state:running}
+.mini .txt{min-width:0;flex:1;text-align:left;line-height:1.3}
+.mini .txt b{display:block;font-size:.85rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini .txt span{font-size:.72rem;color:var(--ink-2)}
+.mini .go{width:40px;height:40px;border-radius:50%;background:var(--ink);color:var(--on-ink);display:grid;place-items:center;flex:none}
+
+/* 时间控制坞 */
+.dock{position:fixed;left:16px;bottom:16px;z-index:55;display:flex;flex-direction:column;align-items:flex-start;gap:10px}
+.dock-pill{display:inline-flex;align-items:center;gap:8px;padding:8px 16px 8px 12px;border-radius:999px;font-weight:700;font-size:.9rem}
+.dock-pill .t{font-family:var(--serif);font-style:italic;font-size:1.05rem;font-variant-numeric:tabular-nums}
+.dock-pill .i{color:var(--accent);font-size:1.25rem}
+.dock-panel{width:min(340px,calc(100vw - 32px));padding:16px 18px 14px;border-radius:24px;transform-origin:left bottom;animation:swapIn .3s both}
+.dock-panel[hidden]{display:none}
+.dock-panel .tt{display:flex;justify-content:space-between;font-size:.85rem;font-weight:700;margin-bottom:6px}
+.dock-panel .tt span:last-child{color:var(--ink-2);font-weight:600}
+.sky-range{--p:0%}
+.sky-range::-webkit-slider-runnable-track{height:12px!important;border-radius:12px!important;background:var(--sky-track)!important}
+.sky-range::-moz-range-track{height:12px!important;border-radius:12px!important;background:var(--sky-track)!important}
+.sky-range::-moz-range-progress{background:transparent!important}
+.sky-range::-webkit-slider-thumb{margin-top:-4px!important;width:20px!important;height:20px!important;background:#fff!important;border:3px solid var(--ink)!important}
+.ticks{display:flex;justify-content:space-between;font-size:.72rem;color:var(--ink-2);margin-top:2px}
+.dock-act{display:flex;gap:8px;margin-top:12px}
+.dock-act .btn{padding:7px 14px;font-size:.82rem}
+@media (max-width:560px){
+  .mini .txt{display:none}
+  .mini{padding:6px}
+}
+
+/* =====================================================================
+   分身展示
+   ===================================================================== */
+.socials{display:grid;grid-template-columns:1fr 1fr;column-gap:clamp(24px,5vw,72px)}
+@media (max-width:760px){.socials{grid-template-columns:1fr}}
+.soc{display:grid;grid-template-columns:48px 1fr auto;gap:16px;align-items:center;width:100%;text-align:left;padding:22px 12px;border-top:1px solid var(--line);border-radius:6px;transition:padding .3s}
+.soc:hover{padding-left:22px}
+.soc .ic{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-size:1.4rem;background:var(--panel);border:1px solid var(--line);transition:background .3s,color .3s,transform .3s}
+.soc:hover .ic{background:var(--ink);color:var(--on-ink);transform:rotate(-6deg)}
+.soc h3{font-size:1.05rem;font-weight:800;line-height:1.3}
+.soc .h{font-family:var(--serif);font-style:italic;color:var(--ink-2)}
+.soc p{font-size:.88rem;color:var(--ink-2);margin-top:2px}
+.soc .cp{display:flex;align-items:center;gap:6px;font-size:.82rem;font-weight:700;color:var(--ink-2);opacity:0;transition:opacity .25s}
+.soc:hover .cp,.soc:focus-visible .cp{opacity:1}
+@media (hover:none){.soc .cp{opacity:1}}
+.soc.end{border-bottom:1px solid var(--line)}
+@media (min-width:761px){.soc:nth-last-child(2){border-bottom:1px solid var(--line)}}
+
+footer{padding:90px 0 110px}
+.foot-in{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:32px}
+.foot-in h3{font-size:1.6rem;font-weight:900;letter-spacing:.02em}
+.foot-in p{color:var(--ink-2);font-size:.9rem}
+.foot-in small{display:block;margin-top:14px;color:var(--ink-2);font-size:.8rem}
+
+.toast{position:fixed;left:50%;bottom:84px;z-index:120;transform:translate(-50%,20px);opacity:0;pointer-events:none;padding:10px 18px;border-radius:999px;background:var(--ink);color:var(--on-ink);font-weight:700;font-size:.88rem;transition:opacity .3s,transform .3s;max-width:calc(100vw - 32px);text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important}
+  .cloud{animation:none!important;left:20vw}
+}
+</style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans transition-colors duration-300">
+<body>
 
-    <!-- Header / Navbar -->
-    <header class="fixed top-0 left-0 right-0 z-50 glass border-b border-slate-200/50 dark:border-slate-800/50 transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <a href="#" class="text-xl font-bold bg-gradient-to-r from-sky-500 to-indigo-600 bg-clip-text text-transparent">
-                郑新 Zheng Xin
-            </a>
+<!-- 图标库 -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-cap" viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.6 2.7 3 6 3s6-1.4 6-3v-5"/></symbol>
+  <symbol id="i-briefcase" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M3 13h18"/></symbol>
+  <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H4v1a4 4 0 0 0 4 4M16 6h4v1a4 4 0 0 1-4 4M12 13v4M8 21h8M10 17h4"/></symbol>
+  <symbol id="i-trend" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></symbol>
+  <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="9" r="6"/><path d="M8.5 14L7 22l5-3 5 3-1.5-8"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></symbol>
+  <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.5"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M3 5.5C5 4 8.5 4 12 6c3.5-2 7-2 9-.5V19c-2-1.5-5.500-1.500-9 .5-3.500-2-7-2-9-.5z"/><path d="M12 6v13.500"/></symbol>
+  <symbol id="i-music" viewBox="0 0 24 24"><path d="M9 18V5l11-2v13"/><circle cx="6.500" cy="18" r="2.500"/><circle cx="17.500" cy="16" r="2.500"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1h-8l-5 4v-4H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/><path d="M8 10h8M8 13h5"/></symbol>
+  <symbol id="i-tv" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M8 3l4 3 4-3M10 10.500l4 2-4 2z"/></symbol>
+  <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></symbol>
+  <symbol id="i-broadcast" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><path d="M8 8a5.700 5.700 0 0 0 0 8M16 8a5.700 5.700 0 0 1 0 8M5 5a10 10 0 0 0 0 14M19 5a10 10 0 0 1 0 14"/></symbol>
+  <symbol id="i-video" viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2.500"/><path d="M16 10.500l5-3v9l-5-3"/></symbol>
+  <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.500 10.900c.6.5 1 1.200 1 2.100h5c0-.9.4-1.600 1-2.100A6 6 0 0 0 12 3z"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.900 4.900l1.400 1.400M17.700 17.700l1.400 1.400M2 12h2M20 12h2M4.900 19.100l1.400-1.400M17.700 6.300l1.400-1.400"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.500A8.500 8.500 0 1 1 9.500 4a7 7 0 0 0 10.500 10.500z"/></symbol>
+  <symbol id="i-sunrise" viewBox="0 0 24 24"><path d="M12 3v4M5.600 8.600l1.400 1.400M18.400 8.600L17 10M2 17h20M7 17a5 5 0 0 1 10 0M9 21h6"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.500v15a1 1 0 0 0 1.500.9l12-7.500a1 1 0 0 0 0-1.800l-12-7.500A1 1 0 0 0 7 4.500z"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="4" width="4.500" height="16" rx="1.200"/><rect x="13.500" y="4" width="4.500" height="16" rx="1.200"/></symbol>
+  <symbol id="i-prev" viewBox="0 0 24 24"><path d="M6 5v14M19 5.500v13a.8.8 0 0 1-1.200.7L9 13.100a1.300 1.300 0 0 1 0-2.200l8.800-6.100A.8.8 0 0 1 19 5.500z"/></symbol>
+  <symbol id="i-next" viewBox="0 0 24 24"><path d="M18 5v14M5 5.500v13a.8.8 0 0 0 1.200.7L15 13.100a1.300 1.300 0 0 0 0-2.200L6.200 4.800A.8.8 0 0 0 5 5.500z"/></symbol>
+  <symbol id="i-shuffle" viewBox="0 0 24 24"><path d="M3 7h3.500c3 0 4.500 2 6 5s3 5 6 5H21M3 17h3.500c1.500 0 2.700-.6 3.700-1.700M14 8.700C15 7.600 16.200 7 17.500 7H21M18 4l3 3-3 3M18 14l3 3-3 3"/></symbol>
+  <symbol id="i-repeat" viewBox="0 0 24 24"><path d="M17 3l3 3-3 3M4 11V9a3 3 0 0 1 3-3h13M7 21l-3-3 3-3M20 13v2a3 3 0 0 1-3 3H4"/></symbol>
+  <symbol id="i-repeat1" viewBox="0 0 24 24"><path d="M17 3l3 3-3 3M4 11V9a3 3 0 0 1 3-3h13M7 21l-3-3 3-3M20 13v2a3 3 0 0 1-3 3H4M11 10l1.500-1v5"/></symbol>
+  <symbol id="i-volume" viewBox="0 0 24 24"><path d="M4 9.500v5h3.500L13 19V5L7.500 9.500zM16.500 8.500a5 5 0 0 1 0 7M19 6a8.500 8.500 0 0 1 0 12"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19"/></symbol>
+  <symbol id="i-chev-l" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></symbol>
+  <symbol id="i-chev-r" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></symbol>
+  <symbol id="i-chev-d" viewBox="0 0 24 24"><path d="M5 9l7 7 7-7"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2.500"/><path d="M16 8V6.500A2.500 2.500 0 0 0 13.500 4h-7A2.500 2.500 0 0 0 4 6.500v7A2.500 2.500 0 0 0 6.500 16H8"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M6 3h8l5 5v12a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5M8.500 13h7M8.500 17h5"/></symbol>
+  <symbol id="i-plane" viewBox="0 0 24 24"><path d="M21 3L3 10.500l7 2.500 2.500 7z"/><path d="M10 13l11-10"/></symbol>
+  <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-8-4.800-8-11a4.500 4.500 0 0 1 8-2.800A4.500 4.500 0 0 1 20 9c0 6.200-8 11-8 11z"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M9 21h6"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.500"/><path d="M2.500 20a6.500 6.500 0 0 1 13 0M16 4.500a3.500 3.500 0 0 1 0 7M18 14.500c2.200.8 3.500 2.700 3.500 5.500"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.800"/><path d="M21 16l-5-5-8 8"/></symbol>
+</svg>
 
-            <!-- Desktop Navigation -->
-            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
-                <a href="#about" class="hover:text-sky-500 transition-colors">首页</a>
-                <a href="#experience" class="hover:text-sky-500 transition-colors">职业</a>
-                <a href="#gallery" class="hover:text-sky-500 transition-colors">生活</a>
-                <a href="#books" class="hover:text-sky-500 transition-colors">著作</a>
-                <a href="#aerial" class="hover:text-sky-500 transition-colors">航拍</a>
-                <a href="#contact" class="hover:text-sky-500 transition-colors">联系</a>
-            </nav>
+<div class="progress" id="progress"></div>
 
-            <!-- Right Controls -->
-            <div class="flex items-center space-x-4">
-                <button id="themeToggle" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors">
-                    <i class="fa-solid fa-moon dark:hidden text-lg"></i>
-                    <i class="fa-solid fa-sun hidden dark:block text-lg"></i>
-                </button>
-                <button id="mobileMenuBtn" class="md:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300">
-                    <i class="fa-solid fa-bars text-xl"></i>
-                </button>
-            </div>
-        </div>
+<!-- 背景场景 -->
+<div class="scene" id="scene" aria-hidden="true">
+  <div class="bgimg" data-k="dawn"></div><div class="bgimg" data-k="day"></div><div class="bgimg" data-k="dusk"></div><div class="bgimg" data-k="night"></div>
+  <div class="sky" id="sky"></div>
+  <div class="orb sun" id="sun"></div>
+  <div class="orb moon" id="moon"></div>
+  <div class="sheen"></div>
+  <canvas id="stars"></canvas>
+  <div class="grain"></div>
+  <div class="vignette"></div>
+</div>
 
-        <!-- Mobile Menu -->
-        <div id="mobileMenu" class="hidden md:hidden px-4 pt-2 pb-6 space-y-3 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
-            <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-100 dark:hover:bg-slate-800">首页</a>
-            <a href="#experience" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-100 dark:hover:bg-slate-800">职业</a>
-            <a href="#gallery" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-100 dark:hover:bg-slate-800">生活</a>
-            <a href="#books" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-100 dark:hover:bg-slate-800">著作</a>
-            <a href="#aerial" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-100 dark:hover:bg-slate-800">航拍</a>
-            <a href="#contact" class="block px-3 py-2 rounded-md text-base font-medium hover:bg-slate-100 dark:hover:bg-slate-800">联系</a>
-        </div>
-    </header>
+<!-- 导航 -->
+<header class="nav" id="nav">
+  <a href="#about" class="brand"><i></i>郑新</a>
+  <nav class="links" id="links" aria-label="主导航">
+    <a href="#about">首页</a>
+    <a href="#experience">工作经历</a>
+    <a href="#gallery">精彩时刻</a>
+    <a href="#books">电子书籍</a>
+    <a href="#music">自制音乐</a>
+    <a href="#digital-avatars">分身展示</a>
+  </nav>
+  <button class="icon-btn menu-btn" id="menuBtn" aria-label="打开菜单" aria-expanded="false"><svg class="i"><use href="#i-menu"/></svg></button>
+</header>
 
-    <!-- Hero Section -->
-    <section id="about" class="min-h-screen pt-24 pb-16 flex items-center justify-center relative overflow-hidden">
-        <div class="absolute inset-0 -z-10 opacity-30 dark:opacity-20 pointer-events-none">
-            <div class="absolute top-20 left-10 w-72 h-72 bg-sky-400 rounded-full filter blur-3xl"></div>
-            <div class="absolute bottom-20 right-10 w-96 h-96 bg-indigo-500 rounded-full filter blur-3xl"></div>
-        </div>
-        
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div class="inline-block p-1 bg-gradient-to-tr from-sky-400 to-indigo-600 rounded-full mb-6">
-                <img src="./images/avatar.jpg" 
-                     onerror="this.src='./images/avatar.jpg'"
-                     alt="郑新" 
-                     class="w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover border-4 border-white dark:border-slate-900 shadow-xl">
-            </div>
-            <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight mb-3">
-                你好，我是 <span class="bg-gradient-to-r from-sky-500 to-indigo-600 bg-clip-text text-transparent">郑新</span>
-            </h1>
-            <p class="text-lg sm:text-xl font-medium text-slate-700 dark:text-slate-300 mb-2">
-                阿斯利康（AstraZeneca）高级产品专员
-            </p>
-            
-            <!-- 座右铭 -->
-            <div class="inline-block px-4 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-sky-600 dark:text-sky-400 font-semibold text-sm mb-8 border border-slate-200 dark:border-slate-700">
-                “ 拥抱创新，顺势而为 ”
-            </div>
+<main>
+<!-- ============ Hero ============ -->
+<section id="about" class="hero">
+  <div class="wrap">
+    <p class="hello"><span id="greet">你好</span><span class="sep"></span><span class="clock" id="clock">--:--</span><span class="preview-tag" id="previewTag" hidden>时间预览</span></p>
+    <div class="name-row">
+      <div class="avatar" aria-label="郑新的头像">郑<img id="avatarImg" src="./images/avatar.jpg" alt="郑新"></div>
+      <h1 class="name" aria-label="郑新"><span aria-hidden="true">郑</span><span aria-hidden="true">新</span></h1>
+    </div>
+    <p class="role"><small>阿斯利康 (AstraZeneca)</small>高级产品专员</p>
+    <p class="motto">“ 拥抱创新，顺势而为 ”</p>
+    <div class="quick">
+      <a href="#experience"><svg class="i"><use href="#i-briefcase"/></svg>工作经历</a>
+      <a href="#gallery"><svg class="i"><use href="#i-camera"/></svg>精彩时刻</a>
+      <a href="#books"><svg class="i"><use href="#i-book"/></svg>电子书籍</a>
+      <a href="#music"><svg class="i"><use href="#i-music"/></svg>自制音乐</a>
+      <a href="#digital-avatars"><svg class="i"><use href="#i-users"/></svg>分身展示</a>
+    </div>
+  </div>
+  <a href="#experience" class="scroll-cue" aria-label="向下滚动"><span>向下</span><svg class="i"><use href="#i-chev-d"/></svg></a>
+</section>
 
-            <!-- 5个导航标签 -->
-            <div class="flex flex-wrap justify-center gap-3 sm:gap-4 max-w-xl mx-auto">
-                <a href="#experience" class="px-5 py-2.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-sky-500 dark:hover:border-sky-500 hover:text-sky-500 font-medium shadow-sm hover:shadow transition-all flex items-center gap-2">
-                    <i class="fa-solid fa-briefcase text-sky-500"></i> 职业
-                </a>
-                <a href="#gallery" class="px-5 py-2.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-indigo-500 dark:hover:border-indigo-500 hover:text-indigo-500 font-medium shadow-sm hover:shadow transition-all flex items-center gap-2">
-                    <i class="fa-solid fa-camera text-indigo-500"></i> 生活
-                </a>
-                <a href="#books" class="px-5 py-2.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-500 dark:hover:border-emerald-500 hover:text-emerald-500 font-medium shadow-sm hover:shadow transition-all flex items-center gap-2">
-                    <i class="fa-solid fa-book text-emerald-500"></i> 著作
-                </a>
-                <a href="#aerial" class="px-5 py-2.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-amber-500 dark:hover:border-amber-500 hover:text-amber-500 font-medium shadow-sm hover:shadow transition-all flex items-center gap-2">
-                    <i class="fa-solid fa-plane text-amber-500"></i> 航拍
-                </a>
-                <a href="#contact" class="px-5 py-2.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-rose-500 dark:hover:border-rose-500 hover:text-rose-500 font-medium shadow-sm hover:shadow transition-all flex items-center gap-2">
-                    <i class="fa-solid fa-paper-plane text-rose-500"></i> 联系
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Work Experience Timeline (从上到下 2017 -> 2025) -->
-    <section id="experience" class="py-20 bg-white dark:bg-slate-900/50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-3xl font-bold tracking-tight mb-4">职业经历与成长脚印</h2>
-                <p class="text-slate-600 dark:text-slate-400">立足医药信息沟通与产品学术推广，持续探索行业前沿。</p>
-            </div>
-
-            <div class="relative timeline-line max-w-4xl mx-auto">
-
-                <!-- 2017年 -->
-                <div class="mb-12 flex flex-col md:flex-row items-center">
-                    <div class="flex md:w-1/2 md:justify-end md:pr-8 mb-4 md:mb-0">
-                        <div class="bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl shadow-md border border-slate-100 dark:border-slate-700/50 w-full md:max-w-md">
-                            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">2017 年</span>
-                            <h3 class="text-xl font-bold mt-1">大学毕业</h3>
-                            <p class="text-sm text-slate-500 dark:text-slate-400 mb-2">福建医科大学</p>
-                            <p class="text-sm text-slate-600 dark:text-slate-300">顺利毕业于福建医科大学，开启医药健康领域的专业实践与学术探索。</p>
-                        </div>
-                    </div>
-                    <div class="z-10 flex items-center justify-center w-10 h-10 rounded-full bg-slate-500 text-white shadow-lg shrink-0">
-                        <i class="fa-solid fa-graduation-cap text-sm"></i>
-                    </div>
-                    <div class="md:w-1/2 md:pl-8 hidden md:block"></div>
-                </div>
-
-                <!-- 2020年 -->
-                <div class="mb-12 flex flex-col md:flex-row items-center">
-                    <div class="md:w-1/2 md:pr-8 hidden md:block"></div>
-                    <div class="z-10 flex items-center justify-center w-10 h-10 rounded-full bg-sky-500 text-white shadow-lg shrink-0">
-                        <i class="fa-solid fa-building text-sm"></i>
-                    </div>
-                    <div class="flex md:w-1/2 md:justify-start md:pl-8 mb-4 md:mb-0">
-                        <div class="bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl shadow-md border border-slate-100 dark:border-slate-700/50 w-full md:max-w-md">
-                            <span class="text-xs font-semibold uppercase tracking-wider text-sky-500">2020 年 8 月 3 日</span>
-                            <h3 class="text-xl font-bold mt-1">加入阿斯利康 (AstraZeneca)</h3>
-                            <p class="text-sm text-slate-500 dark:text-slate-400 mb-2">医学信息沟通代表</p>
-                            <p class="text-sm text-slate-600 dark:text-slate-300">开启在跨国药企的职业新旅程，致力于专业学术传递与临床价值沟通。</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 2022年 -->
-                <div class="mb-12 flex flex-col md:flex-row items-center">
-                    <div class="flex md:w-1/2 md:justify-end md:pr-8 mb-4 md:mb-0">
-                        <div class="bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl shadow-md border border-slate-100 dark:border-slate-700/50 w-full md:max-w-md">
-                            <span class="text-xs font-semibold uppercase tracking-wider text-amber-500">2022 年</span>
-                            <h3 class="text-xl font-bold mt-1">获得 EC 绩效卓越奖</h3>
-                            <p class="text-sm text-slate-500 dark:text-slate-400 mb-2">阿斯利康 荣誉表彰</p>
-                            <p class="text-sm text-slate-600 dark:text-slate-300">凭出色的业务指标与高质量的学术沟通服务，获得 EC 绩效卓越评定。</p>
-                        </div>
-                    </div>
-                    <div class="z-10 flex items-center justify-center w-10 h-10 rounded-full bg-amber-500 text-white shadow-lg shrink-0">
-                        <i class="fa-solid fa-trophy text-sm"></i>
-                    </div>
-                    <div class="md:w-1/2 md:pl-8 hidden md:block"></div>
-                </div>
-
-                <!-- 2023年 -->
-                <div class="mb-12 flex flex-col md:flex-row items-center">
-                    <div class="md:w-1/2 md:pr-8 hidden md:block"></div>
-                    <div class="z-10 flex items-center justify-center w-10 h-10 rounded-full bg-indigo-500 text-white shadow-lg shrink-0">
-                        <i class="fa-solid fa-arrow-up-right-dots text-sm"></i>
-                    </div>
-                    <div class="flex md:w-1/2 md:justify-start md:pl-8 mb-4 md:mb-0">
-                        <div class="bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl shadow-md border border-slate-100 dark:border-slate-700/50 w-full md:max-w-md">
-                            <span class="text-xs font-semibold uppercase tracking-wider text-indigo-500">2023 年</span>
-                            <h3 class="text-xl font-bold mt-1">晋升 高级医学代表</h3>
-                            <p class="text-sm text-slate-500 dark:text-slate-400 mb-2">职业生涯突破</p>
-                            <p class="text-sm text-slate-600 dark:text-slate-300">团队骨干担当，协助区域学术会议筹备及重点项目的推进实施。</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 2024年 -->
-                <div class="mb-12 flex flex-col md:flex-row items-center">
-                    <div class="flex md:w-1/2 md:justify-end md:pr-8 mb-4 md:mb-0">
-                        <div class="bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl shadow-md border border-slate-100 dark:border-slate-700/50 w-full md:max-w-md">
-                            <span class="text-xs font-semibold uppercase tracking-wider text-amber-500">2024 年</span>
-                            <h3 class="text-xl font-bold mt-1">再获 EC 绩效卓越奖</h3>
-                            <p class="text-sm text-slate-500 dark:text-slate-400 mb-2">阿斯利康 荣誉表彰</p>
-                            <p class="text-sm text-slate-600 dark:text-slate-300">持续保持高水平业绩产出与团队协作，再次斩获 EC 绩效卓越称号。</p>
-                        </div>
-                    </div>
-                    <div class="z-10 flex items-center justify-center w-10 h-10 rounded-full bg-amber-500 text-white shadow-lg shrink-0">
-                        <i class="fa-solid fa-award text-sm"></i>
-                    </div>
-                    <div class="md:w-1/2 md:pl-8 hidden md:block"></div>
-                </div>
-
-                <!-- 2025年 -->
-                <div class="flex flex-col md:flex-row items-center">
-                    <div class="md:w-1/2 md:pr-8 hidden md:block"></div>
-                    <div class="z-10 flex items-center justify-center w-10 h-10 rounded-full bg-emerald-500 text-white shadow-lg shrink-0">
-                        <i class="fa-solid fa-user-check text-sm"></i>
-                    </div>
-                    <div class="flex md:w-1/2 md:justify-start md:pl-8 mb-4 md:mb-0">
-                        <div class="bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl shadow-md border border-slate-100 dark:border-slate-700/50 w-full md:max-w-md">
-                            <span class="text-xs font-semibold uppercase tracking-wider text-emerald-500">2025 年</span>
-                            <h3 class="text-xl font-bold mt-1">晋升 高级产品专员</h3>
-                            <p class="text-sm text-slate-500 dark:text-slate-400 mb-2">通过区域春苗测试</p>
-                            <p class="text-sm text-slate-600 dark:text-slate-300">高分通过区域春苗测试考评，成功晋升为高级产品专员，开启产品战略策划与精准学术推介。</p>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- Photo Gallery Section -->
-    <section id="gallery" class="py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-12">
-                <h2 class="text-3xl font-bold tracking-tight mb-4">精彩风采与生活瞬间</h2>
-                <p class="text-slate-600 dark:text-slate-400">记录工作中的高光时刻、远方的壮阔风景，以及与家人度过的温馨岁月。</p>
-                
-                <!-- Filter Tabs -->
-                <div class="flex flex-wrap justify-center gap-3 mt-8">
-                    <button onclick="filterGallery('all')" class="gallery-tab px-5 py-2 rounded-full text-sm font-medium transition-all bg-sky-600 text-white active" data-filter="all">全部照片</button>
-                    <button onclick="filterGallery('work')" class="gallery-tab px-5 py-2 rounded-full text-sm font-medium transition-all bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300" data-filter="work">职场风采/获奖/主持</button>
-                    <button onclick="filterGallery('travel')" class="gallery-tab px-5 py-2 rounded-full text-sm font-medium transition-all bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300" data-filter="travel">旅行足迹</button>
-                    <button onclick="filterGallery('family')" class="gallery-tab px-5 py-2 rounded-full text-sm font-medium transition-all bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300" data-filter="family">家庭时光</button>
-                </div>
-            </div>
-
-            <!-- Gallery Grid -->
-            <div id="galleryGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Work 1: Award Photo -->
-                <div class="gallery-item work group relative overflow-hidden rounded-2xl shadow-md cursor-pointer aspect-4/3" onclick="openLightbox('./images/award.jpg', '2022年团队合影')">
-                    <img src="./images/award.jpg" onerror="this.src='./images/award.jpg " alt="团队合影" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                        <span class="text-xs text-amber-400 font-semibold uppercase tracking-wider">团队合影</span>
-                        <h4 class="text-white text-lg font-bold">EC 团队合影</h4>
-                    </div>
-                </div>
-
-                <!-- Work 2: Gala Hosting -->
-                <div class="gallery-item work group relative overflow-hidden rounded-2xl shadow-md cursor-pointer aspect-4/3" onclick="openLightbox('./images/host.jpg', '2025公司年终会主持')">
-                    <img src="./images/host.jpg" onerror="this.src='./images/host.jpg'" alt="晚宴主持照" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                        <span class="text-xs text-amber-400 font-semibold uppercase tracking-wider">会议主持</span>
-                        <h4 class="text-white text-lg font-bold">晚会主持风采</h4>
-                    </div>
-                </div>
-
-                <!-- Work 3: Team Building -->
-                <div class="gallery-item work group relative overflow-hidden rounded-2xl shadow-md cursor-pointer aspect-4/3" onclick="openLightbox('./images/team.jpg', '2026年赶海一号团建照')">
-                    <img src="./images/team.jpg" onerror="this.src='./images/team.jpg'" alt="公司团建照" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                        <span class="text-xs text-amber-400 font-semibold uppercase tracking-wider">团队合影</span>
-                        <h4 class="text-white text-lg font-bold">团队拓展与团建</h4>
-                    </div>
-                </div>
-
-                <!-- Travel 1 -->
-                <div class="gallery-item travel group relative overflow-hidden rounded-2xl shadow-md cursor-pointer aspect-4/3" onclick="openLightbox('./images/shantou.jpg', '远方旅行回忆')">
-                    <img src="./images/shantou.jpg" alt="旅行" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                        <span class="text-xs text-sky-400 font-semibold uppercase tracking-wider">旅行足迹</span>
-                        <h4 class="text-white text-lg font-bold">汕头</h4>
-                    </div>
-                </div>
-
-                <!-- Family 1 -->
-                <div class="gallery-item family group relative overflow-hidden rounded-2xl shadow-md cursor-pointer aspect-4/3" onclick="openLightbox('./images/nanchang.jpg', '温馨家庭时光')">
-                    <img src="./images/nanchang.jpg" alt="家庭" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                        <span class="text-xs text-emerald-400 font-semibold uppercase tracking-wider">家庭时光</span>
-                        <h4 class="text-white text-lg font-bold">南昌</h4>
-                    </div>
-                </div>
-
-                <!-- Travel 2 -->
-                <div class="gallery-item travel group relative overflow-hidden rounded-2xl shadow-md cursor-pointer aspect-4/3" onclick="openLightbox('https://images.unsplash.com/photo-1476514525535-ce74f45814d9?auto=format&fit=crop&q=80&w=1200', '海滨度假风光')">
-                    <img src="https://images.unsplash.com/photo-1476514525535-ce74f45814d9?auto=format&fit=crop&q=80&w=600" alt="旅行" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                        <span class="text-xs text-sky-400 font-semibold uppercase tracking-wider">旅行足迹</span>
-                        <h4 class="text-white text-lg font-bold">阿尔卑斯山脉风光</h4>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Published Books Section -->
-    <section id="books" class="py-20 bg-slate-100 dark:bg-slate-900/80">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-3xl font-bold tracking-tight mb-4">出版书籍与专业著作</h2>
-                <p class="text-slate-600 dark:text-slate-400">将行业洞察与学术思考凝结成文，记录探索路上的点滴沉淀。</p>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Book 1 -->
-                <div class="bg-white dark:bg-slate-800/80 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row gap-6 border border-slate-100 dark:border-slate-700/50 shadow-md">
-                    <div class="w-40 h-56 bg-slate-300 dark:bg-slate-700 rounded-lg shrink-0 overflow-hidden shadow-lg mx-auto sm:mx-0">
-                        <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=400" alt="书籍封面" class="w-full h-full object-cover">
-                    </div>
-                    <div class="flex flex-col justify-between">
-                        <div>
-                            <span class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-sky-100 text-sky-700 dark:bg-sky-900/50 dark:text-sky-300 mb-2">学术/专业专著</span>
-                            <h3 class="text-2xl font-bold mb-2">《现代医学沟通与学术推介实战》</h3>
-                            <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">医药科技出版社 | 2023出版</p>
-                            <p class="text-sm text-slate-600 dark:text-slate-300">系统梳理高价值学术信息的沟通方法论，兼具理论深度与实操指南。</p>
-                        </div>
-                        <div class="mt-6 flex gap-3">
-                            <a href="#" class="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-sm font-medium transition-colors">查看详情</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Book 2 -->
-                <div class="bg-white dark:bg-slate-800/80 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row gap-6 border border-slate-100 dark:border-slate-700/50 shadow-md">
-                    <div class="w-40 h-56 bg-slate-300 dark:bg-slate-700 rounded-lg shrink-0 overflow-hidden shadow-lg mx-auto sm:mx-0">
-                        <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&q=80&w=400" alt="书籍封面" class="w-full h-full object-cover">
-                    </div>
-                    <div class="flex flex-col justify-between">
-                        <div>
-                            <span class="inline-block px-3 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-700 dark:bg-amber-900/50 dark:text-amber-300 mb-2">个人随笔</span>
-                            <h3 class="text-2xl font-bold mb-2">《光影云端：航拍视觉纪实》</h3>
-                            <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">摄影艺术出版社 | 2022出版</p>
-                            <p class="text-sm text-slate-600 dark:text-slate-300">收录航拍风光照片与构图创作心得，从上帝视角记录神州大地的四时美景。</p>
-                        </div>
-                        <div class="mt-6 flex gap-3">
-                            <a href="#" class="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-sm font-medium transition-colors">查看详情</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Aerial Drone Videos Section -->
-    <section id="aerial" class="py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <span class="text-amber-500 font-semibold text-sm uppercase tracking-wider">上帝视角</span>
-                <h2 class="text-3xl font-bold tracking-tight mt-1 mb-4">航拍视频作品展示</h2>
-                <p class="text-slate-600 dark:text-slate-400">使用无人机俯瞰大地，用镜头捕捉震撼的自然山川与城市轮廓。</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Video 1 -->
-                <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg group border border-slate-100 dark:border-slate-700/50">
-                    <div class="relative aspect-video bg-slate-900 cursor-pointer overflow-hidden" onclick="playVideo('https://player.bilibili.com/player.html?bvid=BV1GJ411x7vh&page=1')">
-                        <img src="https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&q=80&w=800" alt="航拍封面" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/30 transition-colors">
-                            <div class="w-16 h-16 rounded-full bg-white/90 dark:bg-slate-900/90 flex items-center justify-center text-amber-500 shadow-xl group-hover:scale-110 transition-transform">
-                                <i class="fa-solid fa-play text-xl ml-1"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex justify-between items-center mb-2">
-                            <h3 class="text-xl font-bold">山海连绵：航拍大地之美</h3>
-                            <span class="text-xs text-slate-500"><i class="fa-regular fa-clock mr-1"></i>03:45</span>
-                        </div>
-                        <p class="text-sm text-slate-600 dark:text-slate-300">使用大疆无人机创作，记录晨曦中浩瀚的云海与群山。</p>
-                    </div>
-                </div>
-
-                <!-- Video 2 -->
-                <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-lg group border border-slate-100 dark:border-slate-700/50">
-                    <div class="relative aspect-video bg-slate-900 cursor-pointer overflow-hidden" onclick="playVideo('https://player.bilibili.com/player.html?bvid=BV1GJ411x7vh&page=1')">
-                        <img src="https://images.unsplash.com/photo-1477959858617-67f30ac4ce78?auto=format&fit=crop&q=80&w=800" alt="航拍封面" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/30 transition-colors">
-                            <div class="w-16 h-16 rounded-full bg-white/90 dark:bg-slate-900/90 flex items-center justify-center text-amber-500 shadow-xl group-hover:scale-110 transition-transform">
-                                <i class="fa-solid fa-play text-xl ml-1"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="p-6">
-                        <div class="flex justify-between items-center mb-2">
-                            <h3 class="text-xl font-bold">城市天际线：夜色绚烂</h3>
-                            <span class="text-xs text-slate-500"><i class="fa-regular fa-clock mr-1"></i>02:15</span>
-                        </div>
-                        <p class="text-sm text-slate-600 dark:text-slate-300">俯瞰繁华现代都市的高楼大厦与车水马龙，光影交织。</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact & Footer Section -->
-    <footer id="contact" class="bg-slate-900 text-white pt-16 pb-12 border-t border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-                <div>
-                    <h3 class="text-2xl font-bold mb-4 bg-gradient-to-r from-sky-400 to-indigo-400 bg-clip-text text-transparent">郑新 Zheng Xin</h3>
-                    <p class="text-slate-400 text-sm leading-relaxed">
-                        阿斯利康 高级产品专员。保持敏锐与创新，顺应时代趋势发展。欢迎交流与指导！
-                    </p>
-                </div>
-
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">快速导航</h4>
-                    <ul class="space-y-2 text-sm text-slate-400">
-                        <li><a href="#about" class="hover:text-white transition-colors">关于我</a></li>
-                        <li><a href="#experience" class="hover:text-white transition-colors">职业履历</a></li>
-                        <li><a href="#gallery" class="hover:text-white transition-colors">精彩瞬间</a></li>
-                        <li><a href="#books" class="hover:text-white transition-colors">出版书籍</a></li>
-                        <li><a href="#aerial" class="hover:text-white transition-colors">航拍视频</a></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">联系方式</h4>
-                    <ul class="space-y-3 text-sm text-slate-400">
-                        <li class="flex items-center gap-3">
-                            <i class="fa-solid fa-envelope text-sky-400"></i>
-                            <span>zhengxin@example.com</span>
-                        </li>
-                        <li class="flex items-center gap-3">
-                            <i class="fa-solid fa-location-dot text-sky-400"></i>
-                            <span>福建省 / 福州市</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h4 class="text-lg font-semibold mb-4">社交平台</h4>
-                    <div class="flex space-x-4">
-                        <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-sky-600 transition-colors">
-                            <i class="fa-brands fa-weixin"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-sky-600 transition-colors">
-                            <i class="fa-brands fa-bilibili"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-sky-600 transition-colors">
-                            <i class="fa-brands fa-weibo"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="pt-8 border-t border-slate-800 text-center text-xs text-slate-500">
-                <p>&copy; 2026 郑新 (Zheng Xin). All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Lightbox Modal for Photos -->
-    <div id="lightbox" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
-        <button onclick="closeLightbox()" class="absolute top-6 right-6 text-white text-3xl hover:text-slate-300">
-            <i class="fa-solid fa-xmark"></i>
-        </button>
-        <div class="max-w-4xl max-h-[85vh] text-center">
-            <img id="lightboxImg" src="" alt="Full view" class="max-w-full max-h-[75vh] object-contain rounded-lg mx-auto shadow-2xl">
-            <p id="lightboxCaption" class="text-white mt-4 text-lg font-medium"></p>
-        </div>
+<!-- ============ 工作经历 ============ -->
+<section id="experience">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>工作经历</h2>
+      <p>从医学院校到跨国药企，在学术传承与市场推介中追求卓越。点击时间线上的节点，查看每一步。</p>
     </div>
 
-    <!-- Video Player Modal -->
-    <div id="videoModal" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
-        <button onclick="closeVideo()" class="absolute top-6 right-6 text-white text-3xl hover:text-slate-300">
-            <i class="fa-solid fa-xmark"></i>
-        </button>
-        <div class="w-full max-w-4xl aspect-video rounded-xl overflow-hidden shadow-2xl">
-            <iframe id="videoIframe" class="w-full h-full" src="" title="Video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <div class="panel journey-panel">
+      <div class="journey-bar">
+        <h3>经历时间线</h3>
+        <span class="hint" id="jHint">← → 键或左右滑动也可以切换</span>
+      </div>
+      <div class="journey-scroll" id="jScroll">
+        <div class="journey" id="journey">
+          <svg viewBox="0 0 1000 340" aria-hidden="true">
+            <defs>
+              <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb35c" stop-opacity=".3"/><stop offset="1" stop-color="#ffb35c" stop-opacity="0"/></linearGradient>
+              <linearGradient id="fadeX" x1="0" y1="0" x2="1" y2="0"><stop offset=".62" stop-color="#fff"/><stop offset=".93" stop-color="#000"/></linearGradient>
+              <mask id="areaMask" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="340"><rect width="1000" height="340" fill="url(#fadeX)"/></mask>
+            </defs>
+            <path class="area" id="jArea" mask="url(#areaMask)"/>
+            <path class="track" id="jTrack"/>
+            <g id="jSegs"></g>
+          </svg>
         </div>
+      </div>
+
+      <div class="detail" id="detail" aria-live="polite">
+        <div><div class="big" id="dYear">2017</div><span class="tag" id="dTag">教育</span></div>
+        <div>
+          <h4 id="dTitle"></h4>
+          <p class="sub" id="dSub"></p>
+          <p class="d" id="dDesc"></p>
+          <p class="when" id="dWhen"></p>
+        </div>
+      </div>
+
+      <div class="j-ctrl">
+        <div class="ladder" id="ladder" aria-label="职级阶梯">
+          <div class="step"><small>2020</small>医学信息沟通代表</div>
+          <div class="step"><small>2023</small>高级医学代表</div>
+          <div class="step"><small>2025</small>高级产品专员</div>
+        </div>
+        <div class="btns">
+          <button class="icon-btn btn ghost" id="jPrev" aria-label="上一个节点"><svg class="i"><use href="#i-chev-l"/></svg></button>
+          <button class="icon-btn btn ghost" id="jNext" aria-label="下一个节点"><svg class="i"><use href="#i-chev-r"/></svg></button>
+          <button class="btn" id="jPlay"><svg class="i solid"><use href="#i-play"/></svg><span>回放历程</span></button>
+        </div>
+      </div>
     </div>
+  </div>
+</section>
 
-    <!-- JavaScript Logic -->
-    <script>
-        // Toggle Dark/Light Mode
-        const themeToggleBtn = document.getElementById('themeToggle');
-        themeToggleBtn.addEventListener('click', () => {
-            document.documentElement.classList.toggle('dark');
-        });
+<!-- ============ 精彩时刻 ============ -->
+<section id="gallery">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>精彩时刻</h2>
+      <p>工作高光、远方旅行与家庭温馨时光。点击照片可以放大浏览。</p>
+    </div>
+    <div class="tabs" id="gTabs" role="tablist" aria-label="照片分类">
+      <span class="pill"></span>
+      <button role="tab" aria-selected="true" data-f="all">全部照片</button>
+      <button role="tab" aria-selected="false" data-f="work">职场风采</button>
+      <button role="tab" aria-selected="false" data-f="travel">旅行足迹</button>
+      <button role="tab" aria-selected="false" data-f="family">家庭时光</button>
+    </div>
+    <div class="grid3" id="gGrid"></div>
+  </div>
+</section>
 
-        // Mobile Menu Toggle
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
+<!-- ============ 电子书籍 ============ -->
+<section id="books">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>电子书籍</h2>
+      <p>沉淀阅读与专业思考，分享电子书、读书笔记与读后感。</p>
+    </div>
+    <div class="tabs" id="bTabs" role="tablist" aria-label="电子书籍分类">
+      <span class="pill"></span>
+      <button role="tab" aria-selected="true" data-t="ebooks">全套电子书</button>
+      <button role="tab" aria-selected="false" data-t="essays">读后感与文章</button>
+    </div>
+    <div class="books" id="bookGrid"></div>
+    <div class="essays hidden" id="essayList"></div>
+  </div>
+</section>
 
-        // Photo Gallery Filtering
-        function filterGallery(category) {
-            const items = document.querySelectorAll('.gallery-item');
-            const tabs = document.querySelectorAll('.gallery-tab');
+<!-- ============ 自制音乐 ============ -->
+<section id="music">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>自制音乐</h2>
+      <p>工作之余的原创创作。可以随机、顺序或单曲循环播放，右下角的小播放器会一直跟着你。</p>
+    </div>
+    <div class="panel player" id="player">
+      <div class="p-main">
+        <div class="vinyl-wrap"><div class="vinyl"></div><div class="arm"></div></div>
+        <div class="now">
+          <p class="lab" id="nowLab">正在选曲</p>
+          <h3 id="nowTitle">--</h3>
+          <p class="by">原创音乐 · 郑新</p>
+          <div class="seek">
+            <input type="range" id="seek" min="0" max="1000" value="0" aria-label="播放进度">
+            <div class="times"><span id="tCur">0:00</span><span id="tDur">--:--</span></div>
+          </div>
+          <div class="ctrls">
+            <button class="icon-btn" id="bPrev" aria-label="上一首"><svg class="i"><use href="#i-prev"/></svg></button>
+            <button class="play-btn" id="bPlay" aria-label="播放"><svg class="i solid" id="bPlayIcon"><use href="#i-play"/></svg></button>
+            <button class="icon-btn" id="bNext" aria-label="下一首"><svg class="i"><use href="#i-next"/></svg></button>
+            <button class="icon-btn mode" id="bMode" aria-label="切换播放模式"><svg class="i" id="modeIcon"><use href="#i-shuffle"/></svg><span id="modeText">随机播放</span></button>
+            <div class="vol"><svg class="i"><use href="#i-volume"/></svg><input type="range" id="vol" min="0" max="100" value="80" aria-label="音量"></div>
+          </div>
+        </div>
+      </div>
+      <div class="list" id="playlist"></div>
+    </div>
+  </div>
+</section>
 
-            // Update Tab Styling
-            tabs.forEach(tab => {
-                if (tab.getAttribute('data-filter') === category) {
-                    tab.classList.add('bg-sky-600', 'text-white');
-                    tab.classList.remove('bg-slate-200', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
-                } else {
-                    tab.classList.remove('bg-sky-600', 'text-white');
-                    tab.classList.add('bg-slate-200', 'dark:bg-slate-800', 'text-slate-700', 'dark:text-slate-300');
-                }
-            });
+<!-- ============ 分身展示 ============ -->
+<section id="digital-avatars">
+  <div class="wrap">
+    <div class="sec-head">
+      <h2>分身展示</h2>
+      <p>欢迎在各大社交平台关注我。点击任意一行，可以复制账号。</p>
+    </div>
+    <div class="socials" id="socials"></div>
+  </div>
+</section>
+</main>
 
-            // Filter Gallery Items
-            items.forEach(item => {
-                if (category === 'all' || item.classList.contains(category)) {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        }
+<footer>
+  <div class="wrap">
+    <div class="foot-in">
+      <div>
+        <h3>郑新 · Zheng Xin</h3>
+        <p>阿斯利康 高级产品专员 · 拥抱创新，顺势而为</p>
+        <small>&copy; 2026 郑新 (Zheng Xin). All rights reserved.</small>
+      </div>
+      <a class="btn ghost" href="#about"><svg class="i"><use href="#i-up"/></svg>回到顶部</a>
+    </div>
+  </div>
+</footer>
 
-        // Lightbox Functions
-        function openLightbox(src, caption) {
-            document.getElementById('lightboxImg').src = src;
-            document.getElementById('lightboxCaption').textContent = caption;
-            document.getElementById('lightbox').classList.remove('hidden');
-        }
+<!-- 时间坞：拖动改变一天中的时间 -->
+<div class="dock" id="dock">
+  <div class="panel dock-panel" id="dockPanel" hidden>
+    <div class="tt"><span id="dpTime">--:--</span><span id="dpPhase"></span></div>
+    <label class="sr" for="timeRange">拖动调整一天中的时间</label>
+    <input type="range" id="timeRange" class="sky-range" min="0" max="1439" value="720">
+    <div class="ticks"><span>0 点</span><span>6</span><span>12</span><span>18</span><span>24</span></div>
+    <div class="dock-act">
+      <button class="btn ghost" id="dockLive"><svg class="i"><use href="#i-clock"/></svg>回到现在</button>
+      <button class="btn" id="dockPlay"><svg class="i solid"><use href="#i-play"/></svg>播放一天</button>
+    </div>
+  </div>
+  <button class="panel dock-pill" id="dockBtn" aria-expanded="false" aria-controls="dockPanel" aria-label="调整背景时间">
+    <svg class="i" id="dockIcon"><use href="#i-sun"/></svg><span class="t" id="dockTime">--:--</span><span id="dockPhase">--</span>
+  </button>
+</div>
 
-        function closeLightbox() {
-            document.getElementById('lightbox').classList.add('hidden');
-        }
+<!-- 悬浮迷你播放器 -->
+<div class="panel mini" id="mini">
+  <div class="disc"><svg class="i"><use href="#i-music"/></svg></div>
+  <a class="txt" href="#music"><b id="miniTitle">自制音乐</b><span id="miniState">点击播放</span></a>
+  <button class="go" id="miniPlay" aria-label="播放"><svg class="i solid" id="miniIcon"><use href="#i-play"/></svg></button>
+</div>
 
-        // Video Modal Functions
-        function playVideo(url) {
-            document.getElementById('videoIframe').src = url;
-            document.getElementById('videoModal').classList.remove('hidden');
-        }
+<!-- 灯箱 / 弹窗 -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="照片预览">
+  <button class="lb-btn lb-close" id="lbClose" aria-label="关闭"><svg class="i"><use href="#i-x"/></svg></button>
+  <button class="lb-btn lb-prev" id="lbPrev" aria-label="上一张"><svg class="i"><use href="#i-chev-l"/></svg></button>
+  <button class="lb-btn lb-next" id="lbNext" aria-label="下一张"><svg class="i"><use href="#i-chev-r"/></svg></button>
+  <figure><img id="lbImg" alt=""><figcaption><span id="lbCap"></span><span class="count" id="lbCount"></span></figcaption></figure>
+</div>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+  <div class="panel box">
+    <button class="icon-btn x" id="mClose" aria-label="关闭"><svg class="i"><use href="#i-x"/></svg></button>
+    <h3 id="mTitle"></h3>
+    <p class="body" id="mBody"></p>
+    <div class="foot" id="mFoot"></div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
 
-        function closeVideo() {
-            document.getElementById('videoIframe').src = '';
-            document.getElementById('videoModal').classList.add('hidden');
-        }
+<script>
+/* =====================================================================
+   ★ 你最常改的配置都在这里 ★
+   ===================================================================== */
 
-        // Close Modals on Escape Key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeLightbox();
-                closeVideo();
-            }
-        });
-    </script>
+// ---- 音乐：把 mp3 等文件放进 music 文件夹（与 index.html 同级）----
+// file 不带扩展名时，会自动依次尝试 mp3 / m4a / wav / flac / ogg / aac。
+// 如果实际文件名不一样，改 file 即可（也可以写成 '大战在即.mp3'）。alts 是备用文件名。
+const MUSIC_DIR = 'music/';
+const AUDIO_EXTS = ['mp3','m4a','wav','flac','ogg','aac'];
+const TRACKS = [
+  { title:'大战在即', file:'大战在即' },
+  { title:'宿命之轮', file:'宿命之轮' },
+  { title:'So What',  file:'So What', alts:['so what','So_What','so_what','SoWhat','sowhat'] },
+];
+
+// ---- 电子书：把文件放进 E-book 文件夹后，把 file 填成文件名（如 'xxx.pdf'）即可出现下载按钮 ----
+// cover 可选：封面图片（如 'E-book/cover1.jpg'），留空则使用自动生成的封面。
+const EBOOK_DIR = 'E-book/';
+const EBOOKS = [
+  { title:'《现代医学沟通与学术推介实战》', kind:'医药专业', meta:'著者：郑新 | PDF格式 (12.5MB)', hue:210, file:'', cover:'',
+    desc:'聚焦跨国药企学术交流、临床研究证据传达与KOL沟通技巧的实操总结指南。',
+    detail:'本书总结了近5年来在阿斯利康等跨国药企一线学术交流中的百余个实战案例，涵盖临床文献研读方法、科室会学术讲座呈现逻辑以及高价值医学信息的准确传达方法。' },
+  { title:'《光影云端：航拍视觉纪实》', kind:'摄影人文', meta:'著者：郑新 | EPUB格式 (45MB)', hue:170, file:'', cover:'',
+    desc:'收集全国各地的航拍风光摄影作品，附带大疆无人机参数设置与构图创作心得。',
+    detail:'收录了从福建海岸线到江西山川的数十幅高清晰度无人机航拍大片，同时包含无人机航线规划、光影捕捉及后期的全流程干货教案。' },
+  { title:'《顺势而为：职场敏捷成长笔记》', kind:'个人成长', meta:'著者：郑新 | PDF格式 (8.2MB)', hue:28, file:'', cover:'',
+    desc:'从大学毕业到通过春苗测试晋升高级专员的心路历程与高效时间管理框架。',
+    detail:'分享个人在职场生涯中的认知升级过程，包括如何应对行业环境变化、如何在繁忙事务中保持对新事物的敏锐度，以及如何持续拥抱创新。' },
+];
+const ESSAYS = [
+  { kind:'读后感', date:'2025-10-12', title:'读《穷查理宝典》：关于医学沟通的多元思维模型', brief:'如何运用复利效应与逆向思维，提升产品学术推广过程中的沟通深度与临床信任感？',
+    body:'在医药产品学术推介中，单一专业维度往往无法解决复杂的临床沟通问题。查理·芒格提倡的‘多元思维模型’为我们提供了新的解题思路：结合临床医学、行为心理学与经济学考量，能让学术信息的传递更加精准且有温度。' },
+  { kind:'深度研读', date:'2025-08-20', title:'精读《置身事内》：中国整体发展与医药健康产业思考', brief:'结合国内医药市场宏观政策变化，谈谈医疗产品专员如何做到顺势而为。',
+    body:'通过阅读兰小欢教授的《置身事内》，深刻理解了地方政府与经济发展之间的互动逻辑，也让我更加明确了医药创新在保障国民健康与推动产业升级中的核心战略价值。' },
+];
+
+// ---- 背景照片（可选）：想用自己的航拍照片当背景，把路径填进来；留空则使用自动生成的天空 ----
+// 例：{ dawn:'images/bg/dawn.jpg', day:'images/bg/day.jpg', dusk:'images/bg/dusk.jpg', night:'images/bg/night.jpg' }
+const BG_IMAGES = { dawn:'', day:'', dusk:'', night:'' };
+
+// ---- 页面加载后第一次点击时，是否自动开始播放音乐 ----
+const AUTO_PLAY_ON_FIRST_CLICK = false;
+
+/* ---- 职业经历 ---- */
+const CAREER = [
+  { year:'2017', when:'2017 年', tag:'毕业', icon:'cap', title:'福建医科大学 毕业', sub:'医学本科专业', desc:'顺利完成医科学业，奠定扎实的临床医学基础与严谨的科学思维体系。' },
+  { year:'2020', when:'2020 年 8 月 3 日', tag:'入职', icon:'briefcase', title:'加入阿斯利康 (AstraZeneca)', sub:'医学信息沟通代表', desc:'正式开启全球顶尖跨国药企的工作经历，投身核心治疗领域的学术推广与临床价值传递。' },
+  { year:'2022', when:'2022 年', tag:'荣誉', icon:'trophy', title:'荣获 EC 绩效卓越奖', sub:'AstraZeneca 核心荣誉', desc:'凭借突出的学术沟通质量与高效的项目执行力，斩获区域 EC 绩效卓越最高评定。' },
+  { year:'2023', when:'2023 年', tag:'晋升', icon:'trend', title:'晋升 高级医学代表', sub:'职级晋升', desc:'承担更大业务辖区与团队帮带职责，牵头组织多场区域性学术研讨会议。' },
+  { year:'2024', when:'2024 年', tag:'荣誉', icon:'award', title:'连任 获得 EC 绩效卓越奖', sub:'阿斯利康 年度表彰', desc:'业务能力持续精进，再次在公司年度考评中获得 EC 绩效卓越认可。' },
+  { year:'2025', when:'2025 年', tag:'晋升', icon:'star', title:'晋升 高级产品专员', sub:'通过区域春苗测试', desc:'通关公司区域春苗专项测试，全面负责产品市场策略落地与精准学术赋能。' },
+];
+const ROLE_AT = [-1, 0, 0, 1, 1, 2];           // 每个节点对应的职级阶梯位置
+const JOIN_DATE = new Date('2020-08-03');
+
+/* ---- 相册 ---- */
+const PHOTOS = [
+  { cat:'work',   srcs:['./images/award.jpg'],    tag:'团队合影', icon:'award', title:'2022 EC 绩效卓越颁奖合影', long:'2022年 EC 团队合影与获奖评定' },
+  { cat:'work',   srcs:['./images/host.jpg'],     tag:'晚会主持', icon:'mic',   title:'公司年终晚宴舞台主持',   long:'2025公司年终会大型盛典主持' },
+  { cat:'work',   srcs:['./images/team.jpg'],     tag:'团建拓展', icon:'users', title:'赶海一号户外团建留影',   long:'2026年 赶海一号团队团建拓展' },
+  { cat:'travel', srcs:['./images/shantou.jpg'],  tag:'广东汕头', icon:'plane', title:'南澳岛与海滨风光',       long:'汕头海滨与美食探寻之旅' },
+  { cat:'family', srcs:['./images/nanchang.jpg'], tag:'江西南昌', icon:'heart', title:'滕王阁前与家人的时光',   long:'南昌与家人相聚之旅' },
+  { cat:'travel', srcs:['https://images.unsplash.com/photo-1476514525535-ce74f45814d9?auto=format&fit=crop&q=80&w=1200'], tag:'航拍探索', icon:'camera', title:'上帝视角下的湖光山色', long:'航拍视角下的壮丽风光' },
+];
+
+/* ---- 社交账号 ---- */
+const SOCIALS = [
+  { icon:'chat',      name:'微信工作号',     handle:'@ZhengXin_Med',  desc:'学术交流、医药产品探讨与业务合作联系通道。' },
+  { icon:'tv',        name:'哔哩哔哩',       handle:'@郑新-航拍视界', desc:'发布高画质无人机航拍视频与音乐视频作品。' },
+  { icon:'bookmark',  name:'小红书',         handle:'@郑新_LifeLog',  desc:'分享职场装备、阅读书单、旅行攻略与生活Vlog。' },
+  { icon:'broadcast', name:'新浪微博',       handle:'@郑新ZhengXin',  desc:'记录日常感悟、行业即时动态与实时生活随笔。' },
+  { icon:'video',     name:'抖音',           handle:'@树荫沾水',     desc:'日常分享。' },
+  { icon:'bulb',      name:'知乎',           handle:'@郑新-医药洞察', desc:'撰写医药科普回答、读书笔记与职业成长长文。' },
+];
+
+/* =====================================================================
+   工具
+   ===================================================================== */
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const clamp = (v,a,b) => Math.min(b, Math.max(a, v));
+const ic = (n, cls='') => `<svg class="i ${cls}"><use href="#i-${n}"/></svg>`;
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fmt = s => isFinite(s) ? Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0') : '--:--';
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let toastTimer;
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2600); }
+function setP(el){ el.style.setProperty('--p', (el.value-el.min)/(el.max-el.min)*100 + '%'); }
+
+/* =====================================================================
+   一、随时间变化的天空
+   ===================================================================== */
+const hex = h => [1,3,5].map(i => parseInt(h.slice(i,i+2),16));
+const mixc = (a,b,t) => a.map((v,i) => v+(b[i]-v)*t);
+const rgb = (c,a) => a===undefined ? `rgb(${c.map(Math.round)})` : `rgba(${c.map(Math.round)},${a})`;
+const lum = c => { const f=v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)}; return .2126*f(c[0])+.7152*f(c[1])+.0722*f(c[2]); };
+
+// 每个关键时刻：[小时, 顶部, 中段, 底部]  —— 红黑渐变，随时间明暗流转
+const KF = [
+  [0,   '#070103','#1d040b','#3d0715'],
+  [5,   '#0c0206','#3a0714','#7a1522'],
+  [6.5, '#150308','#6a0f1d','#b83426'],
+  [9,   '#1d0408','#85122a','#bd3438'],
+  [12,  '#240509','#9c1429','#c23a46'],
+  [15.5,'#200408','#8a1226','#b9343a'],
+  [17.5,'#190307','#78101f','#cc5028'],
+  [18.5,'#12030a','#5a0a1a','#a42238'],
+  [20,  '#0b0207','#3a0713','#721322'],
+  [22,  '#080104','#240510','#4b0a1b'],
+  [24,  '#070103','#1d040b','#3d0715'],
+].map(k => ({h:k[0], c:k.slice(1).map(hex)}));
+
+function skyAt(min){
+  const h = (min/60) % 24;
+  let i = 0; while (i < KF.length-2 && h >= KF[i+1].h) i++;
+  const a = KF[i], b = KF[i+1];
+  let t = (h-a.h)/(b.h-a.h); t = t*t*(3-2*t);
+  return { h, c: a.c.map((col,k) => mixc(col, b.c[k], t)) };
+}
+// 供时间滑块使用的 24 小时色带
+(function buildTrack(){
+  const stops = []; for (let m=0; m<=1440; m+=60) { const s=skyAt(m===1440?1439:m); stops.push(`${rgb(mixc(s.c[1],s.c[2],.6))} ${(m/1440*100).toFixed(1)}%`); }
+  document.documentElement.style.setProperty('--sky-track', `linear-gradient(to right, ${stops.join(',')})`);
+})();
+
+const root = document.documentElement, scene = $('#scene'), sunEl = $('#sun'), moonEl = $('#moon');
+let curMin = 720, nightF = 0;
+const PHASES = [[5,'凌晨','夜深了'],[8,'清晨','早上好'],[11,'上午','上午好'],[13,'正午','中午好'],[17,'下午','下午好'],[19,'傍晚','傍晚好'],[24,'夜晚','晚上好']];
+const phaseOf = h => PHASES.find(p => h < p[0]) || PHASES[PHASES.length-1];
+
+function renderSky(min){
+  curMin = min;
+  const {h, c} = skyAt(min);
+  const [top, mid, bot] = c;
+  const s = root.style;
+  s.setProperty('--sky-top', rgb(top)); s.setProperty('--sky-mid', rgb(mid)); s.setProperty('--sky-bot', rgb(bot));
+  nightF = clamp(1 - lum(bot)/0.14, 0, 1);
+
+  // 光晕：白天一团暖红光沿弧线走过，夜里换成一团暗玫红
+  const W = innerWidth, H = innerHeight, horizon = H*.98;
+  const place = (el, p, size, amp) => {
+    if (p < -.3 || p > 1.3) { el.style.display='none'; return; }
+    el.style.display='block';
+    const x = W*(.1 + .82*p) - size/2, y = horizon - Math.sin(Math.PI*p)*amp - size/2;
+    el.style.transform = `translate3d(${x}px,${y}px,0)`;
+  };
+  const ps = (h-6)/12, pm = ((h-18+24)%24)/12;
+  place(sunEl, ps, 820, H*.72); place(moonEl, pm, 640, H*.55);
+  const elev = clamp(Math.sin(Math.PI*ps), 0, 1);
+  const g = mixc([255,70,55],[255,160,115], Math.sqrt(elev));
+  s.setProperty('--sun-glow', rgb(g,.5)); s.setProperty('--sun-glow2', rgb(g,.17));
+
+  // 可选背景照片
+  if (BG_IMAGES.dawn||BG_IMAGES.day||BG_IMAGES.dusk||BG_IMAGES.night) {
+    const w = (c,w0)=>clamp(1-Math.abs(h-c)/w0,0,1);
+    const wt = { dawn:w(6.5,2.5), day:Math.max(w(12,5), w(9,3), w(15,3)), dusk:w(18.3,2.2), night:Math.max(w(0,5), w(23,4), w(2,4)) };
+    $$('.bgimg').forEach(el => el.style.opacity = wt[el.dataset.k] || 0);
+  }
+
+  // 文案
+  const hh = Math.floor(h), mm = Math.floor(min%60);
+  const time = String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0');
+  const ph = phaseOf(h);
+  $('#greet').textContent = ph[2]; $('#clock').textContent = time;
+  $('#dockTime').textContent = time; $('#dockPhase').textContent = ph[1];
+  $('#dpTime').textContent = time; $('#dpPhase').textContent = ph[1];
+  $('#dockIcon').firstElementChild.setAttribute('href', (h<5.5||h>19.5) ? '#i-moon' : (h<8||h>16.5 ? '#i-sunrise' : '#i-sun'));
+  $('#timeRange').value = Math.floor(min); setP($('#timeRange'));
+}
+
+// 状态：live（跟随真实时间）/ manual（用户拖动）/ anim（播放一天）
+let skyMode = 'live', dayAnim = null;
+const nowMin = () => { const d = new Date(); return d.getHours()*60 + d.getMinutes() + d.getSeconds()/60; };
+function setMode(m){
+  skyMode = m;
+  $('#previewTag').hidden = m === 'live';
+  $('#dockLive').style.visibility = m === 'live' ? 'hidden' : 'visible';
+}
+function goLive(){ cancelAnimationFrame(dayAnim); setMode('live'); renderSky(nowMin()); setPlayBtn(false); }
+function setPlayBtn(on){ $('#dockPlay').innerHTML = on ? ic('pause','solid')+'暂停' : ic('play','solid')+'播放一天'; }
+function playDay(){
+  if (dayAnim && skyMode==='anim') { cancelAnimationFrame(dayAnim); setMode('manual'); setPlayBtn(false); return; }
+  setMode('anim'); setPlayBtn(true);
+  let start = null, from = curMin;
+  const step = ts => {
+    if (start === null) start = ts;
+    const p = (ts-start)/16000;                        // 16 秒走完 24 小时
+    renderSky((from + p*1440) % 1440);
+    if (p < 1) dayAnim = requestAnimationFrame(step); else goLive();
+  };
+  dayAnim = requestAnimationFrame(step);
+}
+$('#timeRange').addEventListener('input', e => { cancelAnimationFrame(dayAnim); setMode('manual'); setPlayBtn(false); renderSky(+e.target.value); });
+$('#dockLive').addEventListener('click', goLive);
+$('#dockPlay').addEventListener('click', playDay);
+$('#dockBtn').addEventListener('click', () => {
+  const p = $('#dockPanel'), open = p.hidden;
+  p.hidden = !open; $('#dockBtn').setAttribute('aria-expanded', open);
+});
+setInterval(() => { if (skyMode==='live') renderSky(nowMin()); }, 20000);
+addEventListener('resize', () => renderSky(curMin));
+// 地址栏加 ?t=18:30 可以直接预览某个时刻
+(function init(){
+  const q = new URLSearchParams(location.search).get('t');
+  if (q && /^\d{1,2}:\d{2}$/.test(q)) { const [a,b]=q.split(':').map(Number); setMode('manual'); renderSky(a*60+b); }
+  else { setMode('live'); renderSky(nowMin()); }
+})();
+
+/* ---- 飘浮的火星微粒 ---- */
+(function dust(){
+  const cv = $('#stars'), cx = cv.getContext('2d');
+  let W, H, list = [];
+  function size(){
+    const r = devicePixelRatio || 1; W = innerWidth; H = innerHeight; cv.width = W*r; cv.height = H*r; cx.setTransform(r,0,0,r,0,0);
+    list = Array.from({length: clamp(Math.round(W*H/15000), 30, 110)}, () => ({x:Math.random()*W, y:Math.random()*H, r:Math.random()*1.5+.4, v:Math.random()*.22+.06, p:Math.random()*6.28, s:Math.random()*1.2+.4}));
+  }
+  size(); addEventListener('resize', () => { size(); if (reduced) draw(0); });
+  function draw(ts){
+    cx.clearRect(0,0,W,H);
+    for (const d of list) {
+      if (!reduced) { d.y -= d.v; d.x += Math.sin(ts/3500 + d.p)*.12; if (d.y < -4) { d.y = H+4; d.x = Math.random()*W; } }
+      const tw = .5 + .5*Math.sin(ts/1000*d.s + d.p);
+      cx.globalAlpha = (.12 + .5*tw) * (.55 + .45*nightF);
+      cx.fillStyle = '#ffb090';
+      cx.beginPath(); cx.arc(d.x, d.y, d.r, 0, 6.283); cx.fill();
+    }
+  }
+  if (reduced) draw(0); else { const loop = ts => { draw(ts); requestAnimationFrame(loop); }; requestAnimationFrame(loop); }
+})();
+
+/* ---- 鼠标视差 ---- */
+if (!reduced && matchMedia('(hover:hover)').matches) {
+  let raf = 0;
+  addEventListener('pointermove', e => {
+    if (raf) return;
+    raf = requestAnimationFrame(() => { raf = 0;
+      scene.style.setProperty('--mx', (e.clientX/innerWidth*2-1).toFixed(3));
+      scene.style.setProperty('--my', (e.clientY/innerHeight*2-1).toFixed(3));
+    });
+  });
+}
+
+/* =====================================================================
+   二、导航 / 滚动
+   ===================================================================== */
+const nav = $('#nav'), prog = $('#progress');
+function onScroll(){
+  nav.classList.toggle('stuck', scrollY > 30);
+  const max = document.documentElement.scrollHeight - innerHeight;
+  prog.style.transform = `scaleX(${max>0 ? scrollY/max : 0})`;
+}
+addEventListener('scroll', onScroll, {passive:true}); onScroll();
+$('#menuBtn').addEventListener('click', () => { const o = $('#links').classList.toggle('open'); $('#menuBtn').setAttribute('aria-expanded', o); });
+$$('#links a').forEach(a => a.addEventListener('click', () => $('#links').classList.remove('open')));
+const spy = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) $$('#links a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#'+e.target.id));
+}), {rootMargin:'-45% 0px -50% 0px'});
+$$('main section').forEach(s => spy.observe(s));
+
+// 头像：本地没有图片时保留“郑”字头像
+$('#avatarImg').addEventListener('error', e => e.target.remove());
+
+// 聚光灯 & 倾斜
+document.addEventListener('pointermove', e => {
+  const t = e.target.closest && e.target.closest('[data-spot]');
+  if (t) { const r = t.getBoundingClientRect(); t.style.setProperty('--sx', e.clientX-r.left+'px'); t.style.setProperty('--sy', e.clientY-r.top+'px'); }
+});
+function tilt(el, max=6){
+  if (reduced || !matchMedia('(hover:hover)').matches) return;
+  el.addEventListener('pointermove', e => {
+    const r = el.getBoundingClientRect(), x = (e.clientX-r.left)/r.width-.5, y = (e.clientY-r.top)/r.height-.5;
+    el.style.transform = `perspective(800px) rotateY(${x*max}deg) rotateX(${-y*max}deg)`;
+  });
+  el.addEventListener('pointerleave', () => el.style.transform = '');
+}
+
+/* 滑动指示条的分段选项卡 */
+function tabs(box, onSelect){
+  const pill = $('.pill', box), btns = $$('button', box);
+  const move = b => { pill.style.width = b.offsetWidth+'px'; pill.style.transform = `translateX(${b.offsetLeft}px)`; };
+  btns.forEach(b => b.addEventListener('click', () => {
+    btns.forEach(x => x.setAttribute('aria-selected', x===b)); move(b); onSelect(b);
+  }));
+  const init = () => move(btns.find(b => b.getAttribute('aria-selected')==='true'));
+  init(); addEventListener('resize', init); document.fonts && document.fonts.ready.then(init);
+  return init;
+}
+
+/* =====================================================================
+   三、工作经历：成长曲线
+   ===================================================================== */
+(function career(){
+  const box = $('#journey'), N = CAREER.length;
+  const pts = CAREER.map((_,i) => ({ x: 80 + i*168, y: [262,226,194,156,122,72][i] }));
+  const seg = (i) => {
+    const p0 = pts[i-1]||pts[i], p1 = pts[i], p2 = pts[i+1], p3 = pts[i+2]||pts[i+1];
+    return `M${p1.x} ${p1.y}C${p1.x+(p2.x-p0.x)/6} ${p1.y+(p2.y-p0.y)/6} ${p2.x-(p3.x-p1.x)/6} ${p2.y-(p3.y-p1.y)/6} ${p2.x} ${p2.y}`;
+  };
+  let full = ''; for (let i=0;i<N-1;i++) full += (i? seg(i).replace(/^M[^C]+/,'') : seg(i));
+  $('#jTrack').setAttribute('d', full);
+  $('#jArea').setAttribute('d', full + `L${pts[N-1].x} 340L${pts[0].x} 340Z`);
+  const g = $('#jSegs');
+  for (let i=0;i<N-1;i++){ const p = document.createElementNS('http://www.w3.org/2000/svg','path'); p.setAttribute('d', seg(i)); p.setAttribute('class','seg'); g.appendChild(p); }
+  const segs = $$('.seg', g); segs.forEach(p => { const L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; p.dataset.l = L; });
+
+  const nodes = CAREER.map((c,i) => {
+    const b = document.createElement('button'); b.className = 'node';
+    b.style.left = pts[i].x/10 + '%'; b.style.top = pts[i].y/340*100 + '%';
+    b.setAttribute('aria-label', c.when + ' ' + c.title);
+    b.innerHTML = ic(c.icon) + `<span class="yr">${c.year}</span>`;
+    b.addEventListener('click', () => { stopPlay(); select(i); });
+    box.appendChild(b); return b;
+  });
+
+  let sel = N-1, timer = null;
+  const detail = $('#detail'), steps = $$('#ladder .step');
+  function select(i, first){
+    sel = clamp(i, 0, N-1); const c = CAREER[sel];
+    nodes.forEach((n,k) => { n.classList.toggle('sel', k===sel); n.classList.toggle('past', k<sel); if (k===sel) n.setAttribute('aria-current','step'); else n.removeAttribute('aria-current'); });
+    segs.forEach((p,k) => p.style.strokeDashoffset = k < sel ? 0 : p.dataset.l);
+    $('#dYear').textContent = c.year; $('#dTag').textContent = c.tag; $('#dTitle').textContent = c.title;
+    $('#dSub').textContent = c.sub; $('#dDesc').textContent = c.desc; $('#dWhen').textContent = c.when;
+    steps.forEach((s,k) => s.classList.toggle('on', ROLE_AT[sel] === k));
+    $('#jPrev').disabled = sel===0; $('#jNext').disabled = sel===N-1;
+    $('#jPrev').style.opacity = sel===0 ? .35 : 1; $('#jNext').style.opacity = sel===N-1 ? .35 : 1;
+    if (!first) { detail.classList.remove('swap'); void detail.offsetWidth; detail.classList.add('swap'); }
+    const sc = $('#jScroll'), n = nodes[sel];
+    if (sc.scrollWidth > sc.clientWidth) sc.scrollTo({left: n.offsetLeft - sc.clientWidth/2, behavior: first||reduced ? 'auto':'smooth'});
+  }
+  function stopPlay(){ clearInterval(timer); timer = null; $('#jPlay').innerHTML = ic('play','solid')+'<span>回放历程</span>'; }
+  function startPlay(){
+    select(0);
+    $('#jPlay').innerHTML = ic('pause','solid')+'<span>暂停</span>';
+    timer = setInterval(() => { if (sel >= N-1) stopPlay(); else select(sel+1); }, 2200);
+  }
+  $('#jPlay').addEventListener('click', () => timer ? stopPlay() : startPlay());
+  $('#jPrev').addEventListener('click', () => { stopPlay(); select(sel-1); });
+  $('#jNext').addEventListener('click', () => { stopPlay(); select(sel+1); });
+  // 键盘（面板在视口内时）与左右滑动
+  const panel = $('.journey-panel'); let inView = false;
+  new IntersectionObserver(es => inView = es[0].isIntersecting, {threshold:.4}).observe(panel);
+  addEventListener('keydown', e => {
+    if (!inView || $('#lightbox').classList.contains('open') || $('#modal').classList.contains('open') || /INPUT|TEXTAREA/.test(document.activeElement.tagName)) return;
+    if (e.key==='ArrowRight') { stopPlay(); select(sel+1); } if (e.key==='ArrowLeft') { stopPlay(); select(sel-1); }
+  });
+  let sx = 0; const det = $('#detail');
+  det.addEventListener('touchstart', e => sx = e.touches[0].clientX, {passive:true});
+  det.addEventListener('touchend', e => { const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 50) { stopPlay(); select(sel + (dx<0 ? 1 : -1)); } });
+
+  // 初次进入视口：按顺序“走”一遍曲线，最后停在当前职位
+  let ran = false;
+  new IntersectionObserver((es, ob) => { if (es[0].isIntersecting && !ran) { ran = true; ob.disconnect();
+    if (reduced) { select(N-1, true); return; }
+    select(0, true); let k = 0; const t = setInterval(() => { k++; select(k, true); if (k >= N-1) clearInterval(t); }, 380);
+  }}, {threshold:.5}).observe(panel);
+  select(0, true);
+
+})();
+
+/* =====================================================================
+   四、精彩时刻 + 灯箱
+   ===================================================================== */
+(function gallery(){
+  const grid = $('#gGrid');
+  grid.innerHTML = PHOTOS.map((p,i) => `
+    <div class="shot" data-cat="${p.cat}" data-i="${i}" tabindex="0" role="button" aria-label="${esc(p.title)}">
+      <img alt="${esc(p.title)}" loading="lazy" decoding="async">
+      <div class="ph">${ic('image')}<span>照片待添加</span></div>
+      <div class="cap"><span>${ic(p.icon)}${esc(p.tag)}</span><b>${esc(p.title)}</b></div>
+    </div>`).join('');
+  const shots = $$('.shot', grid);
+  shots.forEach((el,i) => {
+    const img = $('img', el), list = PHOTOS[i].srcs.slice();
+    const next = () => { const s = list.shift(); if (s) img.src = s; else { el.classList.add('failed'); img.remove(); PHOTOS[i].failed = true; } };
+    img.addEventListener('error', next); next();
+    el.addEventListener('click', () => open(i)); el.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' ') { e.preventDefault(); open(i); } });
+    tilt(el, 5);
+  });
+  tabs($('#gTabs'), b => {
+    const f = b.dataset.f;
+    shots.forEach(el => {
+      const show = f==='all' || el.dataset.cat===f;
+      if (show) { el.style.display=''; requestAnimationFrame(() => el.classList.remove('hide')); }
+      else { el.classList.add('hide'); setTimeout(() => { if (el.classList.contains('hide')) el.style.display='none'; }, 300); }
+    });
+  });
+
+  const lb = $('#lightbox'); let order = [], pos = 0;
+  function show(){
+    const i = order[pos], p = PHOTOS[i], img = $('#lbImg');
+    img.style.animation = 'none'; void img.offsetWidth; img.style.animation = '';
+    img.src = $('img', shots[i]).currentSrc || p.srcs[0]; img.alt = p.title;
+    $('#lbCap').textContent = p.long; $('#lbCount').textContent = `${pos+1} / ${order.length}`;
+  }
+  function open(i){
+    order = shots.map((el,k)=>k).filter(k => shots[k].style.display!=='none' && !PHOTOS[k].failed);
+    if (!order.includes(i)) return;
+    pos = order.indexOf(i); show(); lb.classList.add('open'); document.body.style.overflow='hidden'; $('#lbClose').focus();
+  }
+  const close = () => { lb.classList.remove('open'); document.body.style.overflow=''; };
+  const step = d => { pos = (pos+d+order.length)%order.length; show(); };
+  $('#lbClose').onclick = close; $('#lbPrev').onclick = () => step(-1); $('#lbNext').onclick = () => step(1);
+  lb.addEventListener('click', e => { if (e.target === lb) close(); });
+  addEventListener('keydown', e => { if (!lb.classList.contains('open')) return;
+    if (e.key==='Escape') close(); if (e.key==='ArrowLeft') step(-1); if (e.key==='ArrowRight') step(1); });
+})();
+
+/* =====================================================================
+   五、电子书籍
+   ===================================================================== */
+(function books(){
+  const modal = $('#modal');
+  function openModal(title, body, file){
+    $('#mTitle').textContent = title; $('#mBody').textContent = body;
+    $('#mFoot').innerHTML = file
+      ? `<a class="btn" href="${EBOOK_DIR + encodeURI(file)}" target="_blank" rel="noopener" download>${ic('download')}下载 / 阅读</a>`
+      : `<span class="note">电子书文件正在整理中，上线后这里会出现下载按钮。</span>`;
+    modal.classList.add('open'); document.body.style.overflow='hidden'; $('#mClose').focus();
+  }
+  const close = () => { modal.classList.remove('open'); document.body.style.overflow=''; };
+  $('#mClose').onclick = close; modal.addEventListener('click', e => { if (e.target===modal) close(); });
+  addEventListener('keydown', e => { if (e.key==='Escape' && modal.classList.contains('open')) close(); });
+
+  $('#bookGrid').innerHTML = EBOOKS.map((b,i) => `
+    <article class="book">
+      <div class="cover-stage"><div class="cover" style="--h:${b.hue}">
+        <span class="c-t">${esc(b.title.replace(/[《》]/g,''))}</span><span class="c-a">郑新</span>
+        ${b.cover ? `<img src="${esc(b.cover)}" alt="${esc(b.title)} 封面" onerror="this.remove()">` : ''}
+      </div></div>
+      <span class="kind">${esc(b.kind)}</span>
+      <h3>${esc(b.title)}</h3>
+      <p class="meta">${esc(b.meta)}</p>
+      <p>${esc(b.desc)}</p>
+      <button class="btn" data-b="${i}">${ic(b.file ? 'download' : 'file')}在线试读 / 下载</button>
+    </article>`).join('');
+  $$('#bookGrid .btn').forEach(btn => btn.addEventListener('click', () => { const b = EBOOKS[+btn.dataset.b]; openModal(b.title, b.detail, b.file); }));
+  $$('#bookGrid .cover').forEach(c => tilt(c, 0));
+
+  $('#essayList').innerHTML = ESSAYS.map((e,i) => `
+    <button class="essay" data-e="${i}"><div class="m"><b>${esc(e.kind)}</b><span class="serif">${esc(e.date)}</span></div><h3>${esc(e.title)}</h3><p>${esc(e.brief)}</p></button>`).join('');
+  $$('#essayList .essay').forEach(el => el.addEventListener('click', () => { const e = ESSAYS[+el.dataset.e]; openModal(e.title, e.body, null); $('#mFoot').innerHTML=''; }));
+
+  tabs($('#bTabs'), b => {
+    const eb = b.dataset.t === 'ebooks';
+    $('#bookGrid').classList.toggle('hidden', !eb); $('#essayList').classList.toggle('hidden', eb);
+  });
+})();
+
+/* =====================================================================
+   六、自制音乐（真实播放）
+   ===================================================================== */
+(function music(){
+  const audio = new Audio(); audio.preload = 'auto';
+  let cur = 0, mode = 'shuffle', ready = false;
+  const MODES = { shuffle:['随机播放','shuffle'], order:['顺序播放','repeat'], one:['单曲循环','repeat1'] };
+
+  // 候选文件列表
+  function candidates(t){
+    const names = [t.file, ...(t.alts||[])], out = [];
+    for (const n of names) {
+      if (/\.[A-Za-z0-9]{2,5}$/.test(n)) out.push(MUSIC_DIR + n.split('/').map(encodeURIComponent).join('/'));
+      else for (const e of AUDIO_EXTS) out.push(MUSIC_DIR + encodeURIComponent(n) + '.' + e);
+    }
+    return out;
+  }
+  function probe(url){
+    return new Promise(res => {
+      const a = new Audio(); let done = false;
+      const fin = ok => { if (done) return; done = true; clearTimeout(to); a.removeAttribute('src'); a.load(); res(ok ? {url, dur:a.duration} : null); };
+      const to = setTimeout(() => fin(false), 7000);
+      a.preload = 'metadata';
+      a.addEventListener('loadedmetadata', () => { const d = a.duration; done || (done = true, clearTimeout(to), res({url, dur:d})); }, {once:true});
+      a.addEventListener('error', () => fin(false), {once:true});
+      a.src = url;
+    });
+  }
+  function resolve(i){
+    const t = TRACKS[i];
+    if (!t.p) t.p = (async () => {
+      for (const url of candidates(t)) { const r = await probe(url); if (r) { t.url = r.url; t.dur = r.dur; return true; } }
+      t.missing = true; return false;
+    })().then(ok => { renderList(); return ok; });
+    return t.p;
+  }
+
+  // 渲染
+  const list = $('#playlist');
+  function renderList(){
+    list.innerHTML = TRACKS.map((t,i) => `
+      <button class="row${i===cur?' cur':''}${t.missing?' missing':''}" data-i="${i}">
+        <span class="n">${String(i+1).padStart(2,'0')}</span><span class="eq"><i></i><i></i><i></i></span>
+        <span><span class="t">${esc(t.title)}</span><span class="e">没有找到音频文件，请检查 music 文件夹里的文件名</span></span>
+        <span class="d">${t.dur ? fmt(t.dur) : t.missing ? '--:--' : ''}</span>
+      </button>`).join('');
+    $$('.row', list).forEach(r => r.addEventListener('click', () => play(+r.dataset.i)));
+  }
+  function ui(){
+    const t = TRACKS[cur], playing = !audio.paused && !audio.ended;
+    $('#nowTitle').textContent = t.title; $('#miniTitle').textContent = t.title;
+    $('#nowLab').textContent = playing ? '正在播放' : '已选曲目';
+    $('#miniState').textContent = playing ? ({shuffle:'随机播放中',order:'顺序播放中',one:'单曲循环中'})[mode] : '点击播放';
+    document.body.classList.toggle('playing', playing);
+    const use = playing ? '#i-pause' : '#i-play';
+    $('#bPlayIcon').firstElementChild.setAttribute('href', use); $('#miniIcon').firstElementChild.setAttribute('href', use);
+    $('#bPlay').setAttribute('aria-label', playing ? '暂停' : '播放'); $('#miniPlay').setAttribute('aria-label', playing ? '暂停' : '播放');
+    $('#modeText').textContent = MODES[mode][0]; $('#modeIcon').firstElementChild.setAttribute('href', '#i-'+MODES[mode][1]);
+    $$('.row', list).forEach((r,i) => r.classList.toggle('cur', i===cur));
+    $('#tDur').textContent = fmt(audio.duration || t.dur);
+    if ('mediaSession' in navigator) navigator.mediaSession.metadata = new MediaMetadata({ title:t.title, artist:'郑新', album:'自制音乐' });
+  }
+
+  async function load(i){
+    cur = i; ui();
+    const ok = await resolve(i);
+    if (cur !== i) return false;
+    if (!ok) { toast(`没有找到《${TRACKS[i].title}》的音频文件`); ui(); return false; }
+    const same = audio.src.endsWith(TRACKS[i].url.replace(/^\.\//,'')) || decodeURI(audio.src).endsWith(decodeURI(TRACKS[i].url));
+    if (!same) { audio.src = TRACKS[i].url; }
+    ui(); return true;
+  }
+  async function play(i){
+    if (i !== undefined && (i !== cur || !audio.src)) { if (!(await load(i))) return; }
+    else if (!audio.src) { if (!(await load(cur))) return; }
+    try { await audio.play(); } catch(e) { toast('浏览器拦截了自动播放，请再点一次播放'); }
+    ui();
+  }
+  const toggle = () => audio.paused ? play() : audio.pause();
+  function pickNext(auto){
+    const n = TRACKS.length;
+    if (mode === 'one' && auto) return cur;
+    if (mode === 'shuffle' && n > 1) { let k; do k = Math.floor(Math.random()*n); while (k === cur); return k; }
+    return (cur + 1) % n;
+  }
+  const next = () => play(pickNext(false));
+  const prev = () => { if (audio.currentTime > 3) { audio.currentTime = 0; } else play((cur - 1 + TRACKS.length) % TRACKS.length); };
+
+  audio.addEventListener('play', ui); audio.addEventListener('pause', ui);
+  audio.addEventListener('loadedmetadata', () => { TRACKS[cur].dur = audio.duration; ui(); renderList(); });
+  audio.addEventListener('ended', () => { const k = pickNext(true); if (k === cur) { audio.currentTime = 0; audio.play(); } else play(k); });
+  audio.addEventListener('error', () => { if (audio.src) { toast(`《${TRACKS[cur].title}》无法播放，请确认文件格式`); ui(); } });
+  let seeking = false; const seek = $('#seek');
+  audio.addEventListener('timeupdate', () => {
+    if (seeking || !audio.duration) return;
+    seek.value = audio.currentTime / audio.duration * 1000; setP(seek); $('#tCur').textContent = fmt(audio.currentTime);
+  });
+  seek.addEventListener('input', () => { seeking = true; setP(seek); if (audio.duration) $('#tCur').textContent = fmt(seek.value/1000*audio.duration); });
+  seek.addEventListener('change', () => { if (audio.duration) audio.currentTime = seek.value/1000*audio.duration; seeking = false; });
+  const vol = $('#vol'); vol.addEventListener('input', () => { audio.volume = vol.value/100; setP(vol); }); audio.volume = .8; setP(vol); setP(seek);
+
+  $('#bPlay').onclick = toggle; $('#miniPlay').onclick = toggle; $('#bNext').onclick = next; $('#bPrev').onclick = prev;
+  $('#bMode').onclick = () => { const ks = Object.keys(MODES); mode = ks[(ks.indexOf(mode)+1) % ks.length]; ui(); toast(MODES[mode][0]); };
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.setActionHandler('play', () => play()); navigator.mediaSession.setActionHandler('pause', () => audio.pause());
+    navigator.mediaSession.setActionHandler('nexttrack', next); navigator.mediaSession.setActionHandler('previoustrack', prev);
+  }
+  addEventListener('keydown', e => { if (e.code==='Space' && e.target===document.body && !$('#lightbox').classList.contains('open') && !$('#modal').classList.contains('open')) { /* 空格不抢占页面滚动 */ } });
+
+  // 初始化：随机选一首作为当前曲目（不自动播放），并预读时长
+  cur = Math.floor(Math.random()*TRACKS.length);
+  renderList(); ui();
+  TRACKS.forEach((_,i) => resolve(i).then(() => { if (i===cur) ui(); }));
+  if (AUTO_PLAY_ON_FIRST_CLICK) addEventListener('pointerdown', () => play(), {once:true});
+})();
+
+/* =====================================================================
+   七、分身展示：点击复制
+   ===================================================================== */
+(function socials(){
+  $('#socials').innerHTML = SOCIALS.map((s,i) => `
+    <button class="soc" data-spot data-i="${i}">
+      <span class="ic">${ic(s.icon)}</span>
+      <span><h3>${esc(s.name)}</h3><span class="h">${esc(s.handle)}</span><p>${esc(s.desc)}</p></span>
+      <span class="cp">${ic('copy')}复制账号</span>
+    </button>`).join('');
+  $$('#socials .soc').forEach(el => el.addEventListener('click', async () => {
+    const s = SOCIALS[+el.dataset.i];
+    try { await navigator.clipboard.writeText(s.handle); }
+    catch(e){ const t=document.createElement('textarea'); t.value=s.handle; document.body.appendChild(t); t.select(); try{document.execCommand('copy')}catch(_){} t.remove(); }
+    toast(`已复制 ${s.handle}`);
+  }));
+})();
+</script>
 </body>
 </html>
