@@ -384,10 +384,14 @@ h1.name span{display:inline-block}
 /* =====================================================================
    自制音乐
    ===================================================================== */
-.player{padding:clamp(22px,4vw,40px)}
-.p-main{display:grid;grid-template-columns:minmax(200px,280px) 1fr;gap:clamp(24px,5vw,60px);align-items:center}
-@media (max-width:760px){.p-main{grid-template-columns:1fr;justify-items:center;text-align:center}}
-.vinyl-wrap{position:relative;width:min(280px,72vw);aspect-ratio:1}
+.player{padding:clamp(20px,3vw,32px);display:grid;grid-template-columns:minmax(0,1.3fr) minmax(320px,.9fr);
+  gap:clamp(22px,3.4vw,44px);align-items:center}
+.p-left{min-width:0}
+.p-main{display:grid;grid-template-columns:clamp(168px,15vw,232px) minmax(0,1fr);gap:clamp(18px,2.4vw,30px);align-items:center}
+.p-left .vol{width:120px}
+.p-left .play-btn{width:58px;height:58px;font-size:1.35rem}
+.p-left .mode{padding:0 12px;font-size:.8rem;gap:6px}
+.vinyl-wrap{position:relative;width:100%;max-width:232px;aspect-ratio:1;margin-inline:auto}
 .vinyl{position:absolute;inset:0;border-radius:50%;
   background:radial-gradient(circle,transparent 0 31%,rgba(255,255,255,.07) 31.5% 32%,transparent 32.5% 40%,rgba(255,255,255,.06) 40.5% 41%,transparent 41.5% 52%,rgba(255,255,255,.06) 52.5% 53%,transparent 53.5% 64%,rgba(255,255,255,.05) 64.5% 65%,transparent 66%),
   conic-gradient(from 20deg,#101828,#252f45,#101828 25%,#222b40 50%,#101828 75%,#252f45,#101828);
@@ -399,34 +403,79 @@ h1.name span{display:inline-block}
 .arm::before{content:"";position:absolute;right:-8px;top:-9px;width:24px;height:24px;border-radius:50%;background:#d7deec;box-shadow:0 2px 8px rgba(0,0,0,.35)}
 .arm::after{content:"";position:absolute;left:-10px;top:-4px;width:20px;height:13px;border-radius:3px;background:#2a3550}
 .playing .arm{transform:rotate(-4deg)}
-.now .lab{font-size:.88rem;color:var(--ink-2);font-weight:600}
-.now h3{font-size:clamp(1.9rem,4.4vw,3rem);font-weight:900;line-height:1.15;letter-spacing:-.02em;margin:4px 0 2px}
-.now .by{color:var(--ink-2)}
-.seek{margin-top:22px}
+.now .lab{font-size:.86rem;color:var(--ink-2);font-weight:600}
+.now h3{font-size:clamp(1.5rem,3.2vw,2.3rem);font-weight:900;line-height:1.16;letter-spacing:-.02em;margin:4px 0 2px}
+.now .by{color:var(--ink-2);font-size:.92rem}
+.seek{margin-top:16px}
 .times{display:flex;justify-content:space-between;font-family:var(--serif);font-style:italic;font-size:.9rem;color:var(--ink-2);font-variant-numeric:tabular-nums}
 .ctrls{display:flex;align-items:center;gap:6px;margin-top:10px;flex-wrap:wrap;justify-content:inherit}
 .play-btn{width:64px;height:64px;border-radius:50%;background:var(--ink);color:var(--on-ink);display:grid;place-items:center;font-size:1.5rem;box-shadow:var(--shadow);transition:transform .2s}
 .play-btn:hover{transform:scale(1.07)}
 .vol{display:flex;align-items:center;gap:6px;margin-left:auto;width:150px;color:var(--ink-2)}
-@media (max-width:760px){.vol{margin:6px auto 0}}
 .mode{display:inline-flex;align-items:center;gap:8px;padding:0 14px;width:auto;border-radius:999px;font-size:.85rem;font-weight:700;border:1px solid var(--line)}
-.list{margin-top:30px;border-top:1px solid var(--line)}
-.row{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:12px;width:100%;text-align:left;padding:14px 10px;border-bottom:1px solid var(--line);border-radius:12px;transition:background .25s}
+/* 右侧曲目面板 */
+.p-right{display:flex;flex-direction:column;gap:12px;min-width:0}
+.pl-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.pl-count{font-size:.85rem;color:var(--ink-2);font-weight:600;white-space:nowrap}
+.pl-count b{font-family:var(--serif);font-style:italic;font-size:1.15rem;color:var(--ink);font-variant-numeric:tabular-nums}
+.pl-search{display:flex;align-items:center;gap:7px;padding:6px 13px;border-radius:999px;border:1px solid var(--line);
+  background:color-mix(in srgb,var(--panel-solid) 35%,transparent);transition:border-color .25s}
+.pl-search:focus-within{border-color:var(--ink-2)}
+.pl-search .i{font-size:.9rem;color:var(--ink-2)}
+.pl-search input{width:104px;background:none;border:0;outline:none;color:var(--ink);font:inherit;font-size:.82rem}
+.pl-search input::placeholder{color:var(--ink-2);opacity:.8}
+.pl-acts{display:flex;gap:8px;flex-wrap:wrap}
+.pl-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;font-size:.8rem;font-weight:700;
+  color:var(--ink-2);border:1px solid var(--line);transition:color .2s,border-color .2s,background .2s}
+.pl-btn:hover{color:var(--ink);border-color:var(--ink-2);background:var(--panel-hi)}
+.pl-btn .i{font-size:.95rem}
+.pl-empty{padding:26px 10px;text-align:center;color:var(--ink-2);font-size:.9rem}
+
+.list{position:relative;height:clamp(300px,44vh,400px);overflow-y:auto;border-top:1px solid var(--line);padding-right:4px;
+  scrollbar-width:thin;scrollbar-color:var(--line) transparent;overscroll-behavior:contain}
+.list::-webkit-scrollbar{width:6px}
+.list::-webkit-scrollbar-thumb{background:var(--line);border-radius:6px}
+.list::-webkit-scrollbar-track{background:transparent}
+.row{display:grid;grid-template-columns:24px 36px minmax(0,1fr) auto;align-items:center;gap:10px;width:100%;text-align:left;
+  padding:8px;border-bottom:1px solid color-mix(in srgb,var(--line) 55%,transparent);border-radius:10px;transition:background .2s}
 .row:hover{background:var(--panel)}
-.row .n{font-family:var(--serif);font-style:italic;color:var(--ink-2)}
-.row .t{font-weight:700}
-.row .e{font-size:.82rem;color:#c0392b;display:none}
-.row.missing .e{display:block}
-.row .d{font-family:var(--serif);font-style:italic;color:var(--ink-2);font-variant-numeric:tabular-nums}
-.row.cur .t{color:var(--ink)}
 .row.cur{background:var(--panel-hi)}
-.eq{display:none;align-items:flex-end;gap:2px;height:16px}
+.row .n{font-family:var(--serif);font-style:italic;color:var(--ink-2);font-size:.85rem;text-align:center}
+.row .cv{position:relative;width:36px;height:36px;border-radius:10px;display:grid;place-items:center;overflow:hidden;
+  font-weight:800;font-size:.82rem;color:rgba(255,255,255,.92);flex:none;
+  background:linear-gradient(150deg,var(--c1,#5c2028),var(--c2,#240a0f) 85%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12)}
+.row .cv::after{content:"";position:absolute;inset:0;background:rgba(8,1,4,.6);opacity:0;transition:opacity .2s;z-index:0}
+.row .cv::before{content:"";position:absolute;left:53%;top:50%;transform:translate(-50%,-50%);
+  border-left:9px solid #fff;border-top:6px solid transparent;border-bottom:6px solid transparent;opacity:0;transition:opacity .2s;z-index:1}
+.row:hover .cv::after,.row:hover .cv::before{opacity:1}
+.row:hover .cv{color:transparent}
+.row.cur .cv{box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 0 0 1px var(--accent)}
+.row .tt{min-width:0;display:block}
+.row .t{display:block;font-weight:700;font-size:.92rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .e{font-size:.78rem;color:#e08a80;display:none}
+.row.missing .e{display:block}
+.row.missing .t{color:var(--ink-2)}
+.row .d{font-family:var(--serif);font-style:italic;color:var(--ink-2);font-variant-numeric:tabular-nums;font-size:.88rem}
+.row.cur .t{color:var(--ink)}
+.eq{display:none;align-items:flex-end;gap:2px;height:16px;justify-self:center}
 .row.cur .eq{display:inline-flex}
 .row.cur .n{display:none}
 .eq i{width:3px;background:var(--accent);border-radius:2px;height:30%;animation:eq 1s ease-in-out infinite;animation-play-state:paused}
 .playing .row.cur .eq i{animation-play-state:running}
 .eq i:nth-child(2){animation-delay:-.4s}.eq i:nth-child(3){animation-delay:-.75s}
 @keyframes eq{50%{height:100%}}
+
+@media (max-width:980px){
+  .player{grid-template-columns:1fr;align-items:stretch}
+  .p-main{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .vinyl-wrap{max-width:210px}
+  .vol{margin:6px auto 0}
+  .list{height:clamp(280px,52vh,380px)}
+}
+@media (max-width:560px){
+  .pl-search input{width:80px}
+  .pl-acts .pl-btn{flex:1;justify-content:center}
+}
 
 .mini{position:fixed;right:16px;bottom:16px;z-index:55;display:flex;align-items:center;gap:10px;padding:8px 8px 8px 8px;border-radius:999px;max-width:min(320px,calc(100vw - 32px))}
 .mini .disc{width:40px;height:40px;border-radius:50%;flex:none;display:grid;place-items:center;color:#2a1a00;background:conic-gradient(var(--accent),#e8664b,var(--accent));animation:spin 6s linear infinite;animation-play-state:paused}
@@ -654,9 +703,9 @@ footer{padding:90px 0 110px}
     <div class="tabs" id="gTabs" role="tablist" aria-label="照片分类">
       <span class="pill"></span>
       <button role="tab" aria-selected="true" data-f="all">全部照片</button>
-      <button role="tab" aria-selected="false" data-f="work">职场风采</button>
-      <button role="tab" aria-selected="false" data-f="travel">旅行足迹</button>
-      <button role="tab" aria-selected="false" data-f="family">家庭时光</button>
+      <button role="tab" aria-selected="false" data-f="职场">职场风采</button>
+      <button role="tab" aria-selected="false" data-f="旅行">旅行足迹</button>
+      <button role="tab" aria-selected="false" data-f="家庭">家庭时光</button>
     </div>
     <div class="grid3" id="gGrid"></div>
   </div>
@@ -705,29 +754,44 @@ footer{padding:90px 0 110px}
   <div class="wrap">
     <div class="sec-head">
       <h2>自制音乐</h2>
-      <p>工作之余的原创创作。可以随机、顺序或单曲循环播放，右下角的小播放器会一直跟着你。</p>
+      <p>工作之余的原创创作。曲目会自动同步，右侧列表可以搜索；右下角的小播放器会一直跟着你。</p>
     </div>
     <div class="panel player" id="player">
-      <div class="p-main">
-        <div class="vinyl-wrap"><div class="vinyl"></div><div class="arm"></div></div>
-        <div class="now">
-          <p class="lab" id="nowLab">正在选曲</p>
-          <h3 id="nowTitle">--</h3>
-          <p class="by">原创音乐 · 郑新</p>
-          <div class="seek">
-            <input type="range" id="seek" min="0" max="1000" value="0" aria-label="播放进度">
-            <div class="times"><span id="tCur">0:00</span><span id="tDur">--:--</span></div>
-          </div>
-          <div class="ctrls">
-            <button class="icon-btn" id="bPrev" aria-label="上一首"><svg class="i"><use href="#i-prev"/></svg></button>
-            <button class="play-btn" id="bPlay" aria-label="播放"><svg class="i solid" id="bPlayIcon"><use href="#i-play"/></svg></button>
-            <button class="icon-btn" id="bNext" aria-label="下一首"><svg class="i"><use href="#i-next"/></svg></button>
-            <button class="icon-btn mode" id="bMode" aria-label="切换播放模式"><svg class="i" id="modeIcon"><use href="#i-shuffle"/></svg><span id="modeText">随机播放</span></button>
-            <div class="vol"><svg class="i"><use href="#i-volume"/></svg><input type="range" id="vol" min="0" max="100" value="80" aria-label="音量"></div>
+      <div class="p-left">
+        <div class="p-main">
+          <div class="vinyl-wrap"><div class="vinyl"></div><div class="arm"></div></div>
+          <div class="now">
+            <p class="lab" id="nowLab">正在选曲</p>
+            <h3 id="nowTitle">--</h3>
+            <p class="by">原创音乐 · 郑新</p>
+            <div class="seek">
+              <input type="range" id="seek" min="0" max="1000" value="0" aria-label="播放进度">
+              <div class="times"><span id="tCur">0:00</span><span id="tDur">--:--</span></div>
+            </div>
+            <div class="ctrls">
+              <button class="icon-btn" id="bPrev" aria-label="上一首"><svg class="i"><use href="#i-prev"/></svg></button>
+              <button class="play-btn" id="bPlay" aria-label="播放"><svg class="i solid" id="bPlayIcon"><use href="#i-play"/></svg></button>
+              <button class="icon-btn" id="bNext" aria-label="下一首"><svg class="i"><use href="#i-next"/></svg></button>
+              <button class="icon-btn mode" id="bMode" aria-label="切换播放模式"><svg class="i" id="modeIcon"><use href="#i-shuffle"/></svg><span id="modeText">随机播放</span></button>
+              <div class="vol"><svg class="i"><use href="#i-volume"/></svg><input type="range" id="vol" min="0" max="100" value="80" aria-label="音量"></div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="list" id="playlist"></div>
+      <div class="p-right">
+        <div class="pl-top">
+          <span class="pl-count" id="plCount">共 <b>3</b> 首</span>
+          <label class="pl-search">
+            <svg class="i"><use href="#i-search"/></svg>
+            <input id="plSearch" type="search" placeholder="搜索曲目" aria-label="搜索曲目">
+          </label>
+        </div>
+        <div class="pl-acts">
+          <button class="pl-btn" id="plPlayAll"><svg class="i solid"><use href="#i-play"/></svg>播放全部</button>
+          <button class="pl-btn" id="plShuffleAll"><svg class="i"><use href="#i-shuffle"/></svg>随机播放</button>
+        </div>
+        <div class="list" id="playlist" role="listbox" aria-label="曲目列表"></div>
+      </div>
     </div>
   </div>
 </section>
@@ -873,12 +937,12 @@ const JOIN_DATE = new Date('2020-08-03');
 
 /* ---- 相册 ---- */
 const PHOTOS = [
-  { cat:'work',   srcs:['./images/award.jpg'],    title:'2022年团队合影照片' },
-  { cat:'work',   srcs:['./images/host.jpg'],     title:'2025年新年晚宴主持' },
-  { cat:'work',   srcs:['./images/team.jpg'],     title:'2026年“赶海一号”团建' },
-  { cat:'travel', srcs:['./images/shantou.jpg'],  title:'2025年汕头旅社合影' },
-  { cat:'family', srcs:['./images/nanchang.jpg'], title:'2026年南昌美术馆合影' },
-  { cat:'travel', srcs:['./images/maotains.jpg'], title:'鼓山观景台' },
+  { cat:'职场', srcs:['./images/award.jpg'],    title:'2022年团队合影照片' },
+  { cat:'职场', srcs:['./images/host.jpg'],     title:'2025年新年晚宴主持' },
+  { cat:'职场', srcs:['./images/team.jpg'],     title:'2026年“赶海一号”团建' },
+  { cat:'旅行', srcs:['./images/shantou.jpg'],  title:'2025年汕头旅社合影' },
+  { cat:'家庭', srcs:['./images/nanchang.jpg'], title:'2026年南昌美术馆合影' },
+  { cat:'旅行', srcs:['./images/maotains.jpg'], title:'鼓山观景台' },
 ];
 
 /* ---- 社交账号 ---- */
@@ -1184,26 +1248,35 @@ function tabs(box, onSelect){
    四、精彩时刻 + 灯箱
    ===================================================================== */
 (function gallery(){
-  const grid = $('#gGrid');
+  const grid = $('#gGrid'), tabBox = $('#gTabs');
   let store = [];
   try { store = JSON.parse(localStorage.getItem('zx-photo-likes') || '[]'); } catch(_){}
   const liked = new Set(Array.isArray(store) ? store : []);
   const saveLikes = () => { try { localStorage.setItem('zx-photo-likes', JSON.stringify([...liked])); } catch(_){} };
 
-  grid.innerHTML = PHOTOS.map((p,i) => `
-    <div class="shot${liked.has(p.title) ? ' liked' : ''}" data-cat="${p.cat}" data-i="${i}" tabindex="0" role="button"
-         aria-pressed="${liked.has(p.title)}" aria-label="${esc(p.title)}，点击点赞">
-      <img alt="${esc(p.title)}" loading="lazy" decoding="async">
-      <div class="ph">${ic('image')}<span>照片待添加</span></div>
-      <div class="cap"><b>${esc(p.title)}</b></div>
-      <span class="like-badge" aria-hidden="true">♥</span>
-      <button class="zoom" type="button" aria-label="查看大图">${ic('search')}</button>
-    </div>`).join('');
-  const shots = $$('.shot', grid);
+  let items = PHOTOS.slice();      // 当前展示的照片；扫描到 photos/ 后会被整体替换
+  let shots = [];
+  let currentFilter = 'all';
+
+  /* 缩略图 / 大图目录：photo/thumbs/x.jpg、photo/full/x.jpg，没有就回退原图 */
+  const variant = (src, kind) => {
+    if (/^[a-z]+:\/\//i.test(src || '')) return src;
+    const i = (src || '').lastIndexOf('/');
+    return i < 0 ? src : `${src.slice(0, i)}/${kind}/${src.slice(i + 1)}`;
+  };
+
+  function applyFilter(f){
+    currentFilter = f;
+    shots.forEach((el, i) => {
+      const show = f === 'all' || items[i].cat === f;
+      if (show) { el.style.display = ''; requestAnimationFrame(() => el.classList.remove('hide')); }
+      else { el.classList.add('hide'); setTimeout(() => { if (el.classList.contains('hide')) el.style.display = 'none'; }, 300); }
+    });
+  }
 
   /* 点击照片：一颗虚化的大爱心，缩小飞向右上角，完成点赞 */
   function like(el, i){
-    const title = PHOTOS[i].title;
+    const title = items[i].title;
     if (!liked.has(title)){ liked.add(title); saveLikes(); }
     el.classList.add('liked');
     el.setAttribute('aria-pressed', 'true');
@@ -1220,9 +1293,14 @@ function tabs(box, onSelect){
     heart.addEventListener('animationend', () => heart.remove(), { once:true });
   }
 
-  shots.forEach((el,i) => {
-    const img = $('img', el), list = PHOTOS[i].srcs.slice();
-    const next = () => { const s = list.shift(); if (s) img.src = s; else { el.classList.add('failed'); img.remove(); PHOTOS[i].failed = true; } };
+  function bindShot(el, i){
+    const img = $('img', el);
+    const queue = [...new Set([...items[i].srcs.map(s => variant(s, 'thumbs')), ...items[i].srcs])];
+    const next = () => {
+      const s = queue.shift();
+      if (s) img.src = s;
+      else { el.classList.add('failed'); img.remove(); items[i].failed = true; }
+    };
     img.addEventListener('error', next); next();
     el.addEventListener('click', () => like(el, i));
     el.addEventListener('keydown', e => {
@@ -1231,25 +1309,71 @@ function tabs(box, onSelect){
     });
     $('.zoom', el).addEventListener('click', e => { e.stopPropagation(); open(i); });
     tilt(el, 5);
-  });
-  tabs($('#gTabs'), b => {
-    const f = b.dataset.f;
-    shots.forEach(el => {
-      const show = f==='all' || el.dataset.cat===f;
-      if (show) { el.style.display=''; requestAnimationFrame(() => el.classList.remove('hide')); }
-      else { el.classList.add('hide'); setTimeout(() => { if (el.classList.contains('hide')) el.style.display='none'; }, 300); }
-    });
+  }
+
+  function render(){
+    grid.innerHTML = items.map((p,i) => `
+      <div class="shot${liked.has(p.title) ? ' liked' : ''}" data-cat="${esc(p.cat || '')}" data-i="${i}" tabindex="0" role="button"
+           aria-pressed="${liked.has(p.title)}" aria-label="${esc(p.title)}，点击点赞">
+        <img alt="${esc(p.title)}" loading="lazy" decoding="async">
+        <div class="ph">${ic('image')}<span>照片待添加</span></div>
+        <div class="cap"><b>${esc(p.title)}</b></div>
+        <span class="like-badge" aria-hidden="true">♥</span>
+        <button class="zoom" type="button" aria-label="查看大图">${ic('search')}</button>
+      </div>`).join('');
+    shots = $$('.shot', grid);
+    shots.forEach(bindShot);
+    applyFilter(currentFilter);
+  }
+
+  /* 分类标签随 photos/ 里的子文件夹自动生成 */
+  const LABEL = { '职场':'职场风采', '旅行':'旅行足迹', '家庭':'家庭时光' };
+  function buildTabs(){
+    const cats = [...new Set(items.map(p => p.cat).filter(Boolean))];
+    tabBox.innerHTML = `<span class="pill"></span><button role="tab" aria-selected="true" data-f="all">全部照片</button>` +
+      cats.map(c => `<button role="tab" aria-selected="false" data-f="${esc(c)}">${esc(LABEL[c] || c)}</button>`).join('');
+    tabs(tabBox, b => applyFilter(b.dataset.f));
+  }
+
+  render();
+  tabs(tabBox, b => applyFilter(b.dataset.f));
+
+  document.addEventListener('library:photos', e => {
+    const list = e.detail || [];
+    if (!list.length) return;
+    const scanned = list.map(x => ({ cat: x.cat || '', title: x.title, srcs: [x.src] }));
+    const seen = new Set(scanned.map(p => p.title));
+    const legacy = items.filter(p => !seen.has(p.title));   // 老的几张留在 images/ 里，不用搬
+    items = legacy.concat(scanned);
+    currentFilter = 'all';
+    buildTabs();
+    render();
   });
 
-  const lb = $('#lightbox'); let order = [], pos = 0;
+  const lb = $('#lightbox'); let order = [], pos = 0, fullToken = 0;
   function show(){
-    const i = order[pos], p = PHOTOS[i], img = $('#lbImg');
+    const i = order[pos], p = items[i], img = $('#lbImg');
     img.style.animation = 'none'; void img.offsetWidth; img.style.animation = '';
-    img.src = $('img', shots[i]).currentSrc || p.srcs[0]; img.alt = p.title;
+    const card = $('img', shots[i]);
+    const small = (card && (card.currentSrc || card.src)) || p.srcs[0];
+    const token = ++fullToken;
+    img.alt = p.title;
+    img.src = small;                                   // 先把已在缓存里的缩略图铺上，不空窗
+    // 后台依次尝试：images/full/大图 → 原图，成功一张就换上
+    const chain = [variant(p.srcs[0], 'full'), p.srcs[0]];
+    let k = 0;
+    const tryBig = () => {
+      if (k >= chain.length || token !== fullToken) return;
+      const probe = new Image();
+      probe.onload = () => { if (token === fullToken) img.src = probe.src; };
+      probe.onerror = () => { k++; tryBig(); };
+      probe.src = chain[k];
+    };
+    tryBig();
     $('#lbCap').textContent = p.title; $('#lbCount').textContent = `${pos+1} / ${order.length}`;
   }
   function open(i){
-    order = shots.map((el,k)=>k).filter(k => shots[k].style.display!=='none' && !PHOTOS[k].failed);
+    order = shots.map((el,k)=>k).filter(k => shots[k].style.display!=='none' && !items[k].failed);
     if (!order.includes(i)) return;
     pos = order.indexOf(i); show(); lb.classList.add('open'); document.body.style.overflow='hidden'; $('#lbClose').focus();
   }
@@ -1641,21 +1765,88 @@ function tabs(box, onSelect){
     if (!t.p) t.p = (async () => {
       for (const url of candidates(t)) { const r = await probe(url); if (r) { t.url = r.url; t.dur = r.dur; return true; } }
       t.missing = true; return false;
-    })().then(ok => { renderList(); return ok; });
+    })().then(ok => { updateRow(i); return ok; });
     return t.p;
   }
 
   // 渲染
   const list = $('#playlist');
-  function renderList(){
-    list.innerHTML = TRACKS.map((t,i) => `
-      <button class="row${i===cur?' cur':''}${t.missing?' missing':''}" data-i="${i}">
-        <span class="n">${String(i+1).padStart(2,'0')}</span><span class="eq"><i></i><i></i><i></i></span>
-        <span><span class="t">${esc(t.title)}</span><span class="e">没有找到音频文件，请检查 music 文件夹里的文件名</span></span>
-        <span class="d">${t.dur ? fmt(t.dur) : t.missing ? '--:--' : ''}</span>
-      </button>`).join('');
-    $$('.row', list).forEach(r => r.addEventListener('click', () => play(+r.dataset.i)));
+  const PALETTE = [
+    ['#6d2a34','#2a0c12'], ['#28605c','#0e2a28'], ['#363f6b','#151830'],
+    ['#6d4726','#2a180c'], ['#355468','#111f29'], ['#5a3353','#200f1e'],
+    ['#2f5039','#102016'], ['#6b352b','#27130e'], ['#3d4d6d','#161e2c'],
+    ['#594627','#251c0b'],
+  ];
+  const palOf = s => { let h = 3; for (let i = 0; i < s.length; i++) h = (h * 17 + s.charCodeAt(i)) % 997; return PALETTE[h % PALETTE.length]; };
+  const fmtLong = s => {
+    s = Math.round(s);
+    const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60;
+    return h ? `${h}:${String(m).padStart(2,'0')}:${String(x).padStart(2,'0')}` : `${m}:${String(x).padStart(2,'0')}`;
+  };
+  let query = '';
+
+  const visibleTracks = () => {
+    const q = query.trim().toLowerCase();
+    const all = TRACKS.map((_, i) => i);
+    return q ? all.filter(i => (TRACKS[i].title + ' ' + TRACKS[i].file).toLowerCase().includes(q)) : all;
+  };
+
+  function updateCount(){
+    const n = TRACKS.length;
+    const known = TRACKS.filter(t => t.dur).length;
+    const total = TRACKS.reduce((s, t) => s + (t.dur || 0), 0);
+    $('#plCount').innerHTML = `共 <b>${n}</b> 首` + (n > 1 && known === n && total > 0 ? ` · ${fmtLong(total)}` : '');
   }
+
+  function renderList(){
+    const idx = visibleTracks();
+    if (!idx.length){
+      list.innerHTML = `<p class="pl-empty">没有找到“${esc(query.trim())}”相关的曲目</p>`;
+      updateCount(); return;
+    }
+    list.innerHTML = idx.map((i, k) => {
+      const t = TRACKS[i], pal = palOf(t.title);
+      const initial = (t.title.trim()[0] || '♪');
+      return `<button class="row${i===cur?' cur':''}${t.missing?' missing':''}" data-i="${i}" role="option" aria-selected="${i===cur}">
+        <span class="n">${String(k+1).padStart(2,'0')}</span><span class="eq"><i></i><i></i><i></i></span>
+        <span class="cv" style="--c1:${pal[0]};--c2:${pal[1]}">${esc(initial)}</span>
+        <span class="tt"><span class="t">${esc(t.title)}</span><span class="e">没有找到音频文件，请检查 music 文件夹里的文件名</span></span>
+        <span class="d">${t.dur ? fmt(t.dur) : t.missing ? '--:--' : ''}</span>
+      </button>`;
+    }).join('');
+    $$('.row', list).forEach(r => r.addEventListener('click', () => play(+r.dataset.i)));
+    updateCount();
+  }
+
+  function updateRow(i){
+    const t = TRACKS[i]; if (!t) return;
+    const r = $(`.row[data-i="${i}"]`, list);
+    if (r){
+      r.classList.toggle('missing', !!t.missing);
+      const d = $('.d', r); if (d) d.textContent = t.dur ? fmt(t.dur) : t.missing ? '--:--' : '';
+    }
+    updateCount();
+  }
+
+  function scrollToCurrent(){
+    const el = $(`.row[data-i="${cur}"]`, list);
+    if (!el) return;
+    const top = el.offsetTop, h = el.offsetHeight;
+    if (top < list.scrollTop || top + h > list.scrollTop + list.clientHeight){
+      list.scrollTo({ top: Math.max(0, top - list.clientHeight / 2 + h / 2), behavior: reduced ? 'auto' : 'smooth' });
+    }
+  }
+
+  $('#plSearch').addEventListener('input', e => { query = e.target.value; renderList(); });
+  $('#plPlayAll').addEventListener('click', () => {
+    const idx = visibleTracks(); if (!idx.length) return;
+    mode = 'order'; ui(); play(idx[0]);
+  });
+  $('#plShuffleAll').addEventListener('click', () => {
+    const idx = visibleTracks(); if (!idx.length) return;
+    mode = 'shuffle'; ui(); play(idx[Math.floor(Math.random() * idx.length)]);
+  });
+
   function ui(){
     const t = TRACKS[cur], playing = !audio.paused && !audio.ended;
     $('#nowTitle').textContent = t.title; $('#miniTitle').textContent = t.title;
@@ -1666,7 +1857,11 @@ function tabs(box, onSelect){
     $('#bPlayIcon').firstElementChild.setAttribute('href', use); $('#miniIcon').firstElementChild.setAttribute('href', use);
     $('#bPlay').setAttribute('aria-label', playing ? '暂停' : '播放'); $('#miniPlay').setAttribute('aria-label', playing ? '暂停' : '播放');
     $('#modeText').textContent = MODES[mode][0]; $('#modeIcon').firstElementChild.setAttribute('href', '#i-'+MODES[mode][1]);
-    $$('.row', list).forEach((r,i) => r.classList.toggle('cur', i===cur));
+    $$('.row', list).forEach(r => {
+      const on = +r.dataset.i === cur;
+      r.classList.toggle('cur', on); r.setAttribute('aria-selected', on);
+    });
+    scrollToCurrent();
     $('#tDur').textContent = fmt(audio.duration || t.dur);
     if ('mediaSession' in navigator) navigator.mediaSession.metadata = new MediaMetadata({ title:t.title, artist:'郑新', album:'自制音乐' });
   }
@@ -1743,12 +1938,13 @@ function tabs(box, onSelect){
 })();
 
 /* =====================================================================
-   七、自动同步：扫描仓库里的 music/ 与 E-book/，并从 EPUB 里取封面
+   七、自动同步：扫描仓库里的 music/、E-book/、photos/，并从 EPUB 里取封面
    —— 往文件夹里丢新文件，刷新网页就会自动出现，不用改任何代码
    ===================================================================== */
 (function library(){
   const AUDIO_RE = /\.(mp3|m4a|wav|flac|ogg|aac|opus)$/i;
   const BOOK_RE  = new RegExp('\\.(' + BOOK_EXT.join('|') + ')$', 'i');
+  const IMG_RE   = /\.(jpe?g|png|webp|gif|avif)$/i;
   const SKIP     = /(^\.|^~\$|thumbs\.db$|desktop\.ini$)/i;
   const CACHE_KEY = 'zx-library-v1';
   const CACHE_TTL = 60 * 1000 * 10;
@@ -1803,6 +1999,7 @@ function tabs(box, onSelect){
     if (/^[a-z0-9\s'’&\-]+$/.test(s)) s = s.replace(/(^|\s)([a-z])/g, (m, a, b) => a + b.toUpperCase());
     return s || name;
   };
+  const prettyPhoto = name => name.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ').replace(/\s+/g, ' ').trim();
   const byName = (a, b) => a.name.localeCompare(b.name, 'zh-Hans-CN');
 
   let running = false;
@@ -1815,9 +2012,10 @@ function tabs(box, onSelect){
     try { root = await listDir(repo, ''); }
     catch(_){
       const cached = readCache();
-      if (cached && cached.tracks && Date.now() - cached.t < CACHE_TTL * 6){
-        emit('library:tracks', cached.tracks);
-        emit('library:books', cached.books || []);
+      if (cached && Date.now() - cached.t < CACHE_TTL * 6){
+        if (cached.tracks && cached.tracks.length) emit('library:tracks', cached.tracks);
+        if (cached.books && cached.books.length) emit('library:books', cached.books);
+        if (cached.photos && cached.photos.length) emit('library:photos', cached.photos);
       }
       running = false;
       return;
@@ -1848,9 +2046,30 @@ function tabs(box, onSelect){
       .filter(f => !f.dir && !SKIP.test(f.name) && BOOK_RE.test(f.name)).sort(byName)
       .map(f => ({ file: f.name, size: f.size, dir: bookName + '/' }));
 
+    // 照片：photos/ 里的图片；子文件夹名就是分类，文件名就是显示的文字
+    let photos = [];
+    const photoName = pick('photos');
+    if (photoName){
+      try {
+        const pd = await listDir(repo, photoName);
+        const subs = pd.filter(d => d.dir && !/^(thumbs|full|\.)/i.test(d.name)).sort(byName);
+        for (const s of subs){
+          const files = await listDir(repo, photoName + '/' + s.name).catch(() => []);
+          files.filter(f => !f.dir && !SKIP.test(f.name) && IMG_RE.test(f.name)).sort(byName).forEach(f =>
+            photos.push({
+              title: prettyPhoto(f.name), cat: s.name,
+              src: photoName + '/' + encodeURIComponent(s.name) + '/' + encodeURIComponent(f.name),
+            }));
+        }
+        pd.filter(f => !f.dir && !SKIP.test(f.name) && IMG_RE.test(f.name)).sort(byName).forEach(f =>
+          photos.push({ title: prettyPhoto(f.name), cat: '', src: photoName + '/' + encodeURIComponent(f.name) }));
+      } catch(_){}
+    }
+
     if (tracks.length) emit('library:tracks', tracks);
     if (bookList.length) emit('library:books', bookList);
-    if (tracks.length || bookList.length) writeCache({ tracks, books: bookList });
+    if (photos.length) emit('library:photos', photos);
+    if (tracks.length || bookList.length || photos.length) writeCache({ tracks, books: bookList, photos });
     running = false;
   }
 
