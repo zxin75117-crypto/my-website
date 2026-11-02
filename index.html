@@ -118,6 +118,7 @@ input[type=range]::-moz-range-thumb{width:12px;height:12px;border-radius:50%;bac
   background:transparent;border:1px solid transparent;transition:background .4s,border-color .4s,box-shadow .4s}
 .nav.stuck{background:var(--panel);border-color:var(--line);box-shadow:var(--shadow);-webkit-backdrop-filter:var(--glass);backdrop-filter:var(--glass)}
 .brand{font-weight:900;font-size:1.15rem;letter-spacing:.02em;display:flex;align-items:center;gap:10px}
+.brand-en{font-weight:600;font-size:.92rem;letter-spacing:.01em;color:var(--ink-2)}
 .brand i{width:12px;height:12px;border-radius:50%;background:var(--accent);box-shadow:0 0 14px var(--accent)}
 .links{display:flex;gap:2px;position:relative}
 .links a{padding:8px 14px;border-radius:999px;font-size:.9rem;font-weight:600;color:var(--ink-2);transition:color var(--d2) var(--ease),background var(--d2) var(--ease)}
@@ -182,8 +183,6 @@ h1.name span{display:inline-block}
    工作经历
    ===================================================================== */
 .journey-panel{padding:var(--s6) var(--s6) calc(var(--s6) + var(--s1))}
-.journey-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px}
-.journey-bar h3{font-size:1.05rem;font-weight:700}
 .journey-scroll{overflow-x:auto;margin:0 -10px;padding:0 10px;scrollbar-width:none}
 .journey-scroll::-webkit-scrollbar{display:none}
 .journey{position:relative;min-width:780px;aspect-ratio:1000/340}
@@ -208,13 +207,8 @@ h1.name span{display:inline-block}
 .detail.swap > *{animation:swapIn var(--d3) var(--ease) both}
 .detail.swap > *:nth-child(2){animation-delay:.06s}
 @keyframes swapIn{from{opacity:0;transform:translateY(14px)}}
-.j-ctrl{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:24px}
+.j-ctrl{display:flex;align-items:center;justify-content:flex-end;gap:14px;flex-wrap:wrap;margin-top:24px}
 .j-ctrl .btns{display:flex;gap:8px}
-.ladder{display:flex;align-items:flex-end;gap:8px;flex:1;min-width:260px;max-width:520px}
-.step{flex:1;border-radius:var(--r-xs) var(--r-xs) 4px 4px;padding:10px 12px;border:1px solid var(--line);background:transparent;color:var(--ink-2);transition:background var(--d3) var(--ease),color var(--d3) var(--ease),border-color var(--d3) var(--ease);font-size:.82rem;line-height:1.35;font-weight:600}
-.step:nth-child(1){min-height:54px}.step:nth-child(2){min-height:74px}.step:nth-child(3){min-height:94px}
-.step small{display:block;font-family:var(--serif);font-style:italic;font-weight:400;font-size:.85rem;opacity:.8}
-.step.on{background:var(--accent);border-color:var(--accent);color:#2a1a00}
 @media (max-width:760px){
   .detail{grid-template-columns:1fr;gap:12px}
   .journey-panel{padding:22px 18px 26px}
@@ -543,6 +537,7 @@ footer{padding:90px 0 110px}
 .foot-mail a:hover{color:var(--accent);border-color:var(--accent)}
 .foot-in{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:32px}
 .foot-in h3{font-size:1.6rem;font-weight:900;letter-spacing:.02em}
+.foot-in h3 .brand-en{font-size:.62em;font-weight:600;letter-spacing:.02em}
 .foot-in p{color:var(--ink-2);font-size:.9rem}
 .foot-in small{display:block;margin-top:14px;color:var(--ink-2);font-size:.8rem}
 
@@ -620,7 +615,7 @@ footer{padding:90px 0 110px}
 
 <!-- 导航 -->
 <header class="nav" id="nav">
-  <a href="#about" class="brand"><i></i>郑新</a>
+  <a href="#about" class="brand"><i></i>郑新<span class="brand-en">丨 Ethan</span></a>
   <nav class="links" id="links" aria-label="主导航">
     <a href="#about">首页</a>
     <a href="#experience">工作经历</a>
@@ -660,9 +655,6 @@ footer{padding:90px 0 110px}
     </div>
 
     <div class="panel journey-panel">
-      <div class="journey-bar">
-        <h3>经历时间线</h3>
-      </div>
       <div class="journey-scroll" id="jScroll">
         <div class="journey" id="journey">
           <svg viewBox="0 0 1000 340" aria-hidden="true">
@@ -688,11 +680,6 @@ footer{padding:90px 0 110px}
       </div>
 
       <div class="j-ctrl">
-        <div class="ladder" id="ladder" aria-label="职级阶梯">
-          <div class="step"><small>2018</small>医学信息沟通代表</div>
-          <div class="step"><small>2023</small>高级医学代表</div>
-          <div class="step"><small>2025</small>高级产品专员</div>
-        </div>
         <div class="btns">
           <button class="icon-btn btn ghost" id="jPrev" aria-label="上一个节点"><svg class="i"><use href="#i-chev-l"/></svg></button>
           <button class="icon-btn btn ghost" id="jNext" aria-label="下一个节点"><svg class="i"><use href="#i-chev-r"/></svg></button>
@@ -712,9 +699,8 @@ footer{padding:90px 0 110px}
     <div class="tabs" id="gTabs" role="tablist" aria-label="照片分类">
       <span class="pill"></span>
       <button role="tab" aria-selected="true" data-f="all">全部照片</button>
-      <button role="tab" aria-selected="false" data-f="职场">职场风采</button>
-      <button role="tab" aria-selected="false" data-f="旅行">旅行足迹</button>
-      <button role="tab" aria-selected="false" data-f="家庭">家庭时光</button>
+      <button role="tab" aria-selected="false" data-f="职场风采">职场风采</button>
+      <button role="tab" aria-selected="false" data-f="旅行风景">旅行风景</button>
     </div>
     <div class="band" id="gBand"></div>
   </div>
@@ -801,10 +787,10 @@ footer{padding:90px 0 110px}
   <div class="wrap">
     <div class="foot-in">
       <div>
-        <h3>郑新 · Zheng Xin</h3>
+        <h3>郑新<span class="brand-en">丨 Ethan</span></h3>
         <p>阿斯利康 高级产品专员 · 拥抱创新，顺势而为</p>
         <p class="foot-mail"><svg class="i"><use href="#i-mail"/></svg><a href="mailto:zxin75117@gmail.com">zxin75117@gmail.com</a></p>
-        <small>&copy; 2026 郑新 (Zheng Xin). All rights reserved.</small>
+        <small>&copy; 2026 郑新 丨 Ethan. All rights reserved.</small>
       </div>
       <a class="btn ghost" href="#about"><svg class="i"><use href="#i-up"/></svg>回到顶部</a>
     </div>
@@ -915,17 +901,17 @@ const CAREER = [
   { year:'2024', when:'2024 年', tag:'荣誉', icon:'award', title:'连任 获得 EC 绩效卓越奖', sub:'阿斯利康 年度表彰' },
   { year:'2025', when:'2025 年', tag:'晋升', icon:'star', title:'晋升 高级产品专员', sub:'通过区域春苗测试' },
 ];
-const ROLE_AT = [-1, 0, 0, 0, 1, 1, 2];        // 每个节点对应的职级阶梯位置
 const JOIN_DATE = new Date('2020-08-03');
 
 /* ---- 相册 ---- */
 const PHOTOS = [
-  { cat:'职场', srcs:['./photos/职场/full/2022年团队合影照片.jpg'],   title:'2022年团队合影照片' },
-  { cat:'职场', srcs:['./photos/职场/full/2025年新年晚宴主持.jpg'],   title:'2025年新年晚宴主持' },
-  { cat:'职场', srcs:['./photos/职场/full/2026年“赶海一号”团建.jpg'], title:'2026年“赶海一号”团建' },
-  { cat:'旅行', srcs:['./photos/旅行/full/2025年汕头旅社合影.jpg'],   title:'2025年汕头旅社合影' },
-  { cat:'旅行', srcs:['./photos/旅行/full/2026年南昌美术馆合影.jpg'], title:'2026年南昌美术馆合影' },
-  { cat:'风景', srcs:['./photos/风景/full/鼓山观景台.jpg'],           title:'鼓山观景台' },
+  { cat:'职场风采', srcs:['./photos/职场风采/full/2022年团队合影照片.jpg'],   title:'2022年团队合影照片' },
+  { cat:'职场风采', srcs:['./photos/职场风采/full/2025年新年晚宴主持.jpg'],   title:'2025年新年晚宴主持' },
+  { cat:'职场风采', srcs:['./photos/职场风采/full/2026年“赶海一号”团建.jpg'], title:'2026年“赶海一号”团建' },
+  { cat:'旅行风景', srcs:['./photos/旅行风景/full/2025年汕头旅社合影.jpg'],   title:'2025年汕头旅社合影' },
+  { cat:'旅行风景', srcs:['./photos/旅行风景/full/2026年南昌美术馆合影.jpg'], title:'2026年南昌美术馆合影' },
+  { cat:'旅行风景', srcs:['./photos/旅行风景/full/太姥山.jpg'],               title:'太姥山' },
+  { cat:'旅行风景', srcs:['./photos/旅行风景/full/鼓山观景台.jpg'],           title:'鼓山观景台' },
 ];
 
 /* =====================================================================
@@ -1338,14 +1324,13 @@ function tabs(box, onSelect){
   });
 
   let sel = N-1, timer = null;
-  const detail = $('#detail'), steps = $$('#ladder .step');
+  const detail = $('#detail');
   function select(i, first){
     sel = clamp(i, 0, N-1); const c = CAREER[sel];
     nodes.forEach((n,k) => { n.classList.toggle('sel', k===sel); n.classList.toggle('past', k<sel); if (k===sel) n.setAttribute('aria-current','step'); else n.removeAttribute('aria-current'); });
     segs.forEach((p,k) => p.style.strokeDashoffset = k < sel ? 0 : p.dataset.l);
     $('#dYear').textContent = c.year; $('#dTag').textContent = c.tag; $('#dTitle').textContent = c.title;
     $('#dSub').textContent = c.sub; $('#dWhen').textContent = c.when;
-    steps.forEach((s,k) => s.classList.toggle('on', ROLE_AT[sel] === k));
     $('#jPrev').disabled = sel===0; $('#jNext').disabled = sel===N-1;
     $('#jPrev').style.opacity = sel===0 ? .35 : 1; $('#jNext').style.opacity = sel===N-1 ? .35 : 1;
     if (!first) { detail.classList.remove('swap'); void detail.offsetWidth; detail.classList.add('swap'); }
@@ -1489,12 +1474,11 @@ function tabs(box, onSelect){
 
   function render(){ buildBand(); }
 
-  /* 分类标签随 photos/ 里的子文件夹自动生成 */
-  const LABEL = { '职场':'职场风采', '旅行':'旅行足迹', '家庭':'家庭时光', '风景':'风景掠影' };
+  /* 分类标签随 photos/ 里的子文件夹自动生成，文件夹名就是标签文字 */
   function buildTabs(){
     const cats = [...new Set(items.map(p => p.cat).filter(Boolean))];
     tabBox.innerHTML = `<span class="pill"></span><button role="tab" aria-selected="true" data-f="all">全部照片</button>` +
-      cats.map(c => `<button role="tab" aria-selected="false" data-f="${esc(c)}">${esc(LABEL[c] || c)}</button>`).join('');
+      cats.map(c => `<button role="tab" aria-selected="false" data-f="${esc(c)}">${esc(c)}</button>`).join('');
     tabs(tabBox, b => applyFilter(b.dataset.f));
   }
 
@@ -2216,7 +2200,7 @@ function tabs(box, onSelect){
       .map(f => ({ file: f.path.split('/').pop(), size: f.size, dir: bookName + '/' }));
 
     // 照片：photos/ 下的图片；子文件夹名就是分类，文件名就是显示的文字
-    const CAT_ORDER = ['职场','旅行','家庭'];
+    const CAT_ORDER = ['职场风采','旅行风景','生活日常'];
     const photoMap = new Map();
     under(photoName).filter(f => IMG_RE.test(f.path) && !SKIP.test(f.path.split('/').pop())).forEach(f => {
       const parts = f.path.slice(photoName.length + 1).split('/');
