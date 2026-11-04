@@ -202,9 +202,6 @@ h1.name span{display:inline-block}
 .node:hover{transform:scale(1.12)}
 .node.past{background:var(--ink);color:var(--on-ink);border-color:var(--ink)}
 .node.sel{transform:scale(1.28);background:var(--accent);border-color:var(--panel-solid);color:#2a1a00;box-shadow:0 0 0 7px color-mix(in srgb,var(--accent) 28%,transparent)}
-.node .yr{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);font-family:var(--serif);font-style:italic;font-size:var(--fs-md);color:var(--ink-2);white-space:nowrap;transition:color .3s}
-.node.sel .yr,.node.past .yr{color:var(--ink)}
-.node.sel .yr{font-weight:700}
 .detail{display:grid;grid-template-columns:minmax(150px,230px) 1fr;gap:clamp(20px,4vw,56px);align-items:center;margin-top:26px;padding-top:28px;border-top:1px solid var(--line)}
 .detail .big{font-family:var(--serif);font-style:italic;font-size:clamp(4rem,9vw,7rem);line-height:.9;letter-spacing:-.03em}
 .detail .tag{display:inline-block;margin-top:12px;padding:3px 12px;border-radius:999px;background:var(--ink);color:var(--on-ink);font-size:var(--fs-xs);font-weight:700}
@@ -214,8 +211,10 @@ h1.name span{display:inline-block}
 .detail.swap > *{animation:swapIn var(--d3) var(--ease) both}
 .detail.swap > *:nth-child(2){animation-delay:.06s}
 @keyframes swapIn{from{opacity:0;transform:translateY(14px)}}
-.j-ctrl{display:flex;align-items:center;justify-content:flex-end;gap:14px;flex-wrap:wrap;margin-top:24px}
+.j-ctrl{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:24px}
 .j-ctrl .btns{display:flex;gap:8px}
+/* 只保留左右两个按钮，悬停时不做垂直位移，避免两个圆看起来一高一低 */
+.j-ctrl .btn:hover{transform:none}
 @media (max-width:620px){ .journey{min-width:560px} }
 @media (max-width:760px){
   .detail{grid-template-columns:1fr;gap:12px}
@@ -329,18 +328,28 @@ h1.name span{display:inline-block}
 .shelf-search input{width:158px;background:none;border:0;color:var(--ink);font:inherit;font-size:var(--fs-xs);outline:none}
 .shelf-search input::placeholder{color:var(--ink-2);opacity:.92}
 
-.shelf-stage{position:relative;z-index:2;height:clamp(330px,42vw,450px);perspective:1600px;perspective-origin:50% 46%;
+.shelf-band{position:relative;z-index:2}
+.shelf-stage{position:relative;height:clamp(260px,34vw,360px);perspective:1300px;perspective-origin:50% 46%;
   touch-action:pan-y;cursor:grab;outline:none;-webkit-user-select:none;user-select:none}
+.shelf-nav{position:absolute;top:50%;z-index:6;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;
+  color:var(--ink);background:var(--panel-hi);border:1px solid var(--line);box-shadow:var(--shadow);
+  -webkit-backdrop-filter:var(--glass);backdrop-filter:var(--glass);transform:translateY(-50%);
+  transition:background var(--d2) var(--ease),opacity var(--d2) var(--ease)}
+.shelf-nav:hover{background:color-mix(in srgb,var(--panel-hi) 62%,var(--ink) 14%)}
+.shelf-nav:active{transform:translateY(-50%) scale(.94)}
+.shelf-nav.prev{left:clamp(2px,1.2vw,14px)}
+.shelf-nav.next{right:clamp(2px,1.2vw,14px)}
+@media (hover:none){.shelf-nav{opacity:.92}}
 .shelf-stage:active{cursor:grabbing}
 .shelf-stage:focus-visible{outline:2px solid var(--ink);outline-offset:6px;border-radius:24px}
 .shelf-empty{position:absolute;inset:0;display:none;place-items:center;text-align:center;color:var(--ink-2);font-size:var(--fs-sm);padding:24px}
 .shelf.is-empty .shelf-empty{display:grid}
 .shelf.is-empty .ring{display:none}
 
-.ring{--bw:168px;--depth:13px;--r:290px;position:absolute;left:50%;top:50%;width:0;height:0;
-  transform-style:preserve-3d;transform:rotateX(-5deg) rotateY(var(--ry,0deg));will-change:transform}
+.ring{--bw:120px;--depth:10px;position:absolute;left:50%;top:50%;width:0;height:0;
+  transform-style:preserve-3d;transform:rotateX(-4deg);will-change:transform}
 .bk{position:absolute;left:0;top:0;width:var(--bw);aspect-ratio:2/3;border:0;padding:0;background:none;
-  transform:translate(-50%,-50%) rotateY(var(--a,0deg)) translateZ(var(--r));
+  transform:translate(-50%,-50%);
   transform-style:preserve-3d;cursor:pointer;outline:none}
 .bk-face{position:absolute;inset:0;border-radius:3px 8px 8px 3px;overflow:hidden;backface-visibility:hidden;
   background:linear-gradient(150deg,#3a1a22,#150609);
@@ -365,22 +374,16 @@ h1.name span{display:inline-block}
 .bk.front .bk-face{box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 55%,transparent),0 30px 54px -20px rgba(0,0,0,.85),inset 0 0 0 1px rgba(255,255,255,.14)}
 .bk:focus-visible .bk-face{box-shadow:0 0 0 2px var(--ink),0 22px 38px -18px rgba(0,0,0,.8)}
 
-.bk-art{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;padding:13px 11px;color:#fff;overflow:hidden;
+.bk-art{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;padding:calc(var(--bw) * .075) calc(var(--bw) * .065);color:#fff;overflow:hidden;
   background:linear-gradient(158deg,var(--c1,#5c2028),var(--c2,#23090d) 72%)}
-.bk-art::before{content:"";position:absolute;inset:7px;border:1px solid rgba(255,255,255,.22);border-radius:2px}
+.bk-art::before{content:"";position:absolute;inset:calc(var(--bw) * .06);border:1px solid rgba(255,255,255,.22);border-radius:2px}
 .bk-art::after{content:"";position:absolute;right:-32%;top:-18%;width:88%;aspect-ratio:1;border-radius:50%;
   background:radial-gradient(circle,rgba(255,255,255,.2),transparent 64%)}
-.bk-t{position:relative;z-index:1;font-weight:800;font-size:var(--fs-xs);line-height:1.3;letter-spacing:.02em;
+.bk-t{position:relative;z-index:1;font-weight:800;font-size:clamp(9px, calc(var(--bw) * .102), 15px);line-height:1.3;letter-spacing:.02em;
   display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
 .bk-art.v .bk-t{writing-mode:vertical-rl;text-orientation:upright;align-self:flex-end;max-height:80%;display:block;overflow:hidden}
-.bk-a{position:relative;z-index:1;font-family:var(--serif);font-style:italic;font-size:var(--fs-2xs);opacity:.82;
+.bk-a{position:relative;z-index:1;font-family:var(--serif);font-style:italic;font-size:clamp(7px, calc(var(--bw) * .062), 10px);opacity:.82;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;align-self:flex-start;max-width:100%}
-
-.shelf-ctrl{position:relative;z-index:3;display:flex;align-items:center;justify-content:center;gap:10px;padding:4px 0 8px}
-.shelf-ctrl .icon-btn{background:var(--panel);border:1px solid var(--line)}
-.spin-btn{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:999px;font-size:var(--fs-xs);font-weight:700;
-  border:1px solid var(--line);color:var(--ink-2);transition:color .25s,border-color .25s,background .25s}
-.spin-btn[aria-pressed="true"]{color:var(--on-ink);background:var(--ink);border-color:var(--ink)}
 
 .shelf-info{display:grid;grid-template-columns:1fr auto;gap:clamp(16px,3vw,40px);align-items:center;margin-top:18px;
   padding:var(--s5) var(--pad);border-radius:var(--r-lg)}
@@ -395,8 +398,7 @@ h1.name span{display:inline-block}
 .si-size{font-family:var(--serif);font-style:italic;color:var(--ink-2);font-size:var(--fs-xs)}
 .si-act .btn{white-space:nowrap}
 @media (max-width:760px){
-  .shelf-stage{height:clamp(300px,68vw,380px)}
-  .ring{--bw:118px;--depth:9px}
+  .shelf-nav{width:40px;height:40px}
   .shelf-info{grid-template-columns:1fr;align-items:flex-start;gap:16px}
   .si-act{align-items:flex-start;text-align:left}
   .shelf-search input{width:104px}
@@ -697,7 +699,6 @@ footer{padding:90px 0 110px}
         <div class="btns">
           <button class="icon-btn btn ghost" id="jPrev" aria-label="上一个节点"><svg class="i"><use href="#i-chev-l"/></svg></button>
           <button class="icon-btn btn ghost" id="jNext" aria-label="下一个节点"><svg class="i"><use href="#i-chev-r"/></svg></button>
-          <button class="btn" id="jPlay"><svg class="i solid"><use href="#i-play"/></svg><span>回放历程</span></button>
         </div>
       </div>
     </div>
@@ -781,14 +782,13 @@ footer{padding:90px 0 110px}
             <input id="shSearch" type="search" placeholder="搜索书名或作者" aria-label="搜索电子书">
           </label>
         </div>
-        <div class="shelf-stage" id="shStage" tabindex="0" role="listbox" aria-label="电子书书柜">
-          <div class="ring" id="shRing"></div>
-          <div class="shelf-empty" id="shEmpty">书架还是空的，把 EPUB 放进 E-book 文件夹，刷新页面就会出现在这里。</div>
-        </div>
-        <div class="shelf-ctrl">
-          <button class="icon-btn" id="shPrev" aria-label="上一本"><svg class="i"><use href="#i-chev-l"/></svg></button>
-          <button class="spin-btn" id="shSpin" aria-pressed="true"><svg class="i" id="shSpinIcon"><use href="#i-pause"/></svg><span id="shSpinText">自动旋转</span></button>
-          <button class="icon-btn" id="shNext" aria-label="下一本"><svg class="i"><use href="#i-chev-r"/></svg></button>
+        <div class="shelf-band">
+          <div class="shelf-stage" id="shStage" tabindex="0" role="listbox" aria-label="电子书书柜">
+            <div class="ring" id="shRing"></div>
+            <div class="shelf-empty" id="shEmpty">书架还是空的，把 EPUB 放进 E-book 文件夹，刷新页面就会出现在这里。</div>
+          </div>
+          <button class="shelf-nav prev" id="shPrev" aria-label="上一本"><svg class="i"><use href="#i-chev-l"/></svg></button>
+          <button class="shelf-nav next" id="shNext" aria-label="下一本"><svg class="i"><use href="#i-chev-r"/></svg></button>
         </div>
       </div>
       <div class="shelf-info panel" id="shInfo"></div>
@@ -877,26 +877,43 @@ const TRACKS = [
 const EBOOK_DIR = 'E-book/';
 const BOOK_EXT = ['epub','pdf','mobi','azw3','txt'];
 const BOOK_INFO = [
+  { file:"QBQ问题背后的问题 .epub", title:"QBQ问题背后的问题", author:"", kind:'电子书' },
   { file:'三体(刘慈欣).epub', title:'三体', author:'刘慈欣', kind:'科幻',
     desc:'刘慈欣的长篇科幻：一次秘密实验，把地球文明推进了宇宙尺度的生死博弈。' },
-  { file:'白夜行 (东野圭吾).epub', title:'白夜行', author:'东野圭吾', kind:'推理',
-    desc:'一桩旧案牵出两个人长达十九年的黑夜，东野圭吾最具代表性的长篇之一。' },
-  { file:'明朝那些事儿 (当年明月) .epub', title:'明朝那些事儿', author:'当年明月', kind:'历史',
-    desc:'用通俗笔法讲透明朝三百年，从开国到覆亡，把正史读成故事。' },
+  { file:"三重专注力 ([美] Daniel Goleman etc.) .epub", title:"三重专注力", author:"Daniel Goleman", kind:'电子书' },
+  { file:"人生 (路遥) .epub", title:"人生", author:"路遥", kind:'电子书' },
+  { file:"人类简史：从动物到上帝(尤瓦尔・赫拉利著, 林俊宏译) .epub", title:"人类简史：从动物到上帝", author:"尤瓦尔·赫拉利", kind:'电子书' },
+  { file:'以日为鉴 衰退时代生存指南 (分析师Boden) .epub', title:'以日为鉴', author:'分析师Boden', kind:'经济',
+    desc:'复盘日本泡沫破裂后的社会与经济，讨论衰退时代普通人的选择。' },
   { file:'你当像鸟飞往你的山 (Tara Westover) .epub', title:'你当像鸟飞往你的山', author:'Tara Westover', kind:'回忆录',
     desc:'一个从大山里走出来的女孩的自述：教育如何把一个人从原生家庭中带出来。' },
+  { file:"克莱因壶 (冈岛二人) .epub", title:"克莱因壶", author:"冈岛二人", kind:'电子书' },
+  { file:"十日终焉 (杀虫队队员).epub", title:"十日终焉", author:"杀虫队队员", kind:'电子书' },
+  { file:"博弈论 Game Theory ((美) 约翰·冯·诺依曼, [译] 刘霞) .epub", title:"博弈论 Game Theory", author:"约翰·冯·诺依曼", kind:'电子书' },
+  { file:"占星术杀人魔法 (【日】岛田庄司) .epub", title:"占星术杀人魔法 (【日】岛田庄司)", author:"", kind:'电子书' },
+  { file:"大秦帝国.epub", title:"大秦帝国", author:"", kind:'电子书' },
+  { file:"少有人走的路 (M·斯科特·派克) .epub", title:"少有人走的路", author:"M·斯科特·派克", kind:'电子书' },
+  { file:"影响力([美] Robert B. Cialdini  闾佳 译) .epub", title:"影响力", author:"Robert B. Cialdini", kind:'电子书' },
+  { file:"我与地坛 (史铁生).epub", title:"我与地坛", author:"史铁生", kind:'电子书' },
+  { file:"文城 (余华) .epub", title:"文城", author:"余华", kind:'电子书' },
+  { file:'明朝那些事儿 (当年明月) .epub', title:'明朝那些事儿', author:'当年明月', kind:'历史',
+    desc:'用通俗笔法讲透明朝三百年，从开国到覆亡，把正史读成故事。' },
+  { file:"檀香刑 (莫言) .epub", title:"檀香刑", author:"莫言", kind:'电子书' },
+  { file:'白夜行 (东野圭吾).epub', title:'白夜行', author:'东野圭吾', kind:'推理',
+    desc:'一桩旧案牵出两个人长达十九年的黑夜，东野圭吾最具代表性的长篇之一。' },
+  { file:"盗墓笔记(南派三叔) .epub", title:"盗墓笔记", author:"南派三叔", kind:'电子书' },
+  { file:"绍宋 (榴弹怕水) .epub", title:"绍宋", author:"榴弹怕水", kind:'电子书' },
+  { file:"经营未来 (李明博) .epub", title:"经营未来", author:"李明博", kind:'电子书' },
+  { file:"股票大作手回忆录 (埃德温•勒菲弗 ) .epub", title:"股票大作手回忆录", author:"埃德温•勒菲弗", kind:'电子书' },
+  { file:"蛙 (莫言).epub", title:"蛙", author:"莫言", kind:'电子书' },
+  { file:"诡秘之主 (爱潜水的乌贼) .epub", title:"诡秘之主", author:"爱潜水的乌贼", kind:'电子书' },
   { file:'贫穷的本质：我们为什么摆脱不了贫穷 (( 印度) 班纳吉  （法）迪弗洛) .epub', title:'贫穷的本质', author:'阿比吉特·班纳吉 / 埃斯特·迪弗洛', kind:'经济学',
     desc:'两位诺奖经济学家用田野实验追问：穷人为什么难以摆脱贫穷，以及什么样的干预真正有效。' },
   { file:'追风筝的人 (胡赛尼 [胡赛尼]) .epub', title:'追风筝的人', author:'卡勒德·胡赛尼', kind:'小说',
     desc:'关于喀布尔、背叛与救赎的故事，也是一个人重新面对自己过去的旅程。' },
-  { file:'Influence The Psychology of Persuasion ([美] Robert B. Cialdini  闾佳 译) .epub', title:'Influence', short:'Influence', author:'Robert B. Cialdini', kind:'心理学',
-    desc:'西奥迪尼的经典社会心理学著作，拆解说服与顺从背后的六大原则。' },
-  { file:'The 7 Habits of Highly Effective People  [美] 史蒂芬 · 柯维 .epub', title:'The 7 Habits of Highly Effective People', short:'The 7 Habits', author:'史蒂芬·柯维', kind:'自我管理',
-    desc:'柯维的自我管理经典：从依赖到独立，再从独立走向互赖。' },
-  { file:'The Triple Focus A New Approach to Education ([美] Daniel Goleman etc.) .epub', title:'The Triple Focus', short:'The Triple Focus', author:'Daniel Goleman / Peter Senge', kind:'教育',
-    desc:'戈尔曼与圣吉谈三种关键能力：专注自己、共情他人、看见系统。' },
-  { file:'以日为鉴 衰退时代生存指南 (分析师Boden) .epub', title:'以日为鉴', author:'分析师Boden', kind:'经济',
-    desc:'复盘日本泡沫破裂后的社会与经济，讨论衰退时代普通人的选择。' },
+  { file:"雪中悍刀行 (烽火戏诸侯) .epub", title:"雪中悍刀行", author:"烽火戏诸侯", kind:'电子书' },
+  { file:"高效能人士的七个习惯 [美] 史蒂芬 · 柯维 .epub", title:"高效能人士的七个习惯", author:"史蒂芬·柯维", kind:'电子书' },
+  { file:"黄雀记 (苏童) .epub", title:"黄雀记", author:"苏童", kind:'电子书' },
 ];
 // ---- 背景照片（可选）：想用自己的航拍照片当背景，把路径填进来；留空则使用自动生成的天空 ----
 // 例：{ dawn:'images/bg/dawn.jpg', day:'images/bg/day.jpg', dusk:'images/bg/dusk.jpg', night:'images/bg/night.jpg' }
@@ -907,12 +924,12 @@ const AUTO_PLAY_ON_FIRST_CLICK = false;
 
 /* ---- 职业经历 ---- */
 const CAREER = [
-  { year:'2017', when:'2017 年', tag:'毕业', icon:'cap', title:'福建医科大学 毕业', sub:'医学本科专业' },
+  { year:'2017', when:'2017 年', tag:'毕业', icon:'cap', title:'福建医科大学本科 毕业', sub:'药学专业' },
   { year:'2018', when:'2018 年', tag:'入行', icon:'briefcase', title:'加入赛诺菲 (Sanofi)', sub:'医学信息沟通代表' },
   { year:'2020', when:'2020 年 8 月 3 日', tag:'入职', icon:'briefcase', title:'加入阿斯利康 (AstraZeneca)', sub:'医学信息沟通代表' },
-  { year:'2022', when:'2022 年', tag:'荣誉', icon:'trophy', title:'荣获 EC 绩效卓越奖', sub:'AstraZeneca 核心荣誉' },
+  { year:'2022', when:'2022 年', tag:'荣誉', icon:'trophy', title:'荣获 EC 绩效卓越', sub:'重要荣誉' },
   { year:'2023', when:'2023 年', tag:'晋升', icon:'trend', title:'晋升 高级医学代表', sub:'职级晋升' },
-  { year:'2024', when:'2024 年', tag:'荣誉', icon:'award', title:'连任 获得 EC 绩效卓越奖', sub:'阿斯利康 年度表彰' },
+  { year:'2024', when:'2024 年', tag:'荣誉', icon:'award', title:'第二次 获得 EC 绩效卓越', sub:'业绩优秀' },
   { year:'2025', when:'2025 年', tag:'晋升', icon:'star', title:'晋升 高级产品专员', sub:'通过区域春苗测试' },
 ];
 const JOIN_DATE = new Date('2020-08-03');
@@ -1076,7 +1093,7 @@ addEventListener('resize', () => renderSky(curMin));
   const S1 = [255,178,92], S2 = [255,106,122], PALE = [255,226,196];
   const BUCKETS = 8;
 
-  let W = 0, H = 0, M = 34, N = K * M + 1, R0 = 110, gain = 1;
+  let W = 0, H = 0, M = 34, N = K * M + 1, R0 = 110, gain = 1, CAM = 460;
   let raf = 0, t0 = 0, lastP = 0, inView = true;
   let ax = 0, ay = 0, ex = 0, ey = 0, ux = 1, uy = 0;      // 轴线起点/终点/方向
   let P1X, P1Y, P2X, P2Y, D1;                              // 每帧的骨架点
@@ -1100,6 +1117,7 @@ addEventListener('resize', () => renderSky(curMin));
     // 半径跟着螺距走：螺距 = 轴长/圈数，真实双螺旋的半径约是螺距的 0.4
     R0 = Math.max(40, Math.min(150, len / TURNS * .40));
     gain = wide ? 1 : .74;                                    // 手机屏幕小，再压暗一点
+    CAM = R0 * 3.2;                                           // 相机距离，决定近大远小的强度
 
     P1X = new Float32Array(N); P1Y = new Float32Array(N);
     P2X = new Float32Array(N); P2Y = new Float32Array(N);
@@ -1130,9 +1148,12 @@ addEventListener('resize', () => renderSky(curMin));
       const th = TAU * (TURNS * u + p);
       const c = Math.cos(th) * R0 * env, s = Math.sin(th) * R0 * env * PERSP;
       const cx = ax + (ex - ax) * u, cy = ay + (ey - ay) * u;
-      P1X[i] = cx + c * nx + s * ux; P1Y[i] = cy + c * ny + s * uy;
-      P2X[i] = cx - c * nx - s * ux; P2Y[i] = cy - c * ny - s * uy;
-      D1[i]  = Math.sin(th);
+      // s 既是轴线方向的剪切量，也当作进深：近的一侧放大、远的一侧缩小
+      const k1 = CAM / Math.max(60, CAM - s);
+      const k2 = CAM / Math.max(60, CAM + s);
+      P1X[i] = cx + c * k1 * nx + s * ux; P1Y[i] = cy + c * k1 * ny + s * uy;
+      P2X[i] = cx - c * k2 * nx - s * ux; P2Y[i] = cy - c * k2 * ny - s * uy;
+      D1[i]  = s / Math.max(1, R0 * PERSP);
     }
 
     ctx.lineCap = 'round'; ctx.lineJoin = 'round';
@@ -1179,12 +1200,12 @@ addEventListener('resize', () => renderSky(curMin));
 
     for (let q = 0; q < BUCKETS; q++){
       const d01 = (q + .5) / BUCKETS;
-      const lw = .8 + 1.9 * d01;
+      const lw = .55 + 2.6 * d01;                    // 近处明显更粗，纵深才立得住
       // 碱基对先画：细、暗，骨架压在上面才有"包住"的纵深
-      strokePath(ra[q], mix(S1, PALE, .62), lw * .5, (.07 + .34 * d01) * gain, true);
-      strokePath(rb[q], mix(S2, PALE, .62), lw * .5, (.07 + .34 * d01) * gain, true);
-      strokePath(pa[q], mix(S1, PALE, .10 * d01), lw, (.26 + .66 * d01) * gain);
-      strokePath(pb[q], mix(S2, PALE, .10 * d01), lw, (.26 + .66 * d01) * gain);
+      strokePath(ra[q], mix(S1, PALE, .62), lw * .5, (.04 + .40 * d01) * gain, true);
+      strokePath(rb[q], mix(S2, PALE, .62), lw * .5, (.04 + .40 * d01) * gain, true);
+      strokePath(pa[q], mix(S1, PALE, .38 * d01), lw, (.14 + .82 * d01) * gain);
+      strokePath(pb[q], mix(S2, PALE, .38 * d01), lw, (.14 + .82 * d01) * gain);
     }
 
     ctx.globalAlpha = 1;
@@ -1343,12 +1364,12 @@ function tabs(box, onSelect){
     const b = document.createElement('button'); b.className = 'node';
     b.style.left = pts[i].x/10 + '%'; b.style.top = pts[i].y/340*100 + '%';
     b.setAttribute('aria-label', c.when + ' ' + c.title);
-    b.innerHTML = ic(c.icon) + `<span class="yr">${c.year}</span>`;
-    b.addEventListener('click', () => { stopPlay(); select(i); });
+    b.innerHTML = ic(c.icon);
+    b.addEventListener('click', () => { select(i); });
     box.appendChild(b); return b;
   });
 
-  let sel = N-1, timer = null;
+  let sel = N-1;
   const detail = $('#detail');
   function select(i, first){
     sel = clamp(i, 0, N-1); const c = CAREER[sel];
@@ -1362,32 +1383,20 @@ function tabs(box, onSelect){
     const sc = $('#jScroll'), n = nodes[sel];
     if (sc.scrollWidth > sc.clientWidth) sc.scrollTo({left: n.offsetLeft - sc.clientWidth/2, behavior: first||reduced ? 'auto':'smooth'});
   }
-  function stopPlay(){ clearInterval(timer); timer = null; $('#jPlay').innerHTML = ic('play','solid')+'<span>回放历程</span>'; }
-  function startPlay(){
-    select(0);
-    $('#jPlay').innerHTML = ic('pause','solid')+'<span>暂停</span>';
-    timer = setInterval(() => { if (sel >= N-1) stopPlay(); else select(sel+1); }, 2200);
-  }
-  $('#jPlay').addEventListener('click', () => timer ? stopPlay() : startPlay());
-  $('#jPrev').addEventListener('click', () => { stopPlay(); select(sel-1); });
-  $('#jNext').addEventListener('click', () => { stopPlay(); select(sel+1); });
+  $('#jPrev').addEventListener('click', () => select(sel-1));
+  $('#jNext').addEventListener('click', () => select(sel+1));
   // 键盘（面板在视口内时）与左右滑动
   const panel = $('.journey-panel'); let inView = false;
   new IntersectionObserver(es => inView = es[0].isIntersecting, {threshold:.4}).observe(panel);
   addEventListener('keydown', e => {
     if (!inView || $('#lightbox').classList.contains('open') || $('#modal').classList.contains('open') || /INPUT|TEXTAREA/.test(document.activeElement.tagName)) return;
-    if (e.key==='ArrowRight') { stopPlay(); select(sel+1); } if (e.key==='ArrowLeft') { stopPlay(); select(sel-1); }
+    if (e.key==='ArrowRight') select(sel+1);
+    else if (e.key==='ArrowLeft') select(sel-1);
   });
   let sx = 0; const det = $('#detail');
   det.addEventListener('touchstart', e => sx = e.touches[0].clientX, {passive:true});
-  det.addEventListener('touchend', e => { const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 50) { stopPlay(); select(sel + (dx<0 ? 1 : -1)); } });
+  det.addEventListener('touchend', e => { const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 50) select(sel + (dx<0 ? 1 : -1)); });
 
-  // 初次进入视口：按顺序“走”一遍曲线，最后停在当前职位
-  let ran = false;
-  new IntersectionObserver((es, ob) => { if (es[0].isIntersecting && !ran) { ran = true; ob.disconnect();
-    if (reduced) { select(N-1, true); return; }
-    select(0, true); let k = 0; const t = setInterval(() => { k++; select(k, true); if (k >= N-1) clearInterval(t); }, 380);
-  }}, {threshold:.5}).observe(panel);
   select(0, true);
 
 })();
@@ -1585,7 +1594,7 @@ function tabs(box, onSelect){
   let all = [], items = [], cards = [];
   let rot = 0, step = 36, stepRad = Math.PI/5, radius = 300, cardW = 168;
   let front = -1, dragging = false, dragX = 0, dragY = 0, dragMoved = 0, dragMoveY = 0, vel = 0;
-  let hovering = false, spinning = !reduced, animating = false, anim = 0, spinPause = 0;
+  let animating = false, anim = 0, spinPause = 0;
   let coverStarted = false;
   const covers = new Map(), pending = new Set();
 
@@ -1645,20 +1654,37 @@ function tabs(box, onSelect){
 
   function measure(){
     const w = $stage.clientWidth || 900;
-    cardW = Math.round(clamp(w * 0.2, 104, 176));
     const n = Math.max(1, items.length);
     step = 360 / n; stepRad = Math.PI * 2 / n;
-    const chord = (cardW * 1.26) / (2 * Math.sin(Math.PI / n));
-    radius = n < 3 ? Math.max(cardW * 0.85, 60) : Math.max(cardW * 0.9, chord);
+
+    // 卡带：书排在一段朝观众凸起的圆弧上，中间的离得最远、两端的最近，
+    // 透视下就是「两头长、中间短」。弧宽跟着模块宽度走，两边各留一点边。
+    const HALF = 84 * Math.PI / 180;                  // 可见半角
+    const navPad = 62;                                // 两侧留给翻页按钮的空间
+    const usable = Math.max(180, w - navPad * 2);
+    const maxCard = clamp(w * 0.13, 64, 148);
+    const PERSPECTIVE = 1300;
+    // 先按铺满可用宽度估半径，再按书数收紧
+    let R = (usable * 0.5) / Math.sin(HALF);
+    let cw = clamp(R * stepRad * 1.28, 56, maxCard);  // 1.28 = 相邻两本叠压约 22%
+    R = Math.min(R, (cw * 1.9) / stepRad);            // 书太少时别拉出大缝
+    cw = clamp(R * stepRad * 1.28, 56, maxCard);
+    // 透视会把外侧的卡继续往外推，迭代收半径，保证外缘落在可用宽度内
+    for (let k = 0; k < 8; k++){
+      const x = R * Math.sin(HALF), z = R * (1 - Math.cos(HALF));
+      const near = PERSPECTIVE / Math.max(400, PERSPECTIVE - z);
+      if ((x + cw * 0.5) * near <= usable * 0.5) break;
+      R *= 0.93;
+    }
+    radius = Math.max(120, R);
+    cardW = Math.round(cw);
+
     $ring.style.setProperty('--bw', cardW + 'px');
     $ring.style.setProperty('--depth', Math.round(cardW * 0.075) + 'px');
-    $ring.style.setProperty('--r', radius.toFixed(1) + 'px');
-    // 舞台高度按透视后的实际投影算：前排封面放大 1.3 倍，旧的高度写死就会被压到控制条上
-    const PERSPECTIVE = 1600;                       // 与 CSS 里 .shelf-stage 的 perspective 保持一致
-    const front = PERSPECTIVE / Math.max(200, PERSPECTIVE - radius);
-    const tilt = radius * Math.sin(5 * Math.PI / 180);
-    const need = Math.round(cardW * 1.5 * front + 2 * tilt + 26);
-    $stage.style.height = clamp(need, 280, 560) + 'px';
+
+    const zMax = radius * (1 - Math.cos(HALF));
+    const near = PERSPECTIVE / Math.max(400, PERSPECTIVE - zMax);
+    $stage.style.height = Math.round(clamp(cardW * 1.5 * near + 24, 150, 520)) + 'px';
   }
 
   function render(){
@@ -1709,7 +1735,7 @@ function tabs(box, onSelect){
     const n = items.length; if (!n) return;
     i = ((i % n) + n) % n;
     vel = 0;
-    spinPause = performance.now() + 6000;
+    spinPause = performance.now() + 2500;
     const to = targetFor(i);
     if (smooth && !reduced) animateTo(to, 620); else { rot = to; animating = false; }
     front = i; renderInfo();
@@ -1717,15 +1743,26 @@ function tabs(box, onSelect){
 
   function paint(){
     if (!items.length) return;
-    $ring.style.setProperty('--ry', rot.toFixed(2) + 'deg');
-    const rr = rot * Math.PI / 180;
     for (let i = 0; i < cards.length; i++){
-      const c = Math.cos(i * stepRad + rr);
-      const sh = c < 0 ? Math.min(.72, -c * .72) : 0;
-      cards[i].style.setProperty('--sh', sh.toFixed(3));
-      cards[i].style.opacity = (0.4 + 0.6 * Math.max(0, c)).toFixed(3);
-      cards[i].classList.toggle('front', c > 0.985);
-      cards[i].classList.toggle('flipped', c < 0.02);
+      const el = cards[i];
+      let a = (i * step + rot) % 360;
+      if (a > 180) a -= 360;
+      if (a < -180) a += 360;
+      const abs = Math.abs(a);
+      if (abs > 100){                           // 转到背面就撤掉，不参与渲染
+        if (el.style.visibility !== 'hidden'){ el.style.visibility = 'hidden'; el.style.opacity = '0'; }
+        el.classList.remove('front');
+        continue;
+      }
+      if (el.style.visibility === 'hidden') el.style.visibility = '';
+      const rad = a * Math.PI / 180;
+      const x = radius * Math.sin(rad);
+      const z = radius * (1 - Math.cos(rad));   // 两端朝观众凸出 → 视觉上更高更宽
+      const turn = Math.max(-75, Math.min(75, -a));   // 边缘的书别转到完全侧对
+      el.style.transform = `translate(-50%,-50%) translate3d(${x.toFixed(1)}px,0,${z.toFixed(1)}px) rotateY(${turn.toFixed(2)}deg)`;
+      el.style.opacity = (abs < 86 ? 1 : Math.max(0, 1 - (abs - 86) / 14)).toFixed(3);
+      el.style.setProperty('--sh', abs > 50 ? Math.min(.45, (abs - 50) / 90).toFixed(3) : '0');
+      el.classList.toggle('front', abs < step / 2);
     }
     const idx = frontIndex();
     if (idx !== front){ front = idx; renderInfo(); }
@@ -1737,10 +1774,11 @@ function tabs(box, onSelect){
     if (!lastT) lastT = now;
     const dt = Math.min(64, now - lastT); lastT = now;
     if (!animating && !dragging){
-      if (Math.abs(vel) > 0.02){ rot += vel * (dt / 16); vel *= Math.pow(0.94, dt / 16); }
+      if (Math.abs(vel) > 0.01){ rot += vel * (dt / 16); vel *= Math.pow(0.972, dt / 16); }
       else {
         vel = 0;
-        if (spinning && !hovering && performance.now() > spinPause) rot += dt * 0.0032;
+        // 卡带常转：鼠标离开也继续，只有主动暂停或拖动时才停
+        if (!reduced && items.length > 1 && performance.now() > spinPause) rot += dt * 0.0038;
       }
     }
     paint();
@@ -1826,8 +1864,10 @@ function tabs(box, onSelect){
     dragX = e.clientX; dragY = e.clientY;
     dragMoved += Math.abs(dx); dragMoveY += Math.abs(dy);
     if (Math.abs(dy) > Math.abs(dx) * 1.5) return;   // 纵向滑动交给页面滚动
-    rot += dx * 0.32;
-    vel = dx * 0.32;
+    // 卡带跟随鼠标速度：拖得越快，每像素转得越多，松手后惯性也更大
+    const gain = 0.26 + Math.min(0.34, Math.abs(dx) * 0.01);
+    rot += dx * gain;
+    vel = dx * gain;
   });
   const endDrag = e => {
     if (!dragging) return;
@@ -1841,10 +1881,6 @@ function tabs(box, onSelect){
   };
   $stage.addEventListener('pointerup', endDrag);
   $stage.addEventListener('pointercancel', endDrag);
-  $stage.addEventListener('pointerenter', e => { if (e.pointerType !== 'touch') hovering = true; });
-  $stage.addEventListener('pointerleave', e => { if (e.pointerType !== 'touch') hovering = false; });
-  $info.addEventListener('pointerenter', () => { hovering = true; });
-  $info.addEventListener('pointerleave', () => { hovering = false; });
   $stage.addEventListener('wheel', e => {
     if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
     e.preventDefault(); rot += e.deltaX * 0.3; vel = 0;
@@ -1856,13 +1892,13 @@ function tabs(box, onSelect){
   });
   $('#shPrev').onclick = () => focusIndex(frontIndex() - 1);
   $('#shNext').onclick = () => focusIndex(frontIndex() + 1);
-  $('#shSpin').onclick = () => {
-    spinning = !spinning;
-    $('#shSpin').setAttribute('aria-pressed', String(spinning));
-    $('#shSpinIcon').firstElementChild.setAttribute('href', spinning ? '#i-pause' : '#i-play');
-    $('#shSpinText').textContent = spinning ? '自动旋转' : '已暂停';
-  };
-  if (reduced){ $('#shSpin').setAttribute('aria-pressed', 'false'); $('#shSpinText').textContent = '已暂停'; }
+
+  // 宽度变化时重算半径与卡片尺寸，卡带随模块宽度伸缩
+  let rsT = 0;
+  addEventListener('resize', () => {
+    clearTimeout(rsT);
+    rsT = setTimeout(() => { measure(); paint(); }, 120);
+  });
 
   $search.addEventListener('input', () => {
     const q = $search.value.trim().toLowerCase();
@@ -2563,6 +2599,5 @@ function tabs(box, onSelect){
 })();
 
 </script>
-<script>/*TEMP-VERIFY*/addEventListener('load',()=>{setTimeout(()=>{document.documentElement.style.scrollBehavior='auto';document.getElementById('gallery').scrollIntoView()},600)});</script>
 </body>
 </html>
